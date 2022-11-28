@@ -19,11 +19,14 @@ homing_motion = JointMotion(neutral_joint_space)
 #x forward
 #y right
 #z downward
-motion = LinearRelativeMotion(Affine(0.0, -0.1, 0.0))
-robot.move(motion)
-
 
 
 
 reaction_motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.0)) 
 push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -5, StopMotion()))
+
+motion = LinearRelativeMotion(Affine(0.0, 0.0, 0.15))
+robot.move(motion, push_constraint)
+
+
+
