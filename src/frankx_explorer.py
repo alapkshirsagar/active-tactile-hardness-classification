@@ -39,9 +39,6 @@ class GridExplorer():
         self.pos = np.array([0,0])
 
     def goto(self, pos_):
-
-        print(self.pos, pos_)
-    
         if not (pos_[0] < self.grid_size_x and pos_[1] < self.grid_size_y):
             return
         if np.linalg.norm(pos_ - self.pos) < 0.01:
@@ -51,7 +48,7 @@ class GridExplorer():
         rel = pos_ - self.pos
         motion = LinearRelativeMotion(Affine(rel[0]*self.cell_size, -rel[1]*self.cell_size, 0.0))
         self.robot.move(motion)
-        print("Test")
+   
 
         self.pos = pos_
 
@@ -63,7 +60,7 @@ class GridExplorer():
         return_motion = JointMotion(return_q)
         
         push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -max_force, StopMotion()))
-        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.08))
+        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.05))
         self.robot.move(push_motion, push_constraint)
 
         self.robot.move(return_motion)
@@ -84,14 +81,21 @@ class GridExplorer():
         plt.imshow(frame)
         plt.show()
 
+    def record_frame_series(self, name,framerate, stop):
+        T = 1/framerate
+        while True:
+            pass
+
+
 
 if __name__ == '__main__':
-    #time.sleep(10)
+   
     exp = GridExplorer()
-    exp.show_frame()
-    #exp.push(1)
-    #exp.goto(np.array([1,0]))
-    #exp.home();
+    #exp.show_frame()
+    for i in range(5):
+        exp.push(1)
+        exp.goto(np.array([1,0]))
+        exp.home()
     #exp.push(2)
     #exp.goto(np.array([1,0]))
     #exp.push(2)
