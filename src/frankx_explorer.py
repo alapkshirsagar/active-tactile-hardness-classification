@@ -6,6 +6,7 @@ from gelsight import gsdevice
 import cv2 as cv
 from datetime import datetime
 from matplotlib import pyplot as plt
+from threading import Thread
 
 
 class GridExplorer():
@@ -52,7 +53,7 @@ class GridExplorer():
 
         self.pos = pos_
 
-    def push(self, max_force): # force should be positive even though negative z direction
+    def push(self, max_force, record = False, name = None, framerate = 30): # force should be positive even though negative z direction
         max_force = np.abs(max_force) # just to be safe
       
         
@@ -61,9 +62,19 @@ class GridExplorer():
         
         push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -max_force, StopMotion()))
         push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.05))
-        self.robot.move(push_motion, push_constraint)
 
+        if record:
+            recording = True
+            stop_recording = lambda: not recording
+            recorder_thread = Thread(target= self.record_frame_series, args = (name, framerate, stop_recording))
+            recorder_thread.start()
+            
+        self.robot.move(push_motion, push_constraint)
         self.robot.move(return_motion)
+        
+        if record:
+            recording = False
+            recorder_thread.join()
 
         #TODO: implement force recording, see
         """
@@ -81,10 +92,11 @@ class GridExplorer():
         plt.imshow(frame)
         plt.show()
 
-    def record_frame_series(self, name,framerate, stop):
+    def record_frame_series(self, series_name, framerate, stop):
         T = 1/framerate
-        while True:
-            pass
+        while not stop:
+            self.save_frame(series_name)
+            time.sleep(T)
 
 
 
