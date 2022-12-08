@@ -84,7 +84,8 @@ class GridExplorer():
     def save_frame(self, annotation):
         frame = self.cam.get_raw_image()
         big_frame = cv.resize(frame, (frame.shape[1] * 2, frame.shape[0] * 2))
-        path = ["frames/img-", datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), annotation, ".jpg"]
+        path = ["frames/img-", str(int(time.time() * 1000)), annotation, ".jpg"]
+        #path = ["frames/img-", datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"), annotation, ".jpg"]
         cv.imwrite("".join(path), frame)
 
     def show_frame(self):
@@ -101,20 +102,8 @@ class GridExplorer():
 
 
 if __name__ == '__main__':
-   
     exp = GridExplorer()
-    #exp.show_frame()
     for i in range(5):
         exp.push(1)
         exp.goto(np.array([1,0]))
         exp.home()
-    #exp.push(2)
-    #exp.goto(np.array([1,0]))
-    #exp.push(2)
-    #exp.goto(np.array([2,0]))
-    #exp.push(2)
-    #exp.goto(np.array([1,1]))
-    #exp.push(2)
-    #exp.goto(np.array([0,1]))
-    #exp.push(2)
-    #exp.home()
