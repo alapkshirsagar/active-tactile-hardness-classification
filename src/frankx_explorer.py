@@ -14,11 +14,12 @@ class GridExplorer():
         self.robot = Robot("172.168.0.2")
         self.robot.set_default_behavior()  
         self.robot.recover_from_errors()
-        self.robot.set_dynamic_rel(0.05)
+        self.robot.set_dynamic_rel(0.01)
 
-        self.cam = gsdevice.Camera(gsdevice.Finger.MINI, 0)
-        self.cam.connect()
-        self.res = (0, 0, 320, 240)
+        #self.cam = gsdevice.Camera(gsdevice.Finger.MINI, 0)
+        #self.cam.connect()
+        self.cv_cam = cv.VideoCapture(0)
+        #self.res = (0, 0, 320, 240)
         #print('image size = ', self.cam.get_raw_image().shape)
 
         #self.neutral_joints = [0.6118366520437153, 0.15716609762216865, -0.25319002091814896, -2.394232290291543, 0.029041619664173065, 2.5748198744888313, 1.1364431301769282]    # Calibration 25.11.2022
@@ -61,15 +62,17 @@ class GridExplorer():
         return_motion = JointMotion(return_q)
         
         push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -max_force, StopMotion()))
-        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.05))
+        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.1))
 
         if record:
             recording = True
             stop_recording = lambda: not recording
-            recorder_thread = Thread(target= self.record_frame_series, args = (name, framerate, stop_recording))
+            recorder_thread = Thread(target= self.record_video, args = (name, framerate, stop_recording))
+            print("Here")
             recorder_thread.start()
             
         self.robot.move(push_motion, push_constraint)
+        time.sleep(1)
         self.robot.move(return_motion)
         
         if record:
@@ -94,15 +97,50 @@ class GridExplorer():
         plt.show()
 
     def record_frame_series(self, series_name, framerate, stop):
+        print("There")
         T = 1/framerate
-        while not stop:
+        while not stop():
+            print("recording")
             self.save_frame(series_name)
             time.sleep(T)
+
+    def record_video(self, name, framerate, stop):
+        path =  ["videos/vid-", str(int(time.time() * 1000)),"_", name, ".mov"]
+        fourcc = cv.VideoWriter_fourcc(*"XVID")
+        out = cv.VideoWriter("".join(path) , fourcc, framerate, (320,240), isColor = True)
+
+        frames = []
+        while not stop():
+            ret, frame = self.cv_cam.read()
+            if ret:
+                frames.append(cv.resize(frame, (320,240)))
+                
+
+        print(len(frames))
+        cv.imshow('frame', frames[100])
+        cv.waitKey()
+        cv.destroyAllWindows()
+
 
 
 
 if __name__ == '__main__':
+    test_object_pos = {
+        "hardness1": np.array([0,0]),
+        "hardness2": np.array([1,0]),
+        "hardness3": np.array([2,0]),
+        "hardness4": np.array([0,1]),
+        "hardness5": np.array([0,0])
+    }
+
+    force_thresholds =  [1,3,5,7]
+    num_press = 2
+    trial_time = "surface"
+
+    
     exp = GridExplorer()
+    exp.push(4, record = True, name = 'Test')
+    exit()
     for i in range(5):
         exp.push(1)
         exp.goto(np.array([1,0]))
