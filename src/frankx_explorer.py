@@ -68,7 +68,7 @@ class GridExplorer():
             recording = True
             stop_recording = lambda: not recording
             recorder_thread = Thread(target= self.record_video, args = (name, framerate, stop_recording))
-            print("Here")
+            # print("Here")
             recorder_thread.start()
             
         self.robot.move(push_motion, push_constraint)
@@ -78,11 +78,6 @@ class GridExplorer():
         if record:
             recording = False
             recorder_thread.join()
-
-        #TODO: implement force recording, see
-        """
-        https://git.ias.informatik.tu-darmstadt.de/tactile-sensing/interpretable-representations/-/blob/master/src/visuotactile_sensor/src/robot_control/robot_control.cpp#L294
-        """
 
     def save_frame(self, annotation):
         frame = self.cam.get_raw_image()
@@ -104,24 +99,22 @@ class GridExplorer():
             self.save_frame(series_name)
             time.sleep(T)
 
-    def record_video(self, name, framerate, stop):
-        path =  ["videos/vid-", str(int(time.time() * 1000)),"_", name, ".mov"]
-        fourcc = cv.VideoWriter_fourcc(*"XVID")
-        out = cv.VideoWriter("".join(path) , fourcc, framerate, (320,240), isColor = True)
-
+    def record_video(self, name, framerate = 0, stop):
         frames = []
+        start = time.time()
         while not stop():
             ret, frame = self.cv_cam.read()
             if ret:
                 frames.append(cv.resize(frame, (320,240)))
-                
+        duration = time.time() - start()
+        framerate = len(frames) / duration
 
-        print(len(frames))
-        cv.imshow('frame', frames[100])
-        cv.waitKey()
-        cv.destroyAllWindows()
-
-
+        path =  ["videos/vid-", name, "_", datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"), ".mov"]
+        # path =  ["videos/vid-", name, "_", str(int(time.time() * 1000)), ".mov"]
+        fourcc = cv.VideoWriter_fourcc(*"XVID")
+        out = cv.VideoWriter("".join(path) , fourcc, framerate, (320,240), isColor = True)
+        for frame in frames:
+            out.write(frame)
 
 
 if __name__ == '__main__':
@@ -139,9 +132,10 @@ if __name__ == '__main__':
 
     
     exp = GridExplorer()
-    exp.push(4, record = True, name = 'Test')
-    exit()
-    for i in range(5):
-        exp.push(1)
-        exp.goto(np.array([1,0]))
-        exp.home()
+    for key in test_object_pos:
+        for _ in range(num_press):
+            for force in force_thresholds:
+                exp.goto(test_object_pos[key])
+                exp.push(force, record = True, name = "".join([key, "_", force, "N"]))
+    exp.home()
+#
