@@ -2,6 +2,7 @@ from frankx import (Gripper, Robot, LinearMotion, Affine, LinearRelativeMotion, 
                     JointMotion, MotionData, Reaction, Measure, StopMotion)
 import numpy as np
 import time
+import os
 from gelsight import gsdevice
 import cv2 as cv
 from datetime import datetime
@@ -14,7 +15,7 @@ class GridExplorer():
         self.robot = Robot("172.168.0.2")
         self.robot.set_default_behavior()  
         self.robot.recover_from_errors()
-        self.robot.set_dynamic_rel(0.01)
+        self.robot.set_dynamic_rel(0.02)
 
         #self.cam = gsdevice.Camera(gsdevice.Finger.MINI, 0)
         #self.cam.connect()
@@ -65,6 +66,9 @@ class GridExplorer():
         push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.1))
 
         if record:
+            if os.path.exists("tmp/time_force.txt"):
+                os.remove("tmp/time_force.txt")
+                print("deleted tmp file.")
             recording = True
             stop_recording = lambda: not recording
             recorder_thread = Thread(target= self.record_video, args = (name, framerate, stop_recording))
@@ -99,22 +103,46 @@ class GridExplorer():
             self.save_frame(series_name)
             time.sleep(T)
 
-    def record_video(self, name, framerate = 0, stop):
+    def record_video(self, name, framerate, stop):
         frames = []
         start = time.time()
+
         while not stop():
             ret, frame = self.cv_cam.read()
             if ret:
-                frames.append(cv.resize(frame, (320,240)))
-        duration = time.time() - start()
-        framerate = len(frames) / duration
+                timestamp = int(time.time() * 1000)
+                img = cv.resize(frame, (320,240))
+                frames.append( (timestamp, img) )
 
-        path =  ["videos/vid-", name, "_", datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"), ".mov"]
-        # path =  ["videos/vid-", name, "_", str(int(time.time() * 1000)), ".mov"]
+        duration = time.time() - start
+        actual_framerate = len(frames) / duration
+
+        path =  ["/home/ip-hard/Projects/ip-hardness/videos/vid-", name, "_", datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), ".mov"]
+        # path =  ["/home/ip-hard/Projects/ip-hardness/videos/vid-", name, "_", str(int(time.time() * 1000)), ".mov"]
         fourcc = cv.VideoWriter_fourcc(*"XVID")
-        out = cv.VideoWriter("".join(path) , fourcc, framerate, (320,240), isColor = True)
+        out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
+
+        forces = np.loadtxt("tmp/time_force.txt")
+
         for frame in frames:
-            out.write(frame)
+            timestamp = frame[0]
+
+            # fix this: trying to match the timestamps from the frame with the timestamp of a measured force from the file.
+            # something doesnt work yet.
+            # known limitations: in the return motion, no forces are measured / saved.
+            #                    there is a force measurement for almost every millisecond of the motion, but for some, there might be none.\
+            #                    unlikely edge case: there might be more than one measurement for a given timestamp.
+            # line = np.where(forces[0] == timestamp)
+
+            # so far this is empty.
+            # print(line)
+
+            ###
+            # force_at_timestamp = forces[line]
+            ###
+
+            out.write(frame[1])
+        
 
 
 if __name__ == '__main__':
@@ -132,10 +160,17 @@ if __name__ == '__main__':
 
     
     exp = GridExplorer()
+
+    # stay closer to the workspaces to make pushes faster
+    exp.robot.move(LinearRelativeMotion(Affine(0.0, 0.0, -0.04)))
+
+    # exp.push(3, record = True, name = "".join(["3N_test"]))
+
     for key in test_object_pos:
         for _ in range(num_press):
             for force in force_thresholds:
+                print("Trying to push ", key, " with ", str(force), "N.\n")
                 exp.goto(test_object_pos[key])
-                exp.push(force, record = True, name = "".join([key, "_", force, "N"]))
+                exp.push(force, record = True, name = "".join([key, "_", force.__str__(), "N"]))
     exp.home()
 #
