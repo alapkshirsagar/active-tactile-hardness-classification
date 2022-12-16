@@ -9,13 +9,16 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 from threading import Thread
 
+import uuid
+import json
+
 
 class GridExplorer():
     def __init__(self):
         self.robot = Robot("172.168.0.2")
         self.robot.set_default_behavior()  
         self.robot.recover_from_errors()
-        self.robot.set_dynamic_rel(0.02)
+        self.robot.set_dynamic_rel(0.05)
 
         #self.cam = gsdevice.Camera(gsdevice.Finger.MINI, 0)
         #self.cam.connect()
@@ -46,8 +49,6 @@ class GridExplorer():
             return
         if np.linalg.norm(pos_ - self.pos) < 0.01:
             return
-
-     
         rel = pos_ - self.pos
         motion = LinearRelativeMotion(Affine(rel[0]*self.cell_size, -rel[1]*self.cell_size, 0.0))
         self.robot.move(motion)
@@ -55,7 +56,8 @@ class GridExplorer():
 
         self.pos = pos_
 
-    def push(self, max_force, record = False, name = None, framerate = 30): # force should be positive even though negative z direction
+    def push(self, max_force, object_name = "default", record = False): # force should be positive even though negative z direction
+        self.robot.set_dynamic_rel(0.02)
         max_force = np.abs(max_force) # just to be safe
       
         
@@ -66,22 +68,71 @@ class GridExplorer():
         push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.1))
 
         if record:
-            if os.path.exists("tmp/time_force.txt"):
-                os.remove("tmp/time_force.txt")
-                print("deleted tmp file.")
             recording = True
             stop_recording = lambda: not recording
-            recorder_thread = Thread(target= self.record_video, args = (name, framerate, stop_recording))
-            # print("Here")
+            recorder_thread = Thread(target= self.record, args = (object_name, force, stop_recording))
             recorder_thread.start()
             
         self.robot.move(push_motion, push_constraint)
-        time.sleep(1)
-        self.robot.move(return_motion)
+        self.robot.move(return_motion,push_constraint)
         
         if record:
             recording = False
             recorder_thread.join()
+        self.robot.set_dynamic_rel(0.05)
+
+    def record(self, object_name, force, stop):
+        if os.path.exists("tmp/numerical.txt"):
+            os.remove("tmp/numerical.txt")
+
+        id = uuid.uuid3()
+
+        frames = []
+        start = time.time()
+
+        while not stop():
+            ret, frame = self.cv_cam.read()
+            if ret:
+                timestamp = int(time.time() * 1000)
+                img = cv.resize(frame, (320,240))
+                frames.append( (timestamp, img) )
+
+        duration = time.time() - start
+        actual_framerate = len(frames) / duration
+
+
+        #video
+        path =  ["/home/ip-hard/Projects/ip-hardness/data/videos", str(id), ".mov"]
+        fourcc = cv.VideoWriter_fourcc(*"XVID")
+        out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
+        for f in frames:
+            out.write(f[1])
+
+        #meta
+        meta = {
+            "id": str(id),
+            "time": datetime.now(),
+            "object": object_name,
+            "force": force
+        }
+        json.dump(meta, "data/meta/"+str(id) + ".json")
+
+        numerical =  np.loadtxt("tmp/numerical.txt")
+
+        #forces
+        np.save("data/forces/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,1]], axis = 1))
+        #angles
+        np.save("data/angles/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,2:]], axis = 1))
+        #frames
+        #np.save("data/forces/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,2:]], axis = 1))
+
+
+
+        
+
+        
+
+
 
     def save_frame(self, annotation):
         frame = self.cam.get_raw_image()
@@ -123,7 +174,8 @@ class GridExplorer():
         out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
 
         forces = np.loadtxt("tmp/time_force.txt")
-
+        plt.plot(forces[:,1])
+        print(forces.shape)
         for frame in frames:
             timestamp = frame[0]
 
@@ -132,14 +184,17 @@ class GridExplorer():
             # known limitations: in the return motion, no forces are measured / saved.
             #                    there is a force measurement for almost every millisecond of the motion, but for some, there might be none.\
             #                    unlikely edge case: there might be more than one measurement for a given timestamp.
-            # line = np.where(forces[0] == timestamp)
+            
+            lines = np.where(forces[:,0] == float(timestamp))
+             
+            try:
+                force_at_frame = forces[lines[0]][1]
+                print("hallo hallo ")
+            except:
+                pass
 
-            # so far this is empty.
-            # print(line)
+            # save frames, joint angles, force reading, timestamps
 
-            ###
-            # force_at_timestamp = forces[line]
-            ###
 
             out.write(frame[1])
         
@@ -150,8 +205,8 @@ if __name__ == '__main__':
         "hardness1": np.array([0,0]),
         "hardness2": np.array([1,0]),
         "hardness3": np.array([2,0]),
-        "hardness4": np.array([0,1]),
-        "hardness5": np.array([0,0])
+        "hardness4": np.array([1,1]),
+        "hardness5": np.array([0,1])
     }
 
     force_thresholds =  [1,3,5,7]
@@ -162,7 +217,7 @@ if __name__ == '__main__':
     exp = GridExplorer()
 
     # stay closer to the workspaces to make pushes faster
-    exp.robot.move(LinearRelativeMotion(Affine(0.0, 0.0, -0.04)))
+    #exp.robot.move(LinearRelativeMotion(Affine(0.0, 0.0, -0.04)))
 
     # exp.push(3, record = True, name = "".join(["3N_test"]))
 
@@ -170,7 +225,8 @@ if __name__ == '__main__':
         for _ in range(num_press):
             for force in force_thresholds:
                 print("Trying to push ", key, " with ", str(force), "N.\n")
+                exp.home()
                 exp.goto(test_object_pos[key])
-                exp.push(force, record = True, name = "".join([key, "_", force.__str__(), "N"]))
+                exp.push(force, record = True, object_name= key)
     exp.home()
 #
