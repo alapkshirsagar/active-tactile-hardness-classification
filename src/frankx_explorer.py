@@ -28,7 +28,8 @@ class GridExplorer():
 
         #self.neutral_joints = [0.6118366520437153, 0.15716609762216865, -0.25319002091814896, -2.394232290291543, 0.029041619664173065, 2.5748198744888313, 1.1364431301769282]    # Calibration 25.11.2022
         #self.neutral_joints = [0.3707151330437521, 0.16326812298140542, -0.028099087464621014, -2.3989490835251646, 0.00702887462245093, 2.5924458934995864, 1.1128487507518794]    # Calibration 28.11.2022
-        self.neutral_joints = [0.37210778693148966, 0.28854662857557595, -0.02800002464495207, -2.39302845971585, 0.01651057972216312, 2.7108360546139134, 1.106010951997505]
+        #self.neutral_joints = [0.37210778693148966, 0.28854662857557595, -0.02800002464495207, -2.39302845971585, 0.01651057972216312, 2.7108360546139134, 1.106010951997505]
+        self.neutral_joints = [0.3742012436992107, 0.3965798386015373, -0.027704081975832653, -2.373704329876077, 0.028091501702229765, 2.7978853032960225, 1.097400190761943]
         self.homing_motion = JointMotion(self.neutral_joints)
 
         self.grid_size_x = 4
@@ -56,16 +57,18 @@ class GridExplorer():
 
         self.pos = pos_
 
-    def push(self, max_force, object_name = "default", record = False): # force should be positive even though negative z direction
+    def push(self, max_force, vel = 0.05, object_name = "default", record = False): # force should be positive even though negative z direction
         self.robot.set_dynamic_rel(0.02)
         max_force = np.abs(max_force) # just to be safe
       
         
         return_q = self.robot.get_state().q
-        return_motion = JointMotion(return_q)
+        return_motion =  JointMotion(return_q)
+        after_push_record_motion =  LinearRelativeMotion(Affine(0.0, 0.0, 0.01)) #
         
         push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -max_force, StopMotion()))
-        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.1))
+        after_push_constaint = MotionData().with_reaction(Reaction(Measure.ForceZ > 5000, StopMotion()))
+        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.05))
 
         if record:
             recording = True
@@ -74,18 +77,19 @@ class GridExplorer():
             recorder_thread.start()
             
         self.robot.move(push_motion, push_constraint)
-        self.robot.move(return_motion,push_constraint)
+        self.robot.move(after_push_record_motion,after_push_constaint)
+        self.robot.move(return_motion)
         
         if record:
             recording = False
             recorder_thread.join()
-        self.robot.set_dynamic_rel(0.05)
+        self.robot.set_dynamic_rel(vel)
 
     def record(self, object_name, force, stop):
         if os.path.exists("tmp/numerical.txt"):
             os.remove("tmp/numerical.txt")
 
-        id = uuid.uuid3()
+        id = uuid.uuid4()
 
         frames = []
         start = time.time()
@@ -102,7 +106,7 @@ class GridExplorer():
 
 
         #video
-        path =  ["/home/ip-hard/Projects/ip-hardness/data/videos", str(id), ".mov"]
+        path =  ["/home/ip-hard/Projects/ip-hardness/data/videos/", str(id), ".mov"]
         fourcc = cv.VideoWriter_fourcc(*"XVID")
         out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
         for f in frames:
@@ -111,92 +115,33 @@ class GridExplorer():
         #meta
         meta = {
             "id": str(id),
-            "time": datetime.now(),
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "object": object_name,
-            "force": force
+            "force": force,
+            "vel": 0.0
         }
-        json.dump(meta, "data/meta/"+str(id) + ".json")
+        with open("data/meta/"+ str(id) + ".json", "w") as f:
+            json.dump(meta, f)
 
         numerical =  np.loadtxt("tmp/numerical.txt")
-
         #forces
-        np.save("data/forces/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,1]], axis = 1))
+        with open("data/forces/" + str(id) + ".npy", 'wb') as f:
+            np.save(f, numerical[:, [0,1]])
         #angles
-        np.save("data/angles/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,2:]], axis = 1))
-        #frames
-        #np.save("data/forces/" + str(id) + ".npy", np.stack([numerical[:,0],numerical[:,2:]], axis = 1))
 
+        with open("data/angles/" + str(id) + ".npy", 'wb') as f:
+            np.save(f, numerical[:, [0,2,3,4,5,6,7,8]])
 
+        poses = np.apply_along_axis(
+            lambda q: Affine(Kinematics.forward(q)),
+            1,
+            numerical[:, [2,3,4,5,6,7,8]]
+        )
 
+        with open("data/poses/" + str(id) + ".npy", "wb") as f:
+            np.save(f, poses)
         
 
-        
-
-
-
-    def save_frame(self, annotation):
-        frame = self.cam.get_raw_image()
-        big_frame = cv.resize(frame, (frame.shape[1] * 2, frame.shape[0] * 2))
-        path = ["frames/img-", str(int(time.time() * 1000)), annotation, ".jpg"]
-        #path = ["frames/img-", datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"), annotation, ".jpg"]
-        cv.imwrite("".join(path), frame)
-
-    def show_frame(self):
-        frame = self.cam.get_raw_image()
-        plt.imshow(frame)
-        plt.show()
-
-    def record_frame_series(self, series_name, framerate, stop):
-        print("There")
-        T = 1/framerate
-        while not stop():
-            print("recording")
-            self.save_frame(series_name)
-            time.sleep(T)
-
-    def record_video(self, name, framerate, stop):
-        frames = []
-        start = time.time()
-
-        while not stop():
-            ret, frame = self.cv_cam.read()
-            if ret:
-                timestamp = int(time.time() * 1000)
-                img = cv.resize(frame, (320,240))
-                frames.append( (timestamp, img) )
-
-        duration = time.time() - start
-        actual_framerate = len(frames) / duration
-
-        path =  ["/home/ip-hard/Projects/ip-hardness/videos/vid-", name, "_", datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), ".mov"]
-        # path =  ["/home/ip-hard/Projects/ip-hardness/videos/vid-", name, "_", str(int(time.time() * 1000)), ".mov"]
-        fourcc = cv.VideoWriter_fourcc(*"XVID")
-        out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
-
-        forces = np.loadtxt("tmp/time_force.txt")
-        plt.plot(forces[:,1])
-        print(forces.shape)
-        for frame in frames:
-            timestamp = frame[0]
-
-            # fix this: trying to match the timestamps from the frame with the timestamp of a measured force from the file.
-            # something doesnt work yet.
-            # known limitations: in the return motion, no forces are measured / saved.
-            #                    there is a force measurement for almost every millisecond of the motion, but for some, there might be none.\
-            #                    unlikely edge case: there might be more than one measurement for a given timestamp.
-            
-            lines = np.where(forces[:,0] == float(timestamp))
-             
-            try:
-                force_at_frame = forces[lines[0]][1]
-                print("hallo hallo ")
-            except:
-                pass
-
-            # save frames, joint angles, force reading, timestamps
-
-
-            out.write(frame[1])
         
 
 
@@ -209,7 +154,7 @@ if __name__ == '__main__':
         "hardness5": np.array([0,1])
     }
 
-    force_thresholds =  [1,3,5,7]
+    force_thresholds =  [3,5,7]
     num_press = 2
     trial_time = "surface"
 
@@ -227,6 +172,7 @@ if __name__ == '__main__':
                 print("Trying to push ", key, " with ", str(force), "N.\n")
                 exp.home()
                 exp.goto(test_object_pos[key])
-                exp.push(force, record = True, object_name= key)
+                exp.push(force, vel = 0.1, record = True, object_name= key)
+                exit()
     exp.home()
 #
