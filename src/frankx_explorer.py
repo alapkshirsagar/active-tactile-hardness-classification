@@ -80,6 +80,11 @@ class GridExplorer():
             recorder_thread = Thread(target= self.record, args = (object_name, force, vel, stop_recording))
             recorder_thread.start()
 
+        if noise:
+            x_off = -0.02 + np.random.random() * 0.04
+            y_off = -0.02 + np.random.random() * 0.04
+            noise_movement = LinearRelativeMotion(Affine(x_off, y_off, 0.00))
+            self.robot.move(noise_movement)
             
         self.robot.move(push_motion, push_constraint)
         self.robot.move(after_push_record_motion,after_push_constaint)
@@ -203,6 +208,6 @@ if __name__ == '__main__':
             vel = min_vel + np.random.random() * (max_vel - min_vel)
             exp.goto(test_object_pos[key])
             print(_, key, force, vel)
-            exp.push(force, vel = vel, record = True, object_name= key)
+            exp.push(force, vel = vel, noise = True, record = True, object_name= key)
         exp.home()
 
