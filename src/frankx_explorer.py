@@ -32,6 +32,8 @@ class GridExplorer():
         self.neutral_joints = [0.3742012436992107, 0.3965798386015373, -0.027704081975832653, -2.373704329876077, 0.028091501702229765, 2.7978853032960225, 1.097400190761943]
         self.homing_motion = JointMotion(self.neutral_joints)
 
+        self.cruise_speed = 0.1
+
         self.grid_size_x = 4
         self.grid_size_y = 5 
 
@@ -42,6 +44,7 @@ class GridExplorer():
         
 
     def home(self):
+        self.robot.set_dynamic_rel(self.cruise_speed)
         self.robot.move(self.homing_motion)
         self.pos = np.array([0,0])
 
@@ -52,13 +55,14 @@ class GridExplorer():
             return
         rel = pos_ - self.pos
         motion = LinearRelativeMotion(Affine(rel[0]*self.cell_size, -rel[1]*self.cell_size, 0.0))
+        self.robot.set_dynamic_rel(self.cruise_speed)
         self.robot.move(motion)
    
 
         self.pos = pos_
 
-    def push(self, max_force, vel = 0.05, object_name = "default", record = False): # force should be positive even though negative z direction
-        self.robot.set_dynamic_rel(0.02)
+    def push(self, max_force, vel = 0.05, noise = False, object_name = "default", record = False): # force should be positive even though negative z direction
+        self.robot.set_dynamic_rel(vel)
         max_force = np.abs(max_force) # just to be safe
       
         
@@ -73,8 +77,9 @@ class GridExplorer():
         if record:
             recording = True
             stop_recording = lambda: not recording
-            recorder_thread = Thread(target= self.record, args = (object_name, force, stop_recording))
+            recorder_thread = Thread(target= self.record, args = (object_name, force, vel, stop_recording))
             recorder_thread.start()
+
             
         self.robot.move(push_motion, push_constraint)
         self.robot.move(after_push_record_motion,after_push_constaint)
@@ -83,9 +88,9 @@ class GridExplorer():
         if record:
             recording = False
             recorder_thread.join()
-        self.robot.set_dynamic_rel(vel)
 
-    def record(self, object_name, force, stop):
+
+    def record(self, object_name, force, vel, stop):
         if os.path.exists("tmp/numerical.txt"):
             os.remove("tmp/numerical.txt")
 
@@ -99,7 +104,7 @@ class GridExplorer():
             if ret:
                 timestamp = int(time.time() * 1000)
                 img = cv.resize(frame, (320,240))
-                frames.append( (timestamp, img) )
+                frames.append( (timestamp, img))
 
         duration = time.time() - start
         actual_framerate = len(frames) / duration
@@ -117,11 +122,29 @@ class GridExplorer():
             "id": str(id),
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "object": object_name,
-            "force": force,
-            "vel": 0.0
+            "max_force": force,
+            "max_vel": vel
         }
+        #meta
         with open("data/meta/"+ str(id) + ".json", "w") as f:
             json.dump(meta, f)
+
+
+        #frames
+        time_array = np.zeros(len(frames))
+        frame_matrix = np.zeros((len(frames), 240, 320, 3))
+
+        for i,(t, f) in enumerate(frames):
+            time_array[i] = t
+            frame_matrix[i,:,:,:] = f
+
+        with open("data/frames/" + str(id) + "_times.npy", "wb") as f:
+            np.save(f, time_array)
+
+        with open("data/frames/" + str(id) + "_frames.npy", "wb") as f:
+            np.save(f, frame_matrix)
+
+
 
         numerical =  np.loadtxt("tmp/numerical.txt")
         #forces
@@ -132,15 +155,19 @@ class GridExplorer():
         with open("data/angles/" + str(id) + ".npy", 'wb') as f:
             np.save(f, numerical[:, [0,2,3,4,5,6,7,8]])
 
+        """
         poses = np.apply_along_axis(
-            lambda q: Affine(Kinematics.forward(q)),
+            lambda q: Kinematics.forward(q),
             1,
             numerical[:, [2,3,4,5,6,7,8]]
         )
-
         with open("data/poses/" + str(id) + ".npy", "wb") as f:
             np.save(f, poses)
         
+        
+        
+        """
+
 
         
 
@@ -150,14 +177,18 @@ if __name__ == '__main__':
         "hardness1": np.array([0,0]),
         "hardness2": np.array([1,0]),
         "hardness3": np.array([2,0]),
-        "hardness4": np.array([1,1]),
-        "hardness5": np.array([0,1])
+        "hardness4": np.array([0,1]),
+        "hardness5": np.array([1,1])
+        
     }
 
-    force_thresholds =  [3,5,7]
-    num_press = 2
-    trial_time = "surface"
+    min_vel = 0.02
+    max_vel = 0.05
 
+    min_force = 1
+    max_force = 5
+
+    collection_epochs = 40
     
     exp = GridExplorer()
 
@@ -166,13 +197,12 @@ if __name__ == '__main__':
 
     # exp.push(3, record = True, name = "".join(["3N_test"]))
 
-    for key in test_object_pos:
-        for _ in range(num_press):
-            for force in force_thresholds:
-                print("Trying to push ", key, " with ", str(force), "N.\n")
-                exp.home()
-                exp.goto(test_object_pos[key])
-                exp.push(force, vel = 0.1, record = True, object_name= key)
-                exit()
-    exp.home()
-#
+    for _ in range(collection_epochs):
+        for key in test_object_pos:
+            force = min_force + np.random.random() * (max_force-min_force) 
+            vel = min_vel + np.random.random() * (max_vel - min_vel)
+            exp.goto(test_object_pos[key])
+            print(_, key, force, vel)
+            exp.push(force, vel = vel, record = True, object_name= key)
+        exp.home()
+
