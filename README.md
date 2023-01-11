@@ -7,6 +7,7 @@ Roadmap
 - Explore other network architectures
 - Outline and draft the paper
 - take data of pushes on the edge of objects
+- check with less data
 
 Deadlines
 - IROS 1st of March
