@@ -1,4 +1,5 @@
 src/__pycache__
+hardness_classification/__pycache__
 *.pdf
 .idea/
 .vscode/
