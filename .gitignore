@@ -2,3 +2,6 @@ src/__pycache__
 *.pdf
 .idea/
 .vscode/
+hardness_classification/data/
+*.h5
+*.npy

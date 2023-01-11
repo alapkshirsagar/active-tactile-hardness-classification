@@ -1,0 +1,16 @@
+ConvLSTM
+- for ConvLSTM, one Dense, set get_ConvLSTM
+- full dataset
+- 0.8 train, 0.2 test
+- 0.2 Validation Split
+- Early stopping on val acc
+test_loss, test_acc = [0.4654759466648102, 0.8913043737411499] 
+
+LeaveOneOUT
+get_ConvLSTM
+Confusion matrix
+[[ 0. 41.  1.  4.  0.]
+ [17.  0. 24.  5.  0.]
+ [ 0. 23.  0.  4. 19.]
+ [ 2. 27. 16.  0.  0.]
+ [ 0.  0. 44.  1.  0.]]
