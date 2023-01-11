@@ -1,4 +1,15 @@
-We should glue the samples to the workspace brackets. Sometimes they stick to the sensor.
+Roadmap
+
+- Check for errors in Confusion matrix and frame selection process
+- add uncertainty estimation
+- Try training on two samples, and estimating similarity to an unknown third
+- Try preprocessing to make frames only show difference to neutral position, and grayscale
+- Explore other network architectures
+- Outline and draft the paper
+- take data of pushes on the edge of objects
+
+Deadlines
+- IROS 1st of March
 
 To apply new frankx code:
 - activate projects/frankx/venv
