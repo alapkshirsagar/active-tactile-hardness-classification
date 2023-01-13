@@ -3,8 +3,10 @@ from sklearn.preprocessing import LabelBinarizer
 from os.path import join, exists
 import numpy as np
 import json
+import matplotlib.pyplot as plt
 
 SEQ_LENGTH = 5
+VISUALIZE_FRAME_SELECTION = False
 
 class DatasetManager():
     def __init__(self, id, path, classes):
@@ -16,7 +18,7 @@ class DatasetManager():
 
 
     
-    def __select_frames(self,frames,k):
+    def __select_frames(self, frames, k, times = [], forces = []):
 
         frame_num = frames.shape[0]
 
@@ -33,13 +35,21 @@ class DatasetManager():
 
         time_span = max_deformation_index - first_deformation_index
         indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
-    
+
+        if VISUALIZE_FRAME_SELECTION:
+            # selected_frame_timestamps = times[indizes]
+            selected_frame_timestamps = [times[index] for index in indizes]
+            plt.plot(forces[:, 0], forces[:, 1])
+            plt.vlines(indizes, 0, 1, ["grey" for i in range(k)])
+            plt.show()
+            input("Press Enter to continue...")
+
 
         return frames[indizes]
 
 
     
-    def __get_frames_and_labels(self,path):
+    def __get_frames_and_labels(self, path):
         X = []
         Y = []
         meta_path = join(path, "meta/")
@@ -53,7 +63,9 @@ class DatasetManager():
             Y.append(meta["object"])
 
             frames = np.load(join(frames_path, meta["id"] + "_frames.npy"))
-            X.append(self.__select_frames(frames, SEQ_LENGTH))
+            times = np.load(join(frames_path, meta["id"] + "_times.npy"))
+            forces = np.load(join(forces_path, meta["id"] + ".npy"))
+            X.append(self.__select_frames(frames, SEQ_LENGTH, times = times, forces = forces))
         
 
         X = np.array(X)
