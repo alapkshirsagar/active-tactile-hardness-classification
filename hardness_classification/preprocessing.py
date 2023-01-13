@@ -6,7 +6,7 @@ import json
 import matplotlib.pyplot as plt
 
 SEQ_LENGTH = 5
-VISUALIZE_FRAME_SELECTION = False
+VISUALIZE_FRAME_SELECTION = True
 
 class DatasetManager():
     def __init__(self, id, path, classes):
@@ -18,7 +18,7 @@ class DatasetManager():
 
 
     
-    def __select_frames(self, frames, k, times = [], forces = []):
+    def __select_frames(self, frames, k, times = [], forces = [], id = 0):
 
         frame_num = frames.shape[0]
 
@@ -37,12 +37,17 @@ class DatasetManager():
         indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
 
         if VISUALIZE_FRAME_SELECTION:
-            # selected_frame_timestamps = times[indizes]
-            selected_frame_timestamps = [times[index] for index in indizes]
+            selected_frame_timestamps = times[indizes]
             plt.plot(forces[:, 0], forces[:, 1])
-            plt.vlines(indizes, 0, 1, ["grey" for i in range(k)])
-            plt.show()
-            input("Press Enter to continue...")
+            plt.vlines(selected_frame_timestamps[1:k-1], np.min(forces[:, 1]), np.max(forces[:, 1]), "grey")
+            plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
+            plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
+            plt.xlabel("Time")
+            plt.ylabel("Force on end-effector")
+            plt.legend()
+            plt.savefig(join(id))
+            plt.cla()
+            # input("Press Enter to continue...")
 
 
         return frames[indizes]
@@ -54,6 +59,7 @@ class DatasetManager():
         Y = []
         meta_path = join(path, "meta/")
         frames_path = join(path, "frames/")
+        forces_path = join(path, "forces/")
 
         for file in os.listdir(meta_path):
             meta = None
@@ -65,7 +71,7 @@ class DatasetManager():
             frames = np.load(join(frames_path, meta["id"] + "_frames.npy"))
             times = np.load(join(frames_path, meta["id"] + "_times.npy"))
             forces = np.load(join(forces_path, meta["id"] + ".npy"))
-            X.append(self.__select_frames(frames, SEQ_LENGTH, times = times, forces = forces))
+            X.append(self.__select_frames(frames, SEQ_LENGTH, times, forces, meta["id"]))
         
 
         X = np.array(X)
@@ -115,7 +121,7 @@ class DatasetManager():
         
         
 if __name__ == "__main__":
-    manager = DatasetManager("42", "data/",["hardness" + str(i+1) for i in range(5)])
+    manager = DatasetManager("43", "data/",["hardness" + str(i+1) for i in range(5)])
     X,y = manager.get_raw_with_classes(["hardness1", "hardness3", "hardness4"])
     print(y[0:20])
     print(X.shape)
