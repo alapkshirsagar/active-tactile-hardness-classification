@@ -17,7 +17,7 @@ class DatasetManager():
         self.encoder.fit(classes)
 
 
-    
+
     def __select_frames(self, frames, k, times = [], forces = [], id = 0):
 
         frame_num = frames.shape[0]
@@ -33,15 +33,16 @@ class DatasetManager():
         first_deformation_index = np.argmax(distances > epsilon)
         max_deformation_index = np.argmax(distances)
 
-        time_span = max_deformation_index - first_deformation_index
-        indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
+        # time_span = max_deformation_index - first_deformation_index
+        indizes = [max_deformation_index - i for i in range(k)]
+        # indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
 
         if VISUALIZE_FRAME_SELECTION:
             selected_frame_timestamps = times[indizes]
             plt.plot(forces[:, 0], forces[:, 1])
-            plt.vlines(selected_frame_timestamps[1:k-1], np.min(forces[:, 1]), np.max(forces[:, 1]), "grey")
-            plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
-            plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
+            plt.vlines(selected_frame_timestamps, np.min(forces[:, 1]), np.max(forces[:, 1]), "grey", label="Selected frames")
+            # plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
+            # plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
             plt.xlabel("Time")
             plt.ylabel("Force on end-effector")
             plt.legend()
@@ -121,7 +122,7 @@ class DatasetManager():
         
         
 if __name__ == "__main__":
-    manager = DatasetManager("43", "data/",["hardness" + str(i+1) for i in range(5)])
+    manager = DatasetManager("44", "data/",["hardness" + str(i+1) for i in range(5)])
     X,y = manager.get_raw_with_classes(["hardness1", "hardness3", "hardness4"])
     print(y[0:20])
     print(X.shape)
