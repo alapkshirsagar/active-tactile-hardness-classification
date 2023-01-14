@@ -32,20 +32,24 @@ class DatasetManager():
 
         first_deformation_index = np.argmax(distances > epsilon)
         max_deformation_index = np.argmax(distances)
+        max_force_timestamp = forces[np.argmin(forces[:, 1]), 0]
+        max_force_index = np.argmin(np.absolute(times - max_force_timestamp))
 
         # time_span = max_deformation_index - first_deformation_index
-        indizes = [max_deformation_index - i for i in range(k)]
+        indizes = [max_force_index - i for i in range(k)]
         # indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
 
         if VISUALIZE_FRAME_SELECTION:
             selected_frame_timestamps = times[indizes]
             plt.plot(forces[:, 0], forces[:, 1])
             plt.vlines(selected_frame_timestamps, np.min(forces[:, 1]), np.max(forces[:, 1]), "grey", label="Selected frames")
+            plt.vlines(max_force_timestamp, np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum force timestamp")
             # plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
             # plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
             plt.xlabel("Time")
             plt.ylabel("Force on end-effector")
             plt.legend()
+            # plt.show()
             plt.savefig(join(id))
             plt.cla()
             # input("Press Enter to continue...")
