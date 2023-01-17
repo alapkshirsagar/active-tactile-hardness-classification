@@ -6,7 +6,7 @@ import json
 import matplotlib.pyplot as plt
 
 SEQ_LENGTH = 5
-VISUALIZE_FRAME_SELECTION = True
+VISUALIZE_FRAME_SELECTION = False
 
 class DatasetManager():
     def __init__(self, id, path, classes):
@@ -126,7 +126,7 @@ class DatasetManager():
         
         
 if __name__ == "__main__":
-    manager = DatasetManager("44", "data/",["hardness" + str(i+1) for i in range(5)])
+    manager = DatasetManager("45", "data/",["hardness" + str(i+1) for i in range(5)])
     X,y = manager.get_raw_with_classes(["hardness1", "hardness3", "hardness4"])
     print(y[0:20])
     print(X.shape)
