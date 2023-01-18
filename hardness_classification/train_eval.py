@@ -156,7 +156,7 @@ def run_train_2_classify_three(model_creator, manager, save_path):
         f.write("--> test_acc " + str(acc) + "\n")
 
         for obj, data in predict_on_data:
-            dist = model.predict(X_comp)
+            dist = model.predict(data)
             choice = np.argmax(dist, axis = 1)
             prediction = np.zeros((choice.size, len(pair)))
             prediction[np.arange(choice.size), choice] = 1

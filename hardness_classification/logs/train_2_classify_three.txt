@@ -1,73 +1,64 @@
 =============================================
-Time: 1673988891.9183466
-Exp: train_2_classify_three
-Dataset ID: 45
---> Trained on ['hardness1', 'hardness2'] predict on ['hardness3', 'hardness4', 'hardness5']
---> test_loss 0.2334396243095398
---> test_acc 0.8421052694320679
---> Prediciton for hardness3 : [ 3. 42.]
---> Prediciton for hardness4 : [ 3. 42.]
---> Prediciton for hardness5 : [ 3. 42.]=============================================
-Time: 1673989117.5402634
+Time: 1674028586.5519724
 Exp: train_2_classify_three
 Dataset ID: 45
 ==> Trained on ['hardness1', 'hardness2'] predict on ['hardness3', 'hardness4', 'hardness5']
---> test_loss 0.6938292980194092
---> test_acc 0.4736842215061188
---> Prediction for hardness3 : [ 0. 45.]
---> Prediction for hardness4 : [ 0. 45.]
---> Prediction for hardness5 : [ 0. 45.]
+--> test_loss 0.793761670589447
+--> test_acc 0.8421052694320679
+--> Prediction for hardness3 : [10. 36.]
+--> Prediction for hardness4 : [27. 18.]
+--> Prediction for hardness5 : [22. 23.]
 ==> Trained on ['hardness1', 'hardness3'] predict on ['hardness2', 'hardness4', 'hardness5']
---> test_loss 0.3077230751514435
---> test_acc 0.8421052694320679
---> Prediction for hardness2 : [ 6. 39.]
---> Prediction for hardness4 : [ 6. 39.]
---> Prediction for hardness5 : [ 6. 39.]
-==> Trained on ['hardness1', 'hardness4'] predict on ['hardness2', 'hardness3', 'hardness5']
---> test_loss 1.0016865730285645
---> test_acc 0.7894737124443054
---> Prediction for hardness2 : [ 7. 38.]
---> Prediction for hardness3 : [ 7. 38.]
---> Prediction for hardness5 : [ 7. 38.]
-==> Trained on ['hardness1', 'hardness5'] predict on ['hardness2', 'hardness3', 'hardness4']
---> test_loss 0.7655050158500671
---> test_acc 0.5789473652839661
---> Prediction for hardness2 : [ 0. 45.]
---> Prediction for hardness3 : [ 0. 45.]
---> Prediction for hardness4 : [ 0. 45.]
-==> Trained on ['hardness2', 'hardness3'] predict on ['hardness1', 'hardness4', 'hardness5']
---> test_loss 0.451854407787323
---> test_acc 0.7894737124443054
---> Prediction for hardness1 : [ 1. 44.]
---> Prediction for hardness4 : [ 1. 44.]
+--> test_loss 0.26143351197242737
+--> test_acc 0.9473684430122375
+--> Prediction for hardness2 : [ 1. 45.]
+--> Prediction for hardness4 : [ 4. 41.]
 --> Prediction for hardness5 : [ 1. 44.]
-==> Trained on ['hardness2', 'hardness4'] predict on ['hardness1', 'hardness3', 'hardness5']
---> test_loss 1.0892057418823242
+==> Trained on ['hardness1', 'hardness4'] predict on ['hardness2', 'hardness3', 'hardness5']
+--> test_loss 0.4420730173587799
+--> test_acc 0.8947368264198303
+--> Prediction for hardness2 : [37.  9.]
+--> Prediction for hardness3 : [41.  5.]
+--> Prediction for hardness5 : [19. 26.]
+==> Trained on ['hardness1', 'hardness5'] predict on ['hardness2', 'hardness3', 'hardness4']
+--> test_loss 0.0008668097434565425
+--> test_acc 1.0
+--> Prediction for hardness2 : [43.  3.]
+--> Prediction for hardness3 : [31. 15.]
+--> Prediction for hardness4 : [ 1. 44.]
+==> Trained on ['hardness2', 'hardness3'] predict on ['hardness1', 'hardness4', 'hardness5']
+--> test_loss 0.6229548454284668
 --> test_acc 0.8421052694320679
---> Prediction for hardness1 : [ 4. 41.]
---> Prediction for hardness3 : [ 4. 41.]
---> Prediction for hardness5 : [ 4. 41.]
+--> Prediction for hardness1 : [38.  8.]
+--> Prediction for hardness4 : [39.  6.]
+--> Prediction for hardness5 : [21. 24.]
+==> Trained on ['hardness2', 'hardness4'] predict on ['hardness1', 'hardness3', 'hardness5']
+--> test_loss 0.19629234075546265
+--> test_acc 0.8947368264198303
+--> Prediction for hardness1 : [45.  1.]
+--> Prediction for hardness3 : [45.  1.]
+--> Prediction for hardness5 : [25. 20.]
 ==> Trained on ['hardness2', 'hardness5'] predict on ['hardness1', 'hardness3', 'hardness4']
---> test_loss 0.22600257396697998
---> test_acc 0.9473684430122375
---> Prediction for hardness1 : [26. 19.]
---> Prediction for hardness3 : [26. 19.]
---> Prediction for hardness4 : [26. 19.]
+--> test_loss 0.368708074092865
+--> test_acc 0.8421052694320679
+--> Prediction for hardness1 : [38.  8.]
+--> Prediction for hardness3 : [27. 19.]
+--> Prediction for hardness4 : [ 6. 39.]
 ==> Trained on ['hardness3', 'hardness4'] predict on ['hardness1', 'hardness2', 'hardness5']
---> test_loss 0.08178013563156128
---> test_acc 0.9473684430122375
---> Prediction for hardness1 : [13. 32.]
---> Prediction for hardness2 : [13. 32.]
---> Prediction for hardness5 : [13. 32.]
+--> test_loss 0.44448861479759216
+--> test_acc 0.8421052694320679
+--> Prediction for hardness1 : [34. 12.]
+--> Prediction for hardness2 : [39.  7.]
+--> Prediction for hardness5 : [21. 24.]
 ==> Trained on ['hardness3', 'hardness5'] predict on ['hardness1', 'hardness2', 'hardness4']
---> test_loss 0.3512348234653473
---> test_acc 0.9473684430122375
---> Prediction for hardness1 : [ 8. 37.]
---> Prediction for hardness2 : [ 8. 37.]
---> Prediction for hardness4 : [ 8. 37.]
+--> test_loss 1.745105504989624
+--> test_acc 0.8421052694320679
+--> Prediction for hardness1 : [22. 24.]
+--> Prediction for hardness2 : [30. 16.]
+--> Prediction for hardness4 : [10. 35.]
 ==> Trained on ['hardness4', 'hardness5'] predict on ['hardness1', 'hardness2', 'hardness3']
---> test_loss 0.8441054821014404
---> test_acc 0.8888888955116272
---> Prediction for hardness1 : [ 5. 41.]
---> Prediction for hardness2 : [ 5. 41.]
---> Prediction for hardness3 : [ 5. 41.]
+--> test_loss 0.09299229830503464
+--> test_acc 1.0
+--> Prediction for hardness1 : [46.  0.]
+--> Prediction for hardness2 : [46.  0.]
+--> Prediction for hardness3 : [46.  0.]

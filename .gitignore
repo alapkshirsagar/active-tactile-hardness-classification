@@ -6,3 +6,4 @@ hardness_classification/__pycache__
 hardness_classification/data/
 *.h5
 *.npy
+*.png
