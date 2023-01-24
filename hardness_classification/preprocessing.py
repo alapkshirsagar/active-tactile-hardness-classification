@@ -6,7 +6,9 @@ import json
 import matplotlib.pyplot as plt
 
 SEQ_LENGTH = 5
-VISUALIZE_FRAME_SELECTION = False
+VISUALIZE_FRAME_SELECTION = True
+SELECT_ON_VISUAL_CUES = True
+EXCLUDE_CORRUPTED_DATA = True
 
 class DatasetManager():
     def __init__(self, id, path, classes):
@@ -15,7 +17,6 @@ class DatasetManager():
         self.storage = "processed_data/"
         self.encoder = LabelBinarizer()
         self.encoder.fit(classes)
-
 
 
     def __select_frames(self, frames, k, times = [], forces = [], id = 0):
@@ -34,18 +35,23 @@ class DatasetManager():
         max_deformation_index = np.argmax(distances)
         max_force_timestamp = forces[np.argmin(forces[:, 1]), 0]
         max_force_index = np.argmin(np.absolute(times - max_force_timestamp))
+        time_span = max_deformation_index - first_deformation_index
 
-        # time_span = max_deformation_index - first_deformation_index
-        indizes = [max_force_index - i for i in range(k)]
-        # indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
+        if SELECT_ON_VISUAL_CUES:
+            indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
+        else:
+            indizes = [max_force_index - i for i in range(k)]
 
         if VISUALIZE_FRAME_SELECTION:
             selected_frame_timestamps = times[indizes]
             plt.plot(forces[:, 0], forces[:, 1])
+            
+            if SELECT_ON_VISUAL_CUES:
+                plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
+                plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
+                
             plt.vlines(selected_frame_timestamps, np.min(forces[:, 1]), np.max(forces[:, 1]), "grey", label="Selected frames")
             plt.vlines(max_force_timestamp, np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum force timestamp")
-            # plt.vlines(times[first_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "green", label="First detected deformation")
-            # plt.vlines(times[max_deformation_index], np.min(forces[:, 1]), np.max(forces[:, 1]), "red", label="Maximum detected deformation")
             plt.xlabel("Time")
             plt.ylabel("Force on end-effector")
             plt.legend()
@@ -54,9 +60,15 @@ class DatasetManager():
             plt.cla()
             # input("Press Enter to continue...")
 
-
         return frames[indizes]
 
+
+    def __check_validity(self, forces):
+        timestamps = forces[:, 0]
+
+        time_between_timestamps = timestamps[1:] - timestamps[:-1]
+
+        return np.max(time_between_timestamps) < 100 # milliseconds
 
     
     def __get_frames_and_labels(self, path):
@@ -70,14 +82,15 @@ class DatasetManager():
             meta = None
             with open(join(meta_path, file),"r") as f:
                 meta = json.load(f)
-
-            Y.append(meta["object"])
-
-            frames = np.load(join(frames_path, meta["id"] + "_frames.npy"))
-            times = np.load(join(frames_path, meta["id"] + "_times.npy"))
             forces = np.load(join(forces_path, meta["id"] + ".npy"))
-            X.append(self.__select_frames(frames, SEQ_LENGTH, times, forces, meta["id"]))
-        
+
+            if (not EXCLUDE_CORRUPTED_DATA) or self.__check_validity(forces):
+                Y.append(meta["object"])
+                frames = np.load(join(frames_path, meta["id"] + "_frames.npy"))
+                times = np.load(join(frames_path, meta["id"] + "_times.npy"))
+                X.append(self.__select_frames(frames, SEQ_LENGTH, times, forces, meta["id"]))
+            else:
+                print("Data point " + str(meta["id"]) + " looks corrupted and is excluded.")
 
         X = np.array(X)
         y = self.encoder.transform(Y) # One hot encoding is in alphabetical order of string labels
@@ -106,6 +119,7 @@ class DatasetManager():
 
         return X,y
 
+
     def get_raw_with_classes(self, classes):
         X,y = self.get_raw()
         labels = self.encoder.transform(classes)
@@ -122,12 +136,10 @@ class DatasetManager():
 
         return np.array(X_out), np.array(y_out)
 
-
-        
         
 if __name__ == "__main__":
-    manager = DatasetManager("45", "data/",["hardness" + str(i+1) for i in range(5)])
+    manager = DatasetManager("46", "data/",["hardness" + str(i+1) for i in range(5)])
     X,y = manager.get_raw_with_classes(["hardness1", "hardness3", "hardness4"])
-    print(y[0:20])
-    print(X.shape)
-    print(y.shape)
+    # print(y[0:20])
+    print("Shape of X: " + str(X.shape))
+    print("Shape of y: " + str(y.shape))
