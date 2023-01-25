@@ -5,6 +5,7 @@ Explaination of Gelsight sensor
 Key Goals (depending on what works):
 -> Sample efficent hardness Classification:
     -> Generic Network can learn different hardnesses without any prior works (Plug and Play)
+      (3), Pretrain with full and augment with edge.
     -> Choose sample with most similar hardness (see Cognitive Science Exp.)
 
 
@@ -17,8 +18,10 @@ Methods:
     -> Simularity network  (Siamise Network) (TODO)
 -> Different Loss Functions:
     -> Categorical cross entropy
-    -> Ordinal categorical cross entropy
+    -> Ordinal categorical cross entropy (1)
 
+-> Make it a regression problem (linear assumption on training hardnesses, but assumes order of samples)
+    (2)
 
 References:
 List of Relevant Papers:
