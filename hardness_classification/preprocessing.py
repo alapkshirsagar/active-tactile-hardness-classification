@@ -55,7 +55,7 @@ class DatasetManager():
             plt.xlabel("Time")
             plt.ylabel("Force on end-effector")
             plt.legend()
-            # plt.show()
+            plt.show()
             plt.savefig(join(id))
             plt.cla()
             # input("Press Enter to continue...")

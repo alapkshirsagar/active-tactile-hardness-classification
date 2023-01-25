@@ -18,7 +18,6 @@ manager = DatasetManager("42", "data/", ["hardness" + str(i + 1) for i in range(
 model = load_model("ConvLSTM.h5")
 
 X,y = manager.get_raw()
-
 y_hat = model.predict(X)
 
 print(y_hat.shape)
