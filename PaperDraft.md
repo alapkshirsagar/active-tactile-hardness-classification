@@ -8,12 +8,16 @@ Key Goals (depending on what works):
     -> Choose sample with most similar hardness (see Cognitive Science Exp.)
 
 
+
 Methods:
 -> Frame Selection (different approches if relevant)
 -> Network Architectures:
     -> CNN LSTM
-    -> 3D Convolutional Neural Network (TODO)
+    -> 3D Convolutional Neural Network
     -> Simularity network  (Siamise Network) (TODO)
+-> Different Loss Functions:
+    -> Categorical cross entropy
+    -> Ordinal categorical cross entropy
 
 
 References:
