@@ -1,0 +1,24 @@
+====================================================
+Wed Jan 25 15:46:25 2023
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/2d890377-61f8-497c-be54-0a37d1f2ea47.h5
+
+Number of Datapoints per class[34 41 34 35 38]
+====================================================
+Wed Jan 25 15:52:06 2023
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/99b34890-c8ac-4bb5-8f15-d51036339d79.h5
+
+Number of Datapoints per class[34 41 34 35 38]
+test_lost, test_acc = [0.05979829281568527, 1.0]
+Confusion Matrix on full data dataset
+tf.Tensor(
+[[46  0  0  0  0]
+ [ 0 46  0  0  0]
+ [ 0  0 46  0  0]
+ [ 0  0  2 43  0]
+ [ 0  0  1  0 44]], shape=(5, 5), dtype=int32)

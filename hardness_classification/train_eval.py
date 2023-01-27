@@ -12,40 +12,68 @@ import itertools
 from tensorflow.math import confusion_matrix
 
 from time import time
+from log import Logger
+
+import uuid
+
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
+MODEL_DUMP_PATH = "model_dumps/"
+LOG_PATH = "logs/"
 
 
 
 def run_on_full_dataset(model_creator, manager, save_path):
+    lossfunction = "categorical_crossentropy"
+    logger = Logger(join(LOG_PATH, "full.txt"),
+        time(),DATASET_ID,"full_dataset",
+        model_creator.__name__,
+        join(MODEL_DUMP_PATH, 
+        str(uuid.uuid4()) + ".h5"),
+        lossfunction=lossfunction)
+
     X,y = manager.get_raw()
     input_shape = X.shape[1:]
     num_classes = y.shape[1]
     model = model_creator(input_shape, num_classes)
 
     X_train, X_test, y_train, y_test = train_test_split(X,y, test_size = .2, random_state = 42)
-    print("Number of Datapoints per class",y_train.sum(axis = 0))
+    logger.log("Number of Datapoints per class" + str(y_train.sum(axis = 0)))
 
-    stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 100, mode = "max", restore_best_weights = True)
+    stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 30, mode = "max", restore_best_weights = True)
 
-    model.compile(loss = "categorical_crossentropy", optimizer = "rmsprop", metrics = ["accuracy"])
+    model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
     history = model.fit(
         X_train, y_train, epochs = 100, batch_size = 4,
         validation_split = 0.1,
         callbacks = [stop_callback]
     )
 
-    #model.save(save_path)
-
+    model.save(join(MODEL_DUMP_PATH, str(uuid.uuid4()) + ".h5"))
 
     results = model.evaluate(X_test, y_test, batch_size= 4)
-    print(results)
+    logger.log("test_lost, test_acc = " + str(results))
 
-    # TODO Print Confusion Matrix
+
+    y_hat = model.predict(X)
+    matrix = confusion_matrix(predictions = np.argmax(y_hat, axis = 1),labels = np.argmax(y, axis = 1))
+    logger.log("Confusion Matrix on full data dataset")
+    logger.log(matrix)
+
+
+    
 
 def run_leave_one_out(model_creator, manager, save_path):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
+
+    lossfunction = "categorical_crossentropy"
+    logger = Logger(join(LOG_PATH, "leave_on_out.txt"),
+        time(),DATASET_ID,"full_dataset",
+        model_creator.__name__,
+        "for save path see below",
+        lossfunction=lossfunction)
+
 
     for i in range(len(CLASSES)):
     
@@ -68,14 +96,16 @@ def run_leave_one_out(model_creator, manager, save_path):
 
         stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 30, mode = "max", restore_best_weights = True)
 
-        model.compile(loss = "categorical_crossentropy", optimizer = "rmsprop", metrics = ["accuracy"])
+        model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
         history = model.fit(
             X_train, y_train, epochs = 100, batch_size = 4,
             validation_split = 0.1,
             callbacks = [stop_callback]
         )
+
+        id = str(uuid.uuid4())
         try:
-            model.save(save_path + "without_" + comp_class + ".h5")
+            model.save(save_path + ".h5")
         except:
             print("could not write")
 
@@ -225,4 +255,4 @@ if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, "data/", CLASSES)
     # run_with_less_data(get_ConvLSTM, manager, "model_dumps/less_data/")
     
-    run_on_full_dataset(get_spatio_temporal_Conv, manager, "model_dumps/without_corrupted_full_dataset/")
+    run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")
