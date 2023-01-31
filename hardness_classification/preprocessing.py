@@ -11,9 +11,9 @@ SELECT_ON_VISUAL_CUES = True
 EXCLUDE_CORRUPTED_DATA = True
 
 class DatasetManager():
-    def __init__(self, id, path, classes):
+    def __init__(self, id, paths, classes):
         self.id = id
-        self.path = path
+        self.paths = paths
         self.storage = "processed_data/"
         self.encoder = LabelBinarizer()
         self.encoder.fit(classes)
@@ -55,7 +55,7 @@ class DatasetManager():
             plt.xlabel("Time")
             plt.ylabel("Force on end-effector")
             plt.legend()
-            plt.show()
+            # plt.show()
             plt.savefig(join(id))
             plt.cla()
             # input("Press Enter to continue...")
@@ -105,8 +105,23 @@ class DatasetManager():
             y = np.load(join(self.storage, self.id, "y_raw.npy"))
 
             return X,y
+
+        Xs = []
+        ys = []
+        for path in self.paths:
+            f_and_l = self.__get_frames_and_labels(path)
+            Xs.append(f_and_l[0])
+            ys.append(f_and_l[1])
         
-        X,y = self.__get_frames_and_labels(self.path)
+        X = []
+        y = []
+        for index in range(len(Xs)):
+            for i in range(Xs[index].shape[0]):
+                X.append(Xs[index][i, :, :, :])
+                y.append(ys[index][i, :])
+
+        X = np.array(X)
+        y = np.array(y)
 
         if not exists(join(self.storage, self.id)):
             os.mkdir(join(self.storage, self.id))
@@ -138,8 +153,8 @@ class DatasetManager():
 
         
 if __name__ == "__main__":
-    manager = DatasetManager("46", "data/",["hardness" + str(i+1) for i in range(5)])
-    X,y = manager.get_raw_with_classes(["hardness1", "hardness3", "hardness4"])
+    manager = DatasetManager("no_noise__visual_selection__filtered", ["data/data_no_noise/"], ["hardness" + str(i+1) for i in range(5)])
+    X,y = manager.get_raw_with_classes(["hardness1", "hardness2", "hardness3", "hardness4", "hardness5"])
     # print(y[0:20])
     print("Shape of X: " + str(X.shape))
     print("Shape of y: " + str(y.shape))
