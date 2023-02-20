@@ -7,6 +7,43 @@ import cv2 as cv
 import matplotlib.animation as animation
 
 
+def sel_frames_gif(id):
+    k = 5
+    frames = np.load("/home/ip-hard/Projects/ip-hardness/hardness_classification/data/data_no_noise/frames/5c9954aa-3927-41f8-b698-2c1d06d31e45_frames.npy")
+
+    epsilon = 1400
+    neutral = frames[int(frames.shape[0] * .05)]
+    dis = lambda x: np.linalg.norm(x - neutral)
+    distances = np.array(list(map(dis,frames)))
+
+    first_deformation_index = np.argmax(distances > epsilon)
+    max_deformation_index = np.argmax(distances)
+    time_span = max_deformation_index - first_deformation_index
+
+
+    idx = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
+    sel_frames = frames[idx]
+
+    fig, ((ax0)) = plt.subplots(1, 1)
+    fig.set_size_inches(11, 9)
+    fig.tight_layout()
+    ax0.tick_params(bottom=False, left=False)
+    ax0.set(xticklabels=[]) 
+    ax0.set(yticklabels=[]) 
+
+    def animate(frame_num):
+        ax0.cla()
+        ax0.set_title("Frame " + str(frame_num))
+        ax0.imshow(sel_frames[frame_num, :, :, 0])
+    
+    ani = animation.FuncAnimation(fig, animate, range(sel_frames.shape[0]))
+    writergif = animation.PillowWriter(fps=2)
+    # writermp4 = animation.FFMpegWriter(fps=15)
+    ani.save("hello.gif", writer=writergif)
+    plt.close()
+    # plt.show()
+
+
 def visualize(id, meta):
     frames = np.load("data/frames/" + id + "_frames.npy")
     times = np.load("data/frames/" + id + "_times.npy")
@@ -69,6 +106,9 @@ def visualize(id, meta):
 
 
 if __name__ == "__main__":
+    sel_frames_gif("5c9954aa-3927-41f8-b698-2c1d06d31e45")
+    exit()
+    
     for file in os.listdir("data/meta/"):
         meta = None
         with open(join("data/meta/", file),"r") as f:
