@@ -8,3 +8,6 @@ hardness_classification/data/
 *.npy
 *.png
 *.gif
+*.zip
+tmp/
+data_collection/data/

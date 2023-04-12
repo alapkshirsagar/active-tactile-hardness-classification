@@ -29,7 +29,10 @@ class GridExplorer():
         #self.neutral_joints = [0.6118366520437153, 0.15716609762216865, -0.25319002091814896, -2.394232290291543, 0.029041619664173065, 2.5748198744888313, 1.1364431301769282]    # Calibration 25.11.2022
         #self.neutral_joints = [0.3707151330437521, 0.16326812298140542, -0.028099087464621014, -2.3989490835251646, 0.00702887462245093, 2.5924458934995864, 1.1128487507518794]    # Calibration 28.11.2022
         #self.neutral_joints = [0.37210778693148966, 0.28854662857557595, -0.02800002464495207, -2.39302845971585, 0.01651057972216312, 2.7108360546139134, 1.106010951997505]
-        self.neutral_joints = [0.3742012436992107, 0.3965798386015373, -0.027704081975832653, -2.373704329876077, 0.028091501702229765, 2.7978853032960225, 1.097400190761943]
+        #self.neutral_joints = [0.3742012436992107, 0.3965798386015373, -0.027704081975832653, -2.373704329876077, 0.028091501702229765, 2.7978853032960225, 1.097400190761943]
+        
+        #high position for new test objects
+        self.neutral_joints = [0.37087141247348876, 0.1417811051004933, -0.027766077848984373, -2.3990414049764155, 0.0059387914338375125, 2.5672801672813654, 1.1137218490452334]
         self.homing_motion = JointMotion(self.neutral_joints)
 
         self.cruise_speed = 0.1
@@ -72,7 +75,9 @@ class GridExplorer():
         
         push_constraint = MotionData().with_reaction(Reaction(Measure.ForceZ < -max_force, StopMotion()))
         after_push_constaint = MotionData().with_reaction(Reaction(Measure.ForceZ > 5000, StopMotion()))
-        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.05))
+        push_motion = LinearRelativeMotion(Affine(0.0, 0.0, -0.12))
+
+        print("bla")
 
         if record:
             recording = True
@@ -116,7 +121,7 @@ class GridExplorer():
 
 
         #video
-        path =  ["/home/ip-hard/Projects/ip-hardness/data/videos/", str(id), ".mov"]
+        path =  ["/home/ip-hard/Projects/ip-hardness/data_collection/data/videos/", str(id), ".mov"]
         fourcc = cv.VideoWriter_fourcc(*"XVID")
         out = cv.VideoWriter("".join(path) , fourcc, actual_framerate, (320,240), isColor = True)
         for f in frames:
@@ -151,7 +156,7 @@ class GridExplorer():
 
 
 
-        numerical =  np.loadtxt("tmp/numerical.txt")
+        numerical =  np.loadtxt("../tmp/numerical.txt")
         #forces
         with open("data/forces/" + str(id) + ".npy", 'wb') as f:
             np.save(f, numerical[:, [0,1]])
@@ -179,11 +184,11 @@ class GridExplorer():
 
 if __name__ == '__main__':
     test_object_pos = {
-        "hardness1": np.array([0,0]),
-        "hardness2": np.array([1,0]),
-        "hardness3": np.array([2,0]),
-        "hardness4": np.array([0,1]),
-        "hardness5": np.array([1,1])
+        "lego": np.array([0,0]),
+        "foam": np.array([1,0]),
+        #"hardness3": np.array([2,0]),
+        "banana": np.array([0,1]),
+        "ball": np.array([1,1])
         
     }
 
@@ -193,7 +198,7 @@ if __name__ == '__main__':
     min_force = 1
     max_force = 5
 
-    collection_epochs = 40
+    collection_epochs = 10
     
     exp = GridExplorer()
 
@@ -208,6 +213,5 @@ if __name__ == '__main__':
             vel = min_vel + np.random.random() * (max_vel - min_vel)
             exp.goto(test_object_pos[key])
             print(_, key, force, vel)
-            exp.push(force, vel = vel, noise = True, record = True, object_name= key)
+            exp.push(force, vel = vel, noise = False, record = True, object_name= key)
         exp.home()
-

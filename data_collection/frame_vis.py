@@ -63,18 +63,22 @@ def visualize(id, meta):
     ani = animation.FuncAnimation(fig, animate, range(frames.shape[0]))
     writergif = animation.PillowWriter(fps=15)
     # writermp4 = animation.FFMpegWriter(fps=15)
-    ani.save("".join(path), writer=writergif)
+    #ani.save("".join(path), writer=writergif)
+    
+    plt.show()
     plt.close()
-    # plt.show()
 
 
 if __name__ == "__main__":
     for file in os.listdir("data/meta/"):
-        meta = None
-        with open(join("data/meta/", file),"r") as f:
-            meta = json.load(f)
-        visualize(meta["id"], meta)
-        print("Visualized " + str(meta["id"]) + ".\n")
+        try:
+            meta = None
+            with open(join("data/meta/", file),"r") as f:
+                meta = json.load(f)
+            visualize(meta["id"], meta)
+            print("Visualized " + str(meta["id"]) + ".\n")
+        except:
+            pass
 
 
     # visualize("5c9954aa-3927-41f8-b698-2c1d06d31e45")
