@@ -1,19 +1,14 @@
 from preprocessing import *
 from models import *
 
-
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
-import numpy as np
-
-import itertools
-
-
 from tensorflow.math import confusion_matrix
-
+import numpy as np
+import itertools
 from time import time
+import datetime
 from log import Logger
-
 import uuid
 
 
@@ -26,11 +21,11 @@ LOG_PATH = "logs/"
 
 def run_on_full_dataset(model_creator, manager, save_path):
     lossfunction = "categorical_crossentropy"
+    model_save_path = save_path + datetime.datetime.fromtimestamp(time()).strftime('%d-%m-%Y_%H-%M-%S') + ".h5"
     logger = Logger(join(LOG_PATH, "full.txt"),
         time(),DATASET_ID,"full_dataset",
         model_creator.__name__,
-        join(MODEL_DUMP_PATH, 
-        str(uuid.uuid4()) + ".h5"),
+        model_save_path,
         lossfunction=lossfunction)
 
     X,y = manager.get_raw()
@@ -49,20 +44,20 @@ def run_on_full_dataset(model_creator, manager, save_path):
         validation_split = 0.1,
         callbacks = [stop_callback]
     )
+    try:
+        model.save(model_save_path)
+    except:
+        print("could not write")
 
-    model.save(join(MODEL_DUMP_PATH, str(uuid.uuid4()) + ".h5"))
 
     results = model.evaluate(X_test, y_test, batch_size= 4)
-    logger.log("test_lost, test_acc = " + str(results))
-
+    logger.log("test_loss, test_acc = " + str(results))
+    logger.log("Required epochs:" + str(len(history.history['loss'])))
 
     y_hat = model.predict(X)
     matrix = confusion_matrix(predictions = np.argmax(y_hat, axis = 1),labels = np.argmax(y, axis = 1))
     logger.log("Confusion Matrix on full data dataset")
     logger.log(matrix)
-
-
-    
 
 def run_leave_one_out(model_creator, manager, save_path):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
@@ -202,8 +197,14 @@ def run_train_2_classify_three(model_creator, manager, save_path):
         
 
 def run_with_less_data(model_creator, manager, save_path, samples_per_class = 10):
-    print("less data")
-  
+    lossfunction = "categorical_crossentropy"
+    model_save_path = save_path + datetime.datetime.fromtimestamp(time()).strftime('%d-%m-%Y_%H-%M-%S') + ".h5"
+    logger = Logger(join(LOG_PATH, "less_data.txt"),
+    time(),DATASET_ID,"less_data",
+    model_creator.__name__,
+    model_save_path,
+    lossfunction=lossfunction)
+
     X,y = manager.get_raw()
     input_shape = X.shape[1:]
     num_classes = y.shape[1]
@@ -211,39 +212,32 @@ def run_with_less_data(model_creator, manager, save_path, samples_per_class = 10
 
     train_size = (samples_per_class * len(CLASSES)) / X.shape[0] 
     
-    print(train_size)
-
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size= train_size, random_state = 42, stratify=y)
-    print("Number of Datapoints per class",y_train.sum(axis = 0))
+    logger.log("Number of Datapoints per class" + str(y_train.sum(axis = 0)))
 
-    print("1")
     stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 100, mode = "max", restore_best_weights = True)
-    print("2")
-    model.compile(loss = "categorical_crossentropy", optimizer = "rmsprop", metrics = ["accuracy"])
-    print("3")
+
+    model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
+
     history = model.fit(
         X_train, y_train, epochs = 100, batch_size = 4,
         validation_split = 0.1,
         callbacks = [stop_callback]
     )
-    print("4")
 
-    model.save(save_path + "less_data.h5")
-
-
-    y_hat = model.predict(X)
-
-    print(y_hat.shape)
-    print(y.shape)
-
-    matrix = confusion_matrix(predictions = np.argmax(y_hat, axis = 1),labels = np.argmax(y, axis = 1))
-    print("Confusion Matrix on less data dataset")
-    print(matrix)
-
-
+    try:
+        model.save(model_save_path)
+    except:
+        print("could not write")
 
     results = model.evaluate(X_test, y_test, batch_size= 4)
-    print(results)
+    logger.log("test_loss, test_acc = " + str(results))
+    logger.log("Required epochs:" + str(len(history.history['loss'])))\
+    
+    y_hat = model.predict(X)
+    matrix = confusion_matrix(predictions = np.argmax(y_hat, axis = 1),labels = np.argmax(y, axis = 1))
+    logger.log("Confusion Matrix on less data dataset")
+    logger.log(matrix)
 
 
 
@@ -252,7 +246,7 @@ def run_with_less_data(model_creator, manager, save_path, samples_per_class = 10
 
 if __name__ == "__main__":
     # print("Here we go")
-    manager = DatasetManager(DATASET_ID, "data/", CLASSES)
-    # run_with_less_data(get_ConvLSTM, manager, "model_dumps/less_data/")
+    manager = DatasetManager(DATASET_ID, ["/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/data_collection/data/IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data/"], CLASSES)
+    run_with_less_data(get_ConvLSTM, manager, "model_dumps/less_data/", samples_per_class=1)
     
-    run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")
+    # run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")

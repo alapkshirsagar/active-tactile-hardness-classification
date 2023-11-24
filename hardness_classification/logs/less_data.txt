@@ -1,0 +1,19 @@
+====================================================
+Fri Nov 24 16:27:34 2023
+Dataset: 42
+Experiment: less_data
+Model: get_ConvLSTM
+Model save file: model_dumps/less_data/24-11-2023_16-27-34.h5
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Number of Datapoints per class[10 10 10 10 10]
+test_loss, test_acc = [1.1175150871276855, 0.7018633484840393]
+Required epochs:100
+Confusion Matrix on less data dataset
+tf.Tensor(
+[[33  1  0  6  0]
+ [ 1 13  5 24  0]
+ [ 1  1 33  6  3]
+ [ 2  0  1 40  0]
+ [ 0  0  2  5 34]], shape=(5, 5), dtype=int32)

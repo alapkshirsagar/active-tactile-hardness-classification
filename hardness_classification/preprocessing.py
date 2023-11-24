@@ -23,7 +23,7 @@ class DatasetManager():
 
         frame_num = frames.shape[0]
 
-        neutral = frames[int(frame_num * .05)] # neural deformation before pressing
+        neutral = frames[int(frame_num * .05)] # neutral deformation before pressing
 
         dis = lambda x: np.linalg.norm( x- neutral)
         distances = np.array(list(map(dis,frames)))

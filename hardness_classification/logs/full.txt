@@ -14,7 +14,7 @@ Model: get_ConvLSTM
 Model save file: model_dumps/99b34890-c8ac-4bb5-8f15-d51036339d79.h5
 
 Number of Datapoints per class[34 41 34 35 38]
-test_lost, test_acc = [0.05979829281568527, 1.0]
+test_loss, test_acc = [0.05979829281568527, 1.0]
 Confusion Matrix on full data dataset
 tf.Tensor(
 [[46  0  0  0  0]
@@ -22,3 +22,58 @@ tf.Tensor(
  [ 0  0 46  0  0]
  [ 0  0  2 43  0]
  [ 0  0  1  0 44]], shape=(5, 5), dtype=int32)
+====================================================
+Fri Nov 24 15:11:48 2023
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/29aa2eaa-e771-4bcb-acbe-6b43baff6a61.h5
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Number of Datapoints per class[29 35 37 34 33]
+test_loss, test_acc = [0.6277225613594055, 0.8604651093482971]
+Confusion Matrix on full data dataset
+tf.Tensor(
+[[38  2  0  0  0]
+ [ 4 38  0  1  0]
+ [ 1  0 43  0  0]
+ [ 2  1  0 38  2]
+ [ 0  0  0  0 41]], shape=(5, 5), dtype=int32)
+====================================================
+Fri Nov 24 15:22:56 2023
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/5c3c5272-1e1d-4cc1-a856-9627c19b3f36.h5
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Number of Datapoints per class[29 35 37 34 33]
+test_lost, test_acc = [0.16579876840114594, 0.930232584476471]
+Confusion Matrix on full data dataset
+tf.Tensor(
+[[40  0  0  0  0]
+ [ 1 42  0  0  0]
+ [ 0  0 44  0  0]
+ [ 2  1  0 40  0]
+ [ 0  0  0  0 41]], shape=(5, 5), dtype=int32)
+====================================================
+Fri Nov 24 15:56:26 2023
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/2334685e-763c-49f6-a0e3-2451ac726004.h5
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Number of Datapoints per class[29 35 37 34 33]
+test_loss, test_acc = [0.10942301899194717, 0.9534883499145508]
+Required epochs:89
+Confusion Matrix on full data dataset
+tf.Tensor(
+[[40  0  0  0  0]
+ [ 0 42  1  0  0]
+ [ 0  0 44  0  0]
+ [ 2  0  0 41  0]
+ [ 0  0  0  0 41]], shape=(5, 5), dtype=int32)
