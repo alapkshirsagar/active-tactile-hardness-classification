@@ -4,6 +4,7 @@ from os.path import join, exists
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+import random
 
 SEQ_LENGTH = 5
 VISUALIZE_FRAME_SELECTION = True
@@ -135,19 +136,34 @@ class DatasetManager():
         return X,y
 
 
-    def get_raw_with_classes(self, classes):
+    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None):
         X,y = self.get_raw()
         labels = self.encoder.transform(classes)
+        # Create a list of indices and shuffle it if necessary
+        indices = list(range(y.shape[0]))
+        if shuffle:
+            random.seed(seed)
+            random.shuffle(indices)
 
 
         X_out = []
         y_out = []
+        # Initialize counters for each class
+        class_counts = {tuple(label): 0 for label in labels}
 
-        for i in range(y.shape[0]):  
-          if (labels == y[i,:]).all(axis = 1).any(axis = 0): # Weird way of checking if current label (y[i]) is in the list of selected labels (labels)
-                X_out.append(X[i])
-                y_out.append(y[i])
-
+        for i in indices:
+            # Get the current label
+            current_label = y[i, :]
+            # Check if current label is in the list of selected labels and the class count is less than the specified number
+            if (labels == current_label).all(axis=1).any(axis=0):
+                if class_counts[tuple(current_label)] < num_samples_per_class:
+                    X_out.append(X[i])
+                    y_out.append(y[i])
+                    # Increment the count for the current class
+                    class_counts[tuple(current_label)] += 1
+            # Break the loop if all classes have enough samples
+            if all(count >= num_samples_per_class for count in class_counts.values()):
+                break
 
         return np.array(X_out), np.array(y_out)
 

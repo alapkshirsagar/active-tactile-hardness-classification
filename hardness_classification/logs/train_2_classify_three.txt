@@ -62,3 +62,720 @@ Dataset ID: 45
 --> Prediction for hardness1 : [46.  0.]
 --> Prediction for hardness2 : [46.  0.]
 --> Prediction for hardness3 : [46.  0.]
+====================================================
+====================================================
+Mon Feb 26 14:47:04 2024
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/train_2_classify_three_26-02-2024_14-47-04
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Training samples per class: 10
+Validation samples per class: 10
+Test samples per class: 10
+Number of experiments: 10
+Run: 0
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 1, hardness1, hardness2, 1.00, 0.90, hardness3, 0.00, 1.00, 100.00
+0, 1, hardness1, hardness2, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+0, 1, hardness1, hardness2, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness2, 0.00, 1.00, 100.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness4, 1.00, 0.00, 0.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 3, hardness1, hardness4, 1.00, 0.75, hardness2, 0.00, 1.00, 0.00
+2, 3, hardness1, hardness4, 1.00, 0.75, hardness3, 0.00, 1.00, 100.00
+2, 3, hardness1, hardness4, 1.00, 0.75, hardness5, 0.00, 1.00, 100.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 5, hardness2, hardness3, 0.90, 0.80, hardness1, 1.00, 0.00, 100.00
+4, 5, hardness2, hardness3, 0.90, 0.80, hardness4, 1.00, 0.00, 0.00
+4, 5, hardness2, hardness3, 0.90, 0.80, hardness5, 0.00, 1.00, 100.00
+5, 6, hardness2, hardness4, 0.90, 0.70, hardness1, 1.00, 0.00, 100.00
+5, 6, hardness2, hardness4, 0.90, 0.70, hardness3, 1.00, 0.00, 100.00
+5, 6, hardness2, hardness4, 0.90, 0.70, hardness5, 1.00, 0.00, 0.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 8, hardness3, hardness4, 1.00, 0.85, hardness1, 1.00, 0.00, 100.00
+7, 8, hardness3, hardness4, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+7, 8, hardness3, hardness4, 1.00, 0.85, hardness5, 1.00, 0.00, 0.00
+8, 9, hardness3, hardness5, 1.00, 0.90, hardness1, 0.00, 1.00, 0.00
+8, 9, hardness3, hardness5, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+8, 9, hardness3, hardness5, 1.00, 0.90, hardness4, 1.00, 0.00, 0.00
+9, 10, hardness4, hardness5, 1.00, 0.85, hardness1, 1.00, 0.00, 100.00
+9, 10, hardness4, hardness5, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+9, 10, hardness4, hardness5, 1.00, 0.85, hardness3, 0.00, 1.00, 0.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 1, 1: 1, 2: 1, 3: 2, 4: 2, 5: 2, 6: 3, 7: 3, 8: 3, 9: 4, 10: 4, 11: 4, 12: 5, 13: 5, 14: 5, 15: 6, 16: 6, 17: 6, 18: 7, 19: 7, 20: 7, 21: 8, 22: 8, 23: 8, 24: 9, 25: 9, 26: 9, 27: 10, 28: 10, 29: 10}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8999999761581421, 13: 0.8999999761581421, 14: 0.8999999761581421, 15: 0.8999999761581421, 16: 0.8999999761581421, 17: 0.8999999761581421, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.8999999761581421, 1: 0.8999999761581421, 2: 0.8999999761581421, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.75, 7: 0.75, 8: 0.75, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.800000011920929, 13: 0.800000011920929, 14: 0.800000011920929, 15: 0.699999988079071, 16: 0.699999988079071, 17: 0.699999988079071, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.8500000238418579, 22: 0.8500000238418579, 23: 0.8500000238418579, 24: 0.8999999761581421, 25: 0.8999999761581421, 26: 0.8999999761581421, 27: 0.8500000238418579, 28: 0.8500000238418579, 29: 0.8500000238418579}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 1.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 0.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 1.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 1.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 0.0, 5: 100.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 0.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 0.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 0.0}}
+Average accuracy:63.333333333333336
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.166667   0.166667   0.166667
+hardness2   0.166667   0.000000   0.500000   0.333333   0.000000
+hardness3   0.166667   0.500000   0.000000   0.166667   0.166667
+hardness4   0.333333   0.500000   0.166667   0.000000   0.000000
+hardness5   0.000000   0.333333   0.500000   0.166667   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 1
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 2, hardness1, hardness2, 1.00, 0.75, hardness3, 1.00, 0.00, 0.00
+0, 2, hardness1, hardness2, 1.00, 0.75, hardness4, 0.00, 1.00, 100.00
+0, 2, hardness1, hardness2, 1.00, 0.75, hardness5, 0.00, 1.00, 100.00
+1, 4, hardness1, hardness3, 1.00, 0.95, hardness2, 1.00, 0.00, 0.00
+1, 4, hardness1, hardness3, 1.00, 0.95, hardness4, 0.00, 1.00, 100.00
+1, 4, hardness1, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness3, 1.00, 0.00, 0.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness5, 0.00, 1.00, 100.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 10, hardness2, hardness3, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+4, 10, hardness2, hardness3, 1.00, 0.90, hardness4, 1.00, 0.00, 0.00
+4, 10, hardness2, hardness3, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+5, 12, hardness2, hardness4, 0.95, 0.95, hardness1, 1.00, 0.00, 100.00
+5, 12, hardness2, hardness4, 0.95, 0.95, hardness3, 1.00, 0.00, 100.00
+5, 12, hardness2, hardness4, 0.95, 0.95, hardness5, 0.00, 1.00, 100.00
+6, 14, hardness2, hardness5, 0.50, 0.50, hardness1, 1.00, 0.00, 100.00
+6, 14, hardness2, hardness5, 0.50, 0.50, hardness3, 1.00, 0.00, 100.00
+6, 14, hardness2, hardness5, 0.50, 0.50, hardness4, 1.00, 0.00, 0.00
+7, 16, hardness3, hardness4, 0.80, 1.00, hardness1, 1.00, 0.00, 100.00
+7, 16, hardness3, hardness4, 0.80, 1.00, hardness2, 1.00, 0.00, 100.00
+7, 16, hardness3, hardness4, 0.80, 1.00, hardness5, 0.00, 1.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.70, hardness1, 1.00, 0.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.70, hardness2, 1.00, 0.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.70, hardness4, 0.00, 1.00, 100.00
+9, 20, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 20, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 20, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 2, 1: 2, 2: 2, 3: 4, 4: 4, 5: 4, 6: 6, 7: 6, 8: 6, 9: 8, 10: 8, 11: 8, 12: 10, 13: 10, 14: 10, 15: 12, 16: 12, 17: 12, 18: 14, 19: 14, 20: 14, 21: 16, 22: 16, 23: 16, 24: 18, 25: 18, 26: 18, 27: 20, 28: 20, 29: 20}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 0.5, 19: 0.5, 20: 0.5, 21: 0.800000011920929, 22: 0.800000011920929, 23: 0.800000011920929, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.75, 1: 0.75, 2: 0.75, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.8500000238418579, 7: 0.8500000238418579, 8: 0.8500000238418579, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8999999761581421, 13: 0.8999999761581421, 14: 0.8999999761581421, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 0.5, 19: 0.5, 20: 0.5, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.699999988079071, 25: 0.699999988079071, 26: 0.699999988079071, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 1.0, 1: 0.0, 2: 0.0, 3: 1.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 0.0, 24: 1.0, 25: 1.0, 26: 0.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 0.0, 1: 1.0, 2: 1.0, 3: 0.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 1.0, 24: 0.0, 25: 0.0, 26: 1.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 0.0, 1: 100.0, 2: 100.0, 3: 0.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 100.0, 24: 100.0, 25: 100.0, 26: 100.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:76.66666666666667
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.500000   0.000000   0.333333   0.166667   0.000000
+hardness3   0.500000   0.333333   0.000000   0.166667   0.000000
+hardness4   0.166667   0.500000   0.166667   0.000000   0.166667
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 2
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 3, hardness1, hardness2, 0.95, 0.90, hardness3, 0.00, 1.00, 100.00
+0, 3, hardness1, hardness2, 0.95, 0.90, hardness4, 0.00, 1.00, 100.00
+0, 3, hardness1, hardness2, 0.95, 0.90, hardness5, 0.00, 1.00, 100.00
+1, 6, hardness1, hardness3, 1.00, 0.90, hardness2, 1.00, 0.00, 0.00
+1, 6, hardness1, hardness3, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+1, 6, hardness1, hardness3, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+2, 9, hardness1, hardness4, 1.00, 0.90, hardness2, 0.00, 1.00, 0.00
+2, 9, hardness1, hardness4, 1.00, 0.90, hardness3, 0.00, 1.00, 100.00
+2, 9, hardness1, hardness4, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+3, 12, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 12, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 12, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 15, hardness2, hardness3, 0.95, 1.00, hardness1, 1.00, 0.00, 100.00
+4, 15, hardness2, hardness3, 0.95, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 15, hardness2, hardness3, 0.95, 1.00, hardness5, 0.00, 1.00, 100.00
+5, 18, hardness2, hardness4, 0.60, 0.40, hardness1, 0.00, 1.00, 0.00
+5, 18, hardness2, hardness4, 0.60, 0.40, hardness3, 0.00, 1.00, 0.00
+5, 18, hardness2, hardness4, 0.60, 0.40, hardness5, 0.00, 1.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 24, hardness3, hardness4, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+7, 24, hardness3, hardness4, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+7, 24, hardness3, hardness4, 1.00, 1.00, hardness5, 1.00, 0.00, 0.00
+8, 27, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 27, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 27, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 3, 1: 3, 2: 3, 3: 6, 4: 6, 5: 6, 6: 9, 7: 9, 8: 9, 9: 12, 10: 12, 11: 12, 12: 15, 13: 15, 14: 15, 15: 18, 16: 18, 17: 18, 18: 21, 19: 21, 20: 21, 21: 24, 22: 24, 23: 24, 24: 27, 25: 27, 26: 27, 27: 30, 28: 30, 29: 30}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 0.949999988079071, 1: 0.949999988079071, 2: 0.949999988079071, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.949999988079071, 13: 0.949999988079071, 14: 0.949999988079071, 15: 0.6000000238418579, 16: 0.6000000238418579, 17: 0.6000000238418579, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.8999999761581421, 1: 0.8999999761581421, 2: 0.8999999761581421, 3: 0.8999999761581421, 4: 0.8999999761581421, 5: 0.8999999761581421, 6: 0.8999999761581421, 7: 0.8999999761581421, 8: 0.8999999761581421, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.4000000059604645, 16: 0.4000000059604645, 17: 0.4000000059604645, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 1.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 0.0, 4: 100.0, 5: 100.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 0.0, 16: 0.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:66.66666666666667
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.333333   0.333333   0.333333        0.0
+hardness2   0.333333   0.000000   0.333333   0.333333        0.0
+hardness3   0.166667   0.333333   0.000000   0.500000        0.0
+hardness4   0.166667   0.500000   0.333333   0.000000        0.0
+hardness5   0.000000   0.166667   0.500000   0.333333        0.0
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 3
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness3, 0.00, 1.00, 100.00
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness4, 0.00, 1.00, 100.00
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness5, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.90, 0.95, hardness2, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.90, 0.95, hardness4, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.90, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 12, hardness1, hardness4, 0.90, 1.00, hardness2, 1.00, 0.00, 100.00
+2, 12, hardness1, hardness4, 0.90, 1.00, hardness3, 1.00, 0.00, 0.00
+2, 12, hardness1, hardness4, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness3, 0.00, 1.00, 100.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 20, hardness2, hardness3, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+4, 20, hardness2, hardness3, 0.90, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 20, hardness2, hardness3, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+5, 24, hardness2, hardness4, 0.95, 0.85, hardness1, 1.00, 0.00, 100.00
+5, 24, hardness2, hardness4, 0.95, 0.85, hardness3, 1.00, 0.00, 100.00
+5, 24, hardness2, hardness4, 0.95, 0.85, hardness5, 0.00, 1.00, 100.00
+6, 28, hardness2, hardness5, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 28, hardness2, hardness5, 0.90, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 28, hardness2, hardness5, 0.90, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness5, 1.00, 0.00, 0.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 4, 1: 4, 2: 4, 3: 8, 4: 8, 5: 8, 6: 12, 7: 12, 8: 12, 9: 16, 10: 16, 11: 16, 12: 20, 13: 20, 14: 20, 15: 24, 16: 24, 17: 24, 18: 28, 19: 28, 20: 28, 21: 32, 22: 32, 23: 32, 24: 36, 25: 36, 26: 36, 27: 40, 28: 40, 29: 40}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 0.6499999761581421, 1: 0.6499999761581421, 2: 0.6499999761581421, 3: 0.8999999761581421, 4: 0.8999999761581421, 5: 0.8999999761581421, 6: 0.8999999761581421, 7: 0.8999999761581421, 8: 0.8999999761581421, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8999999761581421, 13: 0.8999999761581421, 14: 0.8999999761581421, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 0.8999999761581421, 19: 0.8999999761581421, 20: 0.8999999761581421, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.3499999940395355, 1: 0.3499999940395355, 2: 0.3499999940395355, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.8500000238418579, 16: 0.8500000238418579, 17: 0.8500000238418579, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.949999988079071, 22: 0.949999988079071, 23: 0.949999988079071, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 0.0, 9: 1.0, 10: 0.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 1.0, 9: 0.0, 10: 1.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 100.0, 9: 100.0, 10: 100.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:80.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.166667   0.500000   0.000000   0.166667   0.166667
+hardness4   0.166667   0.500000   0.333333   0.000000   0.000000
+hardness5   0.000000   0.166667   0.500000   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 4
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 5, hardness1, hardness2, 0.85, 0.75, hardness3, 0.00, 1.00, 100.00
+0, 5, hardness1, hardness2, 0.85, 0.75, hardness4, 0.00, 1.00, 100.00
+0, 5, hardness1, hardness2, 0.85, 0.75, hardness5, 0.00, 1.00, 100.00
+1, 10, hardness1, hardness3, 0.95, 0.90, hardness2, 0.00, 1.00, 100.00
+1, 10, hardness1, hardness3, 0.95, 0.90, hardness4, 0.00, 1.00, 100.00
+1, 10, hardness1, hardness3, 0.95, 0.90, hardness5, 0.00, 1.00, 100.00
+2, 15, hardness1, hardness4, 0.95, 0.90, hardness2, 1.00, 0.00, 100.00
+2, 15, hardness1, hardness4, 0.95, 0.90, hardness3, 1.00, 0.00, 0.00
+2, 15, hardness1, hardness4, 0.95, 0.90, hardness5, 0.00, 1.00, 100.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness1, 1.00, 0.00, 100.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness4, 1.00, 0.00, 0.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness5, 0.00, 1.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness3, 1.00, 0.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+====================================================
+Mon Feb 26 16:12:43 2024
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/train_2_classify_three_26-02-2024_16-12-43
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Training samples per class: 10
+Validation samples per class: 10
+Test samples per class: 10
+Number of experiments: 10
+Run: 0
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 1, hardness1, hardness2, 1.00, 0.80, hardness3, 0.00, 1.00, 100.00
+0, 1, hardness1, hardness2, 1.00, 0.80, hardness4, 0.00, 1.00, 100.00
+0, 1, hardness1, hardness2, 1.00, 0.80, hardness5, 0.00, 1.00, 100.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness2, 0.00, 1.00, 100.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness4, 1.00, 0.00, 0.00
+1, 2, hardness1, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 3, hardness1, hardness4, 1.00, 0.80, hardness2, 0.00, 1.00, 0.00
+2, 3, hardness1, hardness4, 1.00, 0.80, hardness3, 0.00, 1.00, 100.00
+2, 3, hardness1, hardness4, 1.00, 0.80, hardness5, 0.00, 1.00, 100.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness3, 0.00, 1.00, 100.00
+3, 4, hardness1, hardness5, 1.00, 1.00, hardness4, 0.00, 1.00, 100.00
+4, 5, hardness2, hardness3, 0.60, 0.40, hardness1, 1.00, 0.00, 100.00
+4, 5, hardness2, hardness3, 0.60, 0.40, hardness4, 1.00, 0.00, 0.00
+4, 5, hardness2, hardness3, 0.60, 0.40, hardness5, 1.00, 0.00, 0.00
+5, 6, hardness2, hardness4, 0.95, 0.95, hardness1, 1.00, 0.00, 100.00
+5, 6, hardness2, hardness4, 0.95, 0.95, hardness3, 1.00, 0.00, 100.00
+5, 6, hardness2, hardness4, 0.95, 0.95, hardness5, 1.00, 0.00, 0.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 7, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 8, hardness3, hardness4, 0.55, 0.45, hardness1, 1.00, 0.00, 100.00
+7, 8, hardness3, hardness4, 0.55, 0.45, hardness2, 1.00, 0.00, 100.00
+7, 8, hardness3, hardness4, 0.55, 0.45, hardness5, 1.00, 0.00, 0.00
+8, 9, hardness3, hardness5, 1.00, 0.85, hardness1, 0.00, 1.00, 0.00
+8, 9, hardness3, hardness5, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+8, 9, hardness3, hardness5, 1.00, 0.85, hardness4, 1.00, 0.00, 0.00
+9, 10, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 10, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 10, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 1, 1: 1, 2: 1, 3: 2, 4: 2, 5: 2, 6: 3, 7: 3, 8: 3, 9: 4, 10: 4, 11: 4, 12: 5, 13: 5, 14: 5, 15: 6, 16: 6, 17: 6, 18: 7, 19: 7, 20: 7, 21: 8, 22: 8, 23: 8, 24: 9, 25: 9, 26: 9, 27: 10, 28: 10, 29: 10}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.6000000238418579, 13: 0.6000000238418579, 14: 0.6000000238418579, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.550000011920929, 22: 0.550000011920929, 23: 0.550000011920929, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.800000011920929, 1: 0.800000011920929, 2: 0.800000011920929, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.800000011920929, 7: 0.800000011920929, 8: 0.800000011920929, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.4000000059604645, 13: 0.4000000059604645, 14: 0.4000000059604645, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.44999998807907104, 22: 0.44999998807907104, 23: 0.44999998807907104, 24: 0.8500000238418579, 25: 0.8500000238418579, 26: 0.8500000238418579, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 1.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 0.0, 11: 0.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 1.0, 11: 1.0, 12: 0.0, 13: 0.0, 14: 0.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 1.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 0.0, 5: 100.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 100.0, 11: 100.0, 12: 100.0, 13: 0.0, 14: 0.0, 15: 100.0, 16: 100.0, 17: 0.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 0.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:70.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000        0.5   0.166667   0.166667   0.166667
+hardness2   0.166667        0.0   0.500000   0.333333   0.000000
+hardness3   0.000000        0.5   0.000000   0.333333   0.166667
+hardness4   0.166667        0.5   0.166667   0.000000   0.166667
+hardness5   0.000000        0.5   0.333333   0.166667   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 1
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 2, hardness1, hardness2, 1.00, 0.85, hardness3, 0.00, 1.00, 100.00
+0, 2, hardness1, hardness2, 1.00, 0.85, hardness4, 0.00, 1.00, 100.00
+0, 2, hardness1, hardness2, 1.00, 0.85, hardness5, 0.00, 1.00, 100.00
+1, 4, hardness1, hardness3, 0.65, 0.65, hardness2, 1.00, 0.00, 0.00
+1, 4, hardness1, hardness3, 0.65, 0.65, hardness4, 1.00, 0.00, 0.00
+1, 4, hardness1, hardness3, 0.65, 0.65, hardness5, 1.00, 0.00, 0.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness3, 0.00, 1.00, 100.00
+2, 6, hardness1, hardness4, 1.00, 0.85, hardness5, 0.00, 1.00, 100.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 8, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 10, hardness2, hardness3, 0.95, 0.85, hardness1, 1.00, 0.00, 100.00
+4, 10, hardness2, hardness3, 0.95, 0.85, hardness4, 1.00, 0.00, 0.00
+4, 10, hardness2, hardness3, 0.95, 0.85, hardness5, 0.00, 1.00, 100.00
+5, 12, hardness2, hardness4, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+5, 12, hardness2, hardness4, 1.00, 0.95, hardness3, 1.00, 0.00, 100.00
+5, 12, hardness2, hardness4, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+6, 14, hardness2, hardness5, 0.40, 0.50, hardness1, 0.00, 1.00, 0.00
+6, 14, hardness2, hardness5, 0.40, 0.50, hardness3, 0.00, 1.00, 0.00
+6, 14, hardness2, hardness5, 0.40, 0.50, hardness4, 0.00, 1.00, 100.00
+7, 16, hardness3, hardness4, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+7, 16, hardness3, hardness4, 0.90, 1.00, hardness2, 1.00, 0.00, 100.00
+7, 16, hardness3, hardness4, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+8, 18, hardness3, hardness5, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+9, 20, hardness4, hardness5, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 20, hardness4, hardness5, 0.90, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 20, hardness4, hardness5, 0.90, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 2, 1: 2, 2: 2, 3: 4, 4: 4, 5: 4, 6: 6, 7: 6, 8: 6, 9: 8, 10: 8, 11: 8, 12: 10, 13: 10, 14: 10, 15: 12, 16: 12, 17: 12, 18: 14, 19: 14, 20: 14, 21: 16, 22: 16, 23: 16, 24: 18, 25: 18, 26: 18, 27: 20, 28: 20, 29: 20}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.6499999761581421, 4: 0.6499999761581421, 5: 0.6499999761581421, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.949999988079071, 13: 0.949999988079071, 14: 0.949999988079071, 15: 1.0, 16: 1.0, 17: 1.0, 18: 0.4000000059604645, 19: 0.4000000059604645, 20: 0.4000000059604645, 21: 0.8999999761581421, 22: 0.8999999761581421, 23: 0.8999999761581421, 24: 1.0, 25: 1.0, 26: 1.0, 27: 0.8999999761581421, 28: 0.8999999761581421, 29: 0.8999999761581421}, 'val_acc': {0: 0.8500000238418579, 1: 0.8500000238418579, 2: 0.8500000238418579, 3: 0.6499999761581421, 4: 0.6499999761581421, 5: 0.6499999761581421, 6: 0.8500000238418579, 7: 0.8500000238418579, 8: 0.8500000238418579, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8500000238418579, 13: 0.8500000238418579, 14: 0.8500000238418579, 15: 0.949999988079071, 16: 0.949999988079071, 17: 0.949999988079071, 18: 0.5, 19: 0.5, 20: 0.5, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.8999999761581421, 25: 0.8999999761581421, 26: 0.8999999761581421, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 1.0, 22: 1.0, 23: 0.0, 24: 1.0, 25: 1.0, 26: 0.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.0, 22: 0.0, 23: 1.0, 24: 0.0, 25: 0.0, 26: 1.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 100.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 0.0, 19: 0.0, 20: 100.0, 21: 100.0, 22: 100.0, 23: 100.0, 24: 100.0, 25: 100.0, 26: 100.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:73.33333333333333
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.333333   0.333333   0.166667   0.166667
+hardness2   0.500000   0.000000   0.333333   0.166667   0.000000
+hardness3   0.166667   0.333333   0.000000   0.333333   0.166667
+hardness4   0.333333   0.333333   0.000000   0.000000   0.333333
+hardness5   0.166667   0.166667   0.166667   0.500000   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 2
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 3, hardness1, hardness2, 1.00, 0.90, hardness3, 0.00, 1.00, 100.00
+0, 3, hardness1, hardness2, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+0, 3, hardness1, hardness2, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+1, 6, hardness1, hardness3, 1.00, 1.00, hardness2, 0.00, 1.00, 100.00
+1, 6, hardness1, hardness3, 1.00, 1.00, hardness4, 0.00, 1.00, 100.00
+1, 6, hardness1, hardness3, 1.00, 1.00, hardness5, 0.00, 1.00, 100.00
+2, 9, hardness1, hardness4, 1.00, 0.85, hardness2, 0.00, 1.00, 0.00
+2, 9, hardness1, hardness4, 1.00, 0.85, hardness3, 0.00, 1.00, 100.00
+2, 9, hardness1, hardness4, 1.00, 0.85, hardness5, 0.00, 1.00, 100.00
+3, 12, hardness1, hardness5, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+3, 12, hardness1, hardness5, 1.00, 0.90, hardness3, 1.00, 0.00, 0.00
+3, 12, hardness1, hardness5, 1.00, 0.90, hardness4, 1.00, 0.00, 0.00
+4, 15, hardness2, hardness3, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+4, 15, hardness2, hardness3, 1.00, 0.95, hardness4, 1.00, 0.00, 0.00
+4, 15, hardness2, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+5, 18, hardness2, hardness4, 0.70, 0.60, hardness1, 0.00, 1.00, 0.00
+5, 18, hardness2, hardness4, 0.70, 0.60, hardness3, 0.00, 1.00, 0.00
+5, 18, hardness2, hardness4, 0.70, 0.60, hardness5, 0.00, 1.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 0.90, hardness3, 1.00, 0.00, 100.00
+6, 21, hardness2, hardness5, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+7, 24, hardness3, hardness4, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+7, 24, hardness3, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+7, 24, hardness3, hardness4, 1.00, 0.95, hardness5, 1.00, 0.00, 0.00
+8, 27, hardness3, hardness5, 0.55, 0.45, hardness1, 1.00, 0.00, 100.00
+8, 27, hardness3, hardness5, 0.55, 0.45, hardness2, 1.00, 0.00, 100.00
+8, 27, hardness3, hardness5, 0.55, 0.45, hardness4, 1.00, 0.00, 0.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 30, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 3, 1: 3, 2: 3, 3: 6, 4: 6, 5: 6, 6: 9, 7: 9, 8: 9, 9: 12, 10: 12, 11: 12, 12: 15, 13: 15, 14: 15, 15: 18, 16: 18, 17: 18, 18: 21, 19: 21, 20: 21, 21: 24, 22: 24, 23: 24, 24: 27, 25: 27, 26: 27, 27: 30, 28: 30, 29: 30}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.699999988079071, 16: 0.699999988079071, 17: 0.699999988079071, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.550000011920929, 25: 0.550000011920929, 26: 0.550000011920929, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.8999999761581421, 1: 0.8999999761581421, 2: 0.8999999761581421, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.8500000238418579, 7: 0.8500000238418579, 8: 0.8500000238418579, 9: 0.8999999761581421, 10: 0.8999999761581421, 11: 0.8999999761581421, 12: 0.949999988079071, 13: 0.949999988079071, 14: 0.949999988079071, 15: 0.6000000238418579, 16: 0.6000000238418579, 17: 0.6000000238418579, 18: 0.8999999761581421, 19: 0.8999999761581421, 20: 0.8999999761581421, 21: 0.949999988079071, 22: 0.949999988079071, 23: 0.949999988079071, 24: 0.44999998807907104, 25: 0.44999998807907104, 26: 0.44999998807907104, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 0.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 1.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 0.0, 16: 0.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 100.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:73.33333333333333
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.333333   0.333333   0.333333   0.000000
+hardness2   0.166667   0.000000   0.500000   0.333333   0.000000
+hardness3   0.166667   0.333333   0.000000   0.500000   0.000000
+hardness4   0.166667   0.333333   0.333333   0.000000   0.166667
+hardness5   0.000000   0.166667   0.500000   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 3
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness3, 0.00, 1.00, 100.00
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness4, 0.00, 1.00, 100.00
+0, 4, hardness1, hardness2, 0.65, 0.35, hardness5, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.95, 0.95, hardness2, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.95, 0.95, hardness4, 0.00, 1.00, 100.00
+1, 8, hardness1, hardness3, 0.95, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 12, hardness1, hardness4, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+2, 12, hardness1, hardness4, 1.00, 0.90, hardness3, 1.00, 0.00, 0.00
+2, 12, hardness1, hardness4, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 16, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 20, hardness2, hardness3, 0.85, 0.80, hardness1, 1.00, 0.00, 100.00
+4, 20, hardness2, hardness3, 0.85, 0.80, hardness4, 1.00, 0.00, 0.00
+4, 20, hardness2, hardness3, 0.85, 0.80, hardness5, 0.00, 1.00, 100.00
+5, 24, hardness2, hardness4, 1.00, 0.75, hardness1, 1.00, 0.00, 100.00
+5, 24, hardness2, hardness4, 1.00, 0.75, hardness3, 1.00, 0.00, 100.00
+5, 24, hardness2, hardness4, 1.00, 0.75, hardness5, 0.00, 1.00, 100.00
+6, 28, hardness2, hardness5, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+6, 28, hardness2, hardness5, 1.00, 0.95, hardness3, 1.00, 0.00, 100.00
+6, 28, hardness2, hardness5, 1.00, 0.95, hardness4, 0.00, 1.00, 100.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+7, 32, hardness3, hardness4, 1.00, 0.95, hardness5, 1.00, 0.00, 0.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 36, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 40, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 4, 1: 4, 2: 4, 3: 8, 4: 8, 5: 8, 6: 12, 7: 12, 8: 12, 9: 16, 10: 16, 11: 16, 12: 20, 13: 20, 14: 20, 15: 24, 16: 24, 17: 24, 18: 28, 19: 28, 20: 28, 21: 32, 22: 32, 23: 32, 24: 36, 25: 36, 26: 36, 27: 40, 28: 40, 29: 40}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 0.6499999761581421, 1: 0.6499999761581421, 2: 0.6499999761581421, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8500000238418579, 13: 0.8500000238418579, 14: 0.8500000238418579, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.3499999940395355, 1: 0.3499999940395355, 2: 0.3499999940395355, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.8999999761581421, 7: 0.8999999761581421, 8: 0.8999999761581421, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.800000011920929, 13: 0.800000011920929, 14: 0.800000011920929, 15: 0.75, 16: 0.75, 17: 0.75, 18: 0.949999988079071, 19: 0.949999988079071, 20: 0.949999988079071, 21: 0.949999988079071, 22: 0.949999988079071, 23: 0.949999988079071, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 0.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 1.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 100.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:80.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.333333   0.500000   0.000000   0.166667   0.000000
+hardness4   0.166667   0.333333   0.333333   0.000000   0.166667
+hardness5   0.000000   0.166667   0.500000   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 4
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 5, hardness1, hardness2, 0.95, 0.60, hardness3, 0.00, 1.00, 100.00
+0, 5, hardness1, hardness2, 0.95, 0.60, hardness4, 0.00, 1.00, 100.00
+0, 5, hardness1, hardness2, 0.95, 0.60, hardness5, 0.00, 1.00, 100.00
+1, 10, hardness1, hardness3, 0.90, 0.95, hardness2, 1.00, 0.00, 0.00
+1, 10, hardness1, hardness3, 0.90, 0.95, hardness4, 0.00, 1.00, 100.00
+1, 10, hardness1, hardness3, 0.90, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 15, hardness1, hardness4, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+2, 15, hardness1, hardness4, 1.00, 0.90, hardness3, 1.00, 0.00, 0.00
+2, 15, hardness1, hardness4, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 20, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness1, 1.00, 0.00, 100.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness4, 1.00, 0.00, 0.00
+4, 25, hardness2, hardness3, 1.00, 0.55, hardness5, 0.00, 1.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness3, 1.00, 0.00, 100.00
+5, 30, hardness2, hardness4, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 35, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 40, hardness3, hardness4, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+7, 40, hardness3, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+7, 40, hardness3, hardness4, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+8, 45, hardness3, hardness5, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+8, 45, hardness3, hardness5, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+8, 45, hardness3, hardness5, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+9, 50, hardness4, hardness5, 1.00, 0.70, hardness1, 1.00, 0.00, 100.00
+9, 50, hardness4, hardness5, 1.00, 0.70, hardness2, 1.00, 0.00, 100.00
+9, 50, hardness4, hardness5, 1.00, 0.70, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 5, 1: 5, 2: 5, 3: 10, 4: 10, 5: 10, 6: 15, 7: 15, 8: 15, 9: 20, 10: 20, 11: 20, 12: 25, 13: 25, 14: 25, 15: 30, 16: 30, 17: 30, 18: 35, 19: 35, 20: 35, 21: 40, 22: 40, 23: 40, 24: 45, 25: 45, 26: 45, 27: 50, 28: 50, 29: 50}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 0.949999988079071, 1: 0.949999988079071, 2: 0.949999988079071, 3: 0.8999999761581421, 4: 0.8999999761581421, 5: 0.8999999761581421, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.8999999761581421, 16: 0.8999999761581421, 17: 0.8999999761581421, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.6000000238418579, 1: 0.6000000238418579, 2: 0.6000000238418579, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.8999999761581421, 7: 0.8999999761581421, 8: 0.8999999761581421, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.550000011920929, 13: 0.550000011920929, 14: 0.550000011920929, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.949999988079071, 22: 0.949999988079071, 23: 0.949999988079071, 24: 0.8999999761581421, 25: 0.8999999761581421, 26: 0.8999999761581421, 27: 0.699999988079071, 28: 0.699999988079071, 29: 0.699999988079071}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 1.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 0.0, 24: 1.0, 25: 1.0, 26: 0.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 1.0, 24: 0.0, 25: 0.0, 26: 1.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 0.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 100.0, 24: 100.0, 25: 100.0, 26: 100.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:80.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.500000   0.000000   0.333333   0.166667   0.000000
+hardness3   0.333333   0.500000   0.000000   0.166667   0.000000
+hardness4   0.166667   0.500000   0.166667   0.000000   0.166667
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 5
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 6, hardness1, hardness2, 1.00, 0.85, hardness3, 0.00, 1.00, 100.00
+0, 6, hardness1, hardness2, 1.00, 0.85, hardness4, 0.00, 1.00, 100.00
+0, 6, hardness1, hardness2, 1.00, 0.85, hardness5, 0.00, 1.00, 100.00
+1, 12, hardness1, hardness3, 1.00, 1.00, hardness2, 0.00, 1.00, 100.00
+1, 12, hardness1, hardness3, 1.00, 1.00, hardness4, 0.00, 1.00, 100.00
+1, 12, hardness1, hardness3, 1.00, 1.00, hardness5, 0.00, 1.00, 100.00
+2, 18, hardness1, hardness4, 1.00, 0.90, hardness2, 0.00, 1.00, 0.00
+2, 18, hardness1, hardness4, 1.00, 0.90, hardness3, 0.00, 1.00, 100.00
+2, 18, hardness1, hardness4, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+3, 24, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 24, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 24, hardness1, hardness5, 1.00, 1.00, hardness4, 0.00, 1.00, 100.00
+4, 30, hardness2, hardness3, 0.85, 0.70, hardness1, 1.00, 0.00, 100.00
+4, 30, hardness2, hardness3, 0.85, 0.70, hardness4, 1.00, 0.00, 0.00
+4, 30, hardness2, hardness3, 0.85, 0.70, hardness5, 0.00, 1.00, 100.00
+5, 36, hardness2, hardness4, 0.85, 0.90, hardness1, 1.00, 0.00, 100.00
+5, 36, hardness2, hardness4, 0.85, 0.90, hardness3, 1.00, 0.00, 100.00
+5, 36, hardness2, hardness4, 0.85, 0.90, hardness5, 1.00, 0.00, 0.00
+6, 42, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 42, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 42, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 48, hardness3, hardness4, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+7, 48, hardness3, hardness4, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+7, 48, hardness3, hardness4, 1.00, 0.90, hardness5, 1.00, 0.00, 0.00
+8, 54, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 54, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 54, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 60, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 60, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 60, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 6, 1: 6, 2: 6, 3: 12, 4: 12, 5: 12, 6: 18, 7: 18, 8: 18, 9: 24, 10: 24, 11: 24, 12: 30, 13: 30, 14: 30, 15: 36, 16: 36, 17: 36, 18: 42, 19: 42, 20: 42, 21: 48, 22: 48, 23: 48, 24: 54, 25: 54, 26: 54, 27: 60, 28: 60, 29: 60}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.8500000238418579, 13: 0.8500000238418579, 14: 0.8500000238418579, 15: 0.8500000238418579, 16: 0.8500000238418579, 17: 0.8500000238418579, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.8500000238418579, 1: 0.8500000238418579, 2: 0.8500000238418579, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.8999999761581421, 7: 0.8999999761581421, 8: 0.8999999761581421, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.699999988079071, 13: 0.699999988079071, 14: 0.699999988079071, 15: 0.8999999761581421, 16: 0.8999999761581421, 17: 0.8999999761581421, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.8999999761581421, 22: 0.8999999761581421, 23: 0.8999999761581421, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 0.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 1.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 100.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 0.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:76.66666666666667
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.166667   0.000000   0.500000   0.333333   0.000000
+hardness3   0.166667   0.500000   0.000000   0.333333   0.000000
+hardness4   0.000000   0.500000   0.333333   0.000000   0.166667
+hardness5   0.000000   0.333333   0.500000   0.166667   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 6
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 7, hardness1, hardness2, 1.00, 0.75, hardness3, 0.00, 1.00, 100.00
+0, 7, hardness1, hardness2, 1.00, 0.75, hardness4, 1.00, 0.00, 0.00
+0, 7, hardness1, hardness2, 1.00, 0.75, hardness5, 0.00, 1.00, 100.00
+1, 14, hardness1, hardness3, 0.50, 0.50, hardness2, 1.00, 0.00, 0.00
+1, 14, hardness1, hardness3, 0.50, 0.50, hardness4, 1.00, 0.00, 0.00
+1, 14, hardness1, hardness3, 0.50, 0.50, hardness5, 1.00, 0.00, 0.00
+2, 21, hardness1, hardness4, 1.00, 0.95, hardness2, 0.00, 1.00, 0.00
+2, 21, hardness1, hardness4, 1.00, 0.95, hardness3, 0.00, 1.00, 100.00
+2, 21, hardness1, hardness4, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+3, 28, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 28, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 28, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 35, hardness2, hardness3, 1.00, 0.65, hardness1, 1.00, 0.00, 100.00
+4, 35, hardness2, hardness3, 1.00, 0.65, hardness4, 1.00, 0.00, 0.00
+4, 35, hardness2, hardness3, 1.00, 0.65, hardness5, 0.00, 1.00, 100.00
+5, 42, hardness2, hardness4, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+5, 42, hardness2, hardness4, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+5, 42, hardness2, hardness4, 1.00, 1.00, hardness5, 0.00, 1.00, 100.00
+6, 49, hardness2, hardness5, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+6, 49, hardness2, hardness5, 1.00, 0.95, hardness3, 1.00, 0.00, 100.00
+6, 49, hardness2, hardness5, 1.00, 0.95, hardness4, 1.00, 0.00, 0.00
+7, 56, hardness3, hardness4, 0.95, 0.85, hardness1, 1.00, 0.00, 100.00
+7, 56, hardness3, hardness4, 0.95, 0.85, hardness2, 1.00, 0.00, 100.00
+7, 56, hardness3, hardness4, 0.95, 0.85, hardness5, 1.00, 0.00, 0.00
+8, 63, hardness3, hardness5, 1.00, 0.45, hardness1, 0.00, 1.00, 0.00
+8, 63, hardness3, hardness5, 1.00, 0.45, hardness2, 0.00, 1.00, 0.00
+8, 63, hardness3, hardness5, 1.00, 0.45, hardness4, 0.00, 1.00, 100.00
+9, 70, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 70, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 70, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 7, 1: 7, 2: 7, 3: 14, 4: 14, 5: 14, 6: 21, 7: 21, 8: 21, 9: 28, 10: 28, 11: 28, 12: 35, 13: 35, 14: 35, 15: 42, 16: 42, 17: 42, 18: 49, 19: 49, 20: 49, 21: 56, 22: 56, 23: 56, 24: 63, 25: 63, 26: 63, 27: 70, 28: 70, 29: 70}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.5, 4: 0.5, 5: 0.5, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.949999988079071, 22: 0.949999988079071, 23: 0.949999988079071, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.75, 1: 0.75, 2: 0.75, 3: 0.5, 4: 0.5, 5: 0.5, 6: 0.949999988079071, 7: 0.949999988079071, 8: 0.949999988079071, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.6499999761581421, 13: 0.6499999761581421, 14: 0.6499999761581421, 15: 1.0, 16: 1.0, 17: 1.0, 18: 0.949999988079071, 19: 0.949999988079071, 20: 0.949999988079071, 21: 0.8500000238418579, 22: 0.8500000238418579, 23: 0.8500000238418579, 24: 0.44999998807907104, 25: 0.44999998807907104, 26: 0.44999998807907104, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 1.0, 2: 0.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 0.0, 2: 1.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 0.0, 2: 100.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 100.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:60.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.166667   0.166667   0.166667
+hardness2   0.333333   0.000000   0.166667   0.333333   0.166667
+hardness3   0.166667   0.500000   0.000000   0.333333   0.000000
+hardness4   0.500000   0.333333   0.000000   0.000000   0.166667
+hardness5   0.166667   0.166667   0.333333   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 7
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 8, hardness1, hardness2, 0.85, 0.75, hardness3, 0.00, 1.00, 100.00
+0, 8, hardness1, hardness2, 0.85, 0.75, hardness4, 0.00, 1.00, 100.00
+0, 8, hardness1, hardness2, 0.85, 0.75, hardness5, 0.00, 1.00, 100.00
+1, 16, hardness1, hardness3, 1.00, 0.95, hardness2, 1.00, 0.00, 0.00
+1, 16, hardness1, hardness3, 1.00, 0.95, hardness4, 1.00, 0.00, 0.00
+1, 16, hardness1, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 24, hardness1, hardness4, 1.00, 0.80, hardness2, 1.00, 0.00, 100.00
+2, 24, hardness1, hardness4, 1.00, 0.80, hardness3, 1.00, 0.00, 0.00
+2, 24, hardness1, hardness4, 1.00, 0.80, hardness5, 1.00, 0.00, 0.00
+3, 32, hardness1, hardness5, 0.90, 0.80, hardness2, 1.00, 0.00, 100.00
+3, 32, hardness1, hardness5, 0.90, 0.80, hardness3, 1.00, 0.00, 0.00
+3, 32, hardness1, hardness5, 0.90, 0.80, hardness4, 1.00, 0.00, 0.00
+4, 40, hardness2, hardness3, 0.95, 0.85, hardness1, 1.00, 0.00, 100.00
+4, 40, hardness2, hardness3, 0.95, 0.85, hardness4, 1.00, 0.00, 0.00
+4, 40, hardness2, hardness3, 0.95, 0.85, hardness5, 0.00, 1.00, 100.00
+5, 48, hardness2, hardness4, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+5, 48, hardness2, hardness4, 1.00, 0.90, hardness3, 1.00, 0.00, 100.00
+5, 48, hardness2, hardness4, 1.00, 0.90, hardness5, 1.00, 0.00, 0.00
+6, 56, hardness2, hardness5, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+6, 56, hardness2, hardness5, 1.00, 0.90, hardness3, 0.00, 1.00, 0.00
+6, 56, hardness2, hardness5, 1.00, 0.90, hardness4, 1.00, 0.00, 0.00
+7, 64, hardness3, hardness4, 1.00, 0.90, hardness1, 1.00, 0.00, 100.00
+7, 64, hardness3, hardness4, 1.00, 0.90, hardness2, 1.00, 0.00, 100.00
+7, 64, hardness3, hardness4, 1.00, 0.90, hardness5, 1.00, 0.00, 0.00
+8, 72, hardness3, hardness5, 1.00, 0.95, hardness1, 1.00, 0.00, 100.00
+8, 72, hardness3, hardness5, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+8, 72, hardness3, hardness5, 1.00, 0.95, hardness4, 0.00, 1.00, 100.00
+9, 80, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 80, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 80, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 8, 1: 8, 2: 8, 3: 16, 4: 16, 5: 16, 6: 24, 7: 24, 8: 24, 9: 32, 10: 32, 11: 32, 12: 40, 13: 40, 14: 40, 15: 48, 16: 48, 17: 48, 18: 56, 19: 56, 20: 56, 21: 64, 22: 64, 23: 64, 24: 72, 25: 72, 26: 72, 27: 80, 28: 80, 29: 80}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 0.8500000238418579, 1: 0.8500000238418579, 2: 0.8500000238418579, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.8999999761581421, 10: 0.8999999761581421, 11: 0.8999999761581421, 12: 0.949999988079071, 13: 0.949999988079071, 14: 0.949999988079071, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.75, 1: 0.75, 2: 0.75, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.800000011920929, 7: 0.800000011920929, 8: 0.800000011920929, 9: 0.800000011920929, 10: 0.800000011920929, 11: 0.800000011920929, 12: 0.8500000238418579, 13: 0.8500000238418579, 14: 0.8500000238418579, 15: 0.8999999761581421, 16: 0.8999999761581421, 17: 0.8999999761581421, 18: 0.8999999761581421, 19: 0.8999999761581421, 20: 0.8999999761581421, 21: 0.8999999761581421, 22: 0.8999999761581421, 23: 0.8999999761581421, 24: 0.949999988079071, 25: 0.949999988079071, 26: 0.949999988079071, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 1.0, 4: 1.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 0.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 0.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0, 4: 0.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 0.0, 18: 0.0, 19: 1.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 1.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 0.0, 4: 0.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 0.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 0.0, 18: 100.0, 19: 0.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 100.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:63.333333333333336
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.500000   0.000000   0.333333   0.166667   0.000000
+hardness3   0.333333   0.333333   0.000000   0.166667   0.166667
+hardness4   0.333333   0.500000   0.000000   0.000000   0.166667
+hardness5   0.166667   0.333333   0.500000   0.000000   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 8
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 9, hardness1, hardness2, 1.00, 1.00, hardness3, 0.00, 1.00, 100.00
+0, 9, hardness1, hardness2, 1.00, 1.00, hardness4, 0.00, 1.00, 100.00
+0, 9, hardness1, hardness2, 1.00, 1.00, hardness5, 0.00, 1.00, 100.00
+1, 18, hardness1, hardness3, 1.00, 0.95, hardness2, 0.00, 1.00, 100.00
+1, 18, hardness1, hardness3, 1.00, 0.95, hardness4, 0.00, 1.00, 100.00
+1, 18, hardness1, hardness3, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+2, 27, hardness1, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+2, 27, hardness1, hardness4, 1.00, 0.95, hardness3, 1.00, 0.00, 0.00
+2, 27, hardness1, hardness4, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+3, 36, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 36, hardness1, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 0.00
+3, 36, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 45, hardness2, hardness3, 1.00, 0.80, hardness1, 0.00, 1.00, 0.00
+4, 45, hardness2, hardness3, 1.00, 0.80, hardness4, 1.00, 0.00, 0.00
+4, 45, hardness2, hardness3, 1.00, 0.80, hardness5, 1.00, 0.00, 0.00
+5, 54, hardness2, hardness4, 0.90, 1.00, hardness1, 1.00, 0.00, 100.00
+5, 54, hardness2, hardness4, 0.90, 1.00, hardness3, 1.00, 0.00, 100.00
+5, 54, hardness2, hardness4, 0.90, 1.00, hardness5, 0.00, 1.00, 100.00
+6, 63, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 63, hardness2, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+6, 63, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 72, hardness3, hardness4, 0.85, 0.60, hardness1, 0.00, 1.00, 0.00
+7, 72, hardness3, hardness4, 0.85, 0.60, hardness2, 1.00, 0.00, 100.00
+7, 72, hardness3, hardness4, 0.85, 0.60, hardness5, 1.00, 0.00, 0.00
+8, 81, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 81, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 81, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 90, hardness4, hardness5, 0.95, 0.95, hardness1, 1.00, 0.00, 100.00
+9, 90, hardness4, hardness5, 0.95, 0.95, hardness2, 1.00, 0.00, 100.00
+9, 90, hardness4, hardness5, 0.95, 0.95, hardness3, 0.00, 1.00, 0.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 9, 1: 9, 2: 9, 3: 18, 4: 18, 5: 18, 6: 27, 7: 27, 8: 27, 9: 36, 10: 36, 11: 36, 12: 45, 13: 45, 14: 45, 15: 54, 16: 54, 17: 54, 18: 63, 19: 63, 20: 63, 21: 72, 22: 72, 23: 72, 24: 81, 25: 81, 26: 81, 27: 90, 28: 90, 29: 90}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.8999999761581421, 16: 0.8999999761581421, 17: 0.8999999761581421, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.8500000238418579, 22: 0.8500000238418579, 23: 0.8500000238418579, 24: 1.0, 25: 1.0, 26: 1.0, 27: 0.949999988079071, 28: 0.949999988079071, 29: 0.949999988079071}, 'val_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 0.949999988079071, 7: 0.949999988079071, 8: 0.949999988079071, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.800000011920929, 13: 0.800000011920929, 14: 0.800000011920929, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.6000000238418579, 22: 0.6000000238418579, 23: 0.6000000238418579, 24: 1.0, 25: 1.0, 26: 1.0, 27: 0.949999988079071, 28: 0.949999988079071, 29: 0.949999988079071}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 1.0, 8: 0.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 0.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 0.0, 8: 1.0, 9: 0.0, 10: 0.0, 11: 0.0, 12: 1.0, 13: 0.0, 14: 0.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 0.0, 20: 0.0, 21: 1.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 1.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 0.0, 8: 100.0, 9: 100.0, 10: 0.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 0.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 100.0, 20: 0.0, 21: 0.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 0.0}}
+Average accuracy:63.333333333333336
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.333333   0.333333   0.333333   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.333333   0.500000   0.000000   0.000000   0.166667
+hardness4   0.166667   0.500000   0.333333   0.000000   0.000000
+hardness5   0.000000   0.333333   0.333333   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Run: 9
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']
+0, 10, hardness1, hardness2, 1.00, 0.90, hardness3, 0.00, 1.00, 100.00
+0, 10, hardness1, hardness2, 1.00, 0.90, hardness4, 0.00, 1.00, 100.00
+0, 10, hardness1, hardness2, 1.00, 0.90, hardness5, 0.00, 1.00, 100.00
+1, 20, hardness1, hardness3, 0.95, 0.90, hardness2, 0.00, 1.00, 100.00
+1, 20, hardness1, hardness3, 0.95, 0.90, hardness4, 0.00, 1.00, 100.00
+1, 20, hardness1, hardness3, 0.95, 0.90, hardness5, 0.00, 1.00, 100.00
+2, 30, hardness1, hardness4, 1.00, 0.95, hardness2, 1.00, 0.00, 100.00
+2, 30, hardness1, hardness4, 1.00, 0.95, hardness3, 0.00, 1.00, 100.00
+2, 30, hardness1, hardness4, 1.00, 0.95, hardness5, 0.00, 1.00, 100.00
+3, 40, hardness1, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+3, 40, hardness1, hardness5, 1.00, 1.00, hardness3, 0.00, 1.00, 100.00
+3, 40, hardness1, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+4, 50, hardness2, hardness3, 0.95, 0.75, hardness1, 1.00, 0.00, 100.00
+4, 50, hardness2, hardness3, 0.95, 0.75, hardness4, 1.00, 0.00, 0.00
+4, 50, hardness2, hardness3, 0.95, 0.75, hardness5, 0.00, 1.00, 100.00
+5, 60, hardness2, hardness4, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+5, 60, hardness2, hardness4, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+5, 60, hardness2, hardness4, 1.00, 1.00, hardness5, 0.00, 1.00, 100.00
+6, 70, hardness2, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+6, 70, hardness2, hardness5, 1.00, 1.00, hardness3, 0.00, 1.00, 0.00
+6, 70, hardness2, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+7, 80, hardness3, hardness4, 1.00, 0.85, hardness1, 1.00, 0.00, 100.00
+7, 80, hardness3, hardness4, 1.00, 0.85, hardness2, 1.00, 0.00, 100.00
+7, 80, hardness3, hardness4, 1.00, 0.85, hardness5, 1.00, 0.00, 0.00
+8, 90, hardness3, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+8, 90, hardness3, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+8, 90, hardness3, hardness5, 1.00, 1.00, hardness4, 1.00, 0.00, 0.00
+9, 100, hardness4, hardness5, 1.00, 1.00, hardness1, 1.00, 0.00, 100.00
+9, 100, hardness4, hardness5, 1.00, 1.00, hardness2, 1.00, 0.00, 100.00
+9, 100, hardness4, hardness5, 1.00, 1.00, hardness3, 1.00, 0.00, 100.00
+{'trial': {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 5, 18: 6, 19: 6, 20: 6, 21: 7, 22: 7, 23: 7, 24: 8, 25: 8, 26: 8, 27: 9, 28: 9, 29: 9}, 'seed': {0: 10, 1: 10, 2: 10, 3: 20, 4: 20, 5: 20, 6: 30, 7: 30, 8: 30, 9: 40, 10: 40, 11: 40, 12: 50, 13: 50, 14: 50, 15: 60, 16: 60, 17: 60, 18: 70, 19: 70, 20: 70, 21: 80, 22: 80, 23: 80, 24: 90, 25: 90, 26: 90, 27: 100, 28: 100, 29: 100}, 'comparison1': {0: 'hardness1', 1: 'hardness1', 2: 'hardness1', 3: 'hardness1', 4: 'hardness1', 5: 'hardness1', 6: 'hardness1', 7: 'hardness1', 8: 'hardness1', 9: 'hardness1', 10: 'hardness1', 11: 'hardness1', 12: 'hardness2', 13: 'hardness2', 14: 'hardness2', 15: 'hardness2', 16: 'hardness2', 17: 'hardness2', 18: 'hardness2', 19: 'hardness2', 20: 'hardness2', 21: 'hardness3', 22: 'hardness3', 23: 'hardness3', 24: 'hardness3', 25: 'hardness3', 26: 'hardness3', 27: 'hardness4', 28: 'hardness4', 29: 'hardness4'}, 'comparison2': {0: 'hardness2', 1: 'hardness2', 2: 'hardness2', 3: 'hardness3', 4: 'hardness3', 5: 'hardness3', 6: 'hardness4', 7: 'hardness4', 8: 'hardness4', 9: 'hardness5', 10: 'hardness5', 11: 'hardness5', 12: 'hardness3', 13: 'hardness3', 14: 'hardness3', 15: 'hardness4', 16: 'hardness4', 17: 'hardness4', 18: 'hardness5', 19: 'hardness5', 20: 'hardness5', 21: 'hardness4', 22: 'hardness4', 23: 'hardness4', 24: 'hardness5', 25: 'hardness5', 26: 'hardness5', 27: 'hardness5', 28: 'hardness5', 29: 'hardness5'}, 'train_acc': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.949999988079071, 4: 0.949999988079071, 5: 0.949999988079071, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.949999988079071, 13: 0.949999988079071, 14: 0.949999988079071, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'val_acc': {0: 0.8999999761581421, 1: 0.8999999761581421, 2: 0.8999999761581421, 3: 0.8999999761581421, 4: 0.8999999761581421, 5: 0.8999999761581421, 6: 0.949999988079071, 7: 0.949999988079071, 8: 0.949999988079071, 9: 1.0, 10: 1.0, 11: 1.0, 12: 0.75, 13: 0.75, 14: 0.75, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 0.8500000238418579, 22: 0.8500000238418579, 23: 0.8500000238418579, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'standard': {0: 'hardness3', 1: 'hardness4', 2: 'hardness5', 3: 'hardness2', 4: 'hardness4', 5: 'hardness5', 6: 'hardness2', 7: 'hardness3', 8: 'hardness5', 9: 'hardness2', 10: 'hardness3', 11: 'hardness4', 12: 'hardness1', 13: 'hardness4', 14: 'hardness5', 15: 'hardness1', 16: 'hardness3', 17: 'hardness5', 18: 'hardness1', 19: 'hardness3', 20: 'hardness4', 21: 'hardness1', 22: 'hardness2', 23: 'hardness5', 24: 'hardness1', 25: 'hardness2', 26: 'hardness4', 27: 'hardness1', 28: 'hardness2', 29: 'hardness3'}, 'prediction1': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 1.0, 7: 0.0, 8: 0.0, 9: 1.0, 10: 0.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 0.0, 15: 1.0, 16: 1.0, 17: 0.0, 18: 1.0, 19: 0.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0}, 'prediction2': {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.0, 7: 1.0, 8: 1.0, 9: 0.0, 10: 1.0, 11: 0.0, 12: 0.0, 13: 0.0, 14: 1.0, 15: 0.0, 16: 0.0, 17: 1.0, 18: 0.0, 19: 1.0, 20: 0.0, 21: 0.0, 22: 0.0, 23: 0.0, 24: 0.0, 25: 0.0, 26: 0.0, 27: 0.0, 28: 0.0, 29: 0.0}, 'accuracy': {0: 100.0, 1: 100.0, 2: 100.0, 3: 100.0, 4: 100.0, 5: 100.0, 6: 100.0, 7: 100.0, 8: 100.0, 9: 100.0, 10: 100.0, 11: 0.0, 12: 100.0, 13: 0.0, 14: 100.0, 15: 100.0, 16: 100.0, 17: 100.0, 18: 100.0, 19: 0.0, 20: 0.0, 21: 100.0, 22: 100.0, 23: 0.0, 24: 100.0, 25: 100.0, 26: 0.0, 27: 100.0, 28: 100.0, 29: 100.0}}
+Average accuracy:80.0
+Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.333333   0.000000   0.333333   0.333333
+hardness4   0.166667   0.500000   0.333333   0.000000   0.000000
+hardness5   0.000000   0.166667   0.500000   0.333333   0.000000
+True Confusion Matrix           hardness1  hardness2  hardness3  hardness4  hardness5
+hardness1   0.000000   0.500000   0.333333   0.166667   0.000000
+hardness2   0.333333   0.000000   0.500000   0.166667   0.000000
+hardness3   0.000000   0.500000   0.000000   0.333333   0.166667
+hardness4   0.000000   0.166667   0.333333   0.000000   0.500000
+hardness5   0.000000   0.166667   0.333333   0.500000   0.000000
+=====================================
+Accuracies over all runs:[70.0, 73.33333333333333, 73.33333333333333, 80.0, 80.0, 76.66666666666667, 60.0, 63.333333333333336, 63.333333333333336, 80.0]
+Average accuracy over all runs:72.0
+Standard deviation over all runs:7.180219742846005
+Average Confusion Matrix 
+[[0.         0.45       0.3        0.2        0.05      ]
+ [0.33333333 0.         0.41666667 0.23333333 0.01666667]
+ [0.2        0.43333333 0.         0.26666667 0.1       ]
+ [0.21666667 0.43333333 0.2        0.         0.15      ]
+ [0.05       0.25       0.4        0.3        0.        ]]

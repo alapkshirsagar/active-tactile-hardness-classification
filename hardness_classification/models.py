@@ -54,7 +54,7 @@ def get_ConvLSTM(input_shape, num_classes): # input_shape = (SEQ_LEN, IMAGE_HEIG
     model.add(Dense(num_classes, activation = "softmax"))
 
 
-    model.summary()
+    # model.summary()
 
     return model
 
