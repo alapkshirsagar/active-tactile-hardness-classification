@@ -1,16 +1,7 @@
-Roadmap
-
-- Check for errors in Confusion matrix and frame selection process
-- add uncertainty estimation
-- Try training on two samples, and estimating similarity to an unknown third
-- Try preprocessing to make frames only show difference to neutral position, and grayscale
-- Explore other network architectures
-- Outline and draft the paper
-- take data of pushes on the edge of objects
-- check with less data
-
-Deadlines
-- IROS 1st of March
+- To run the training and evaluation:
+```
+python3 hardness_classification/train_eval.py
+```
 
 To apply new frankx code:
 - activate projects/frankx/venv
