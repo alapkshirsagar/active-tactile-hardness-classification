@@ -4,7 +4,7 @@ import time
 class Logger():
     def __init__(self, filename, time_stamp, data_set, exp, model, model_save, lossfunction = "categorical_crossentropy", epochs = 100) -> None:
         self.filename = filename
-        with open(self.filename, "a") as f:
+        with open(self.filename, "w") as f:
             f.write("====================================================\n")
             f.write(datetime.datetime.fromtimestamp(time_stamp).ctime() + "\n")
             f.write("Dataset: " + data_set + "\n")

@@ -4,6 +4,7 @@ from models import *
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.math import confusion_matrix
+from tensorflow.keras.models import load_model
 import numpy as np
 import itertools
 from time import time
@@ -120,12 +121,26 @@ def run_leave_one_out(model_creator, manager, save_path):
 
     print(confusion)
 
-def run_train_2_classify_three(model_creator, manager, save_path, n_experiments = 1, lossfunction = "categorical_crossentropy", epochs=100, train_samples_per_class=20, validation_samples_per_class = 10, test_samples_per_class = 20):
-    model_save_path = save_path + datetime.datetime.fromtimestamp(time()).strftime('%d-%m-%Y_%H-%M-%S')
-    logger = Logger(join(LOG_PATH, "train_2_classify_three.txt"),
+def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, train_samples_per_class, validation_samples_per_class, test_samples_per_class, lossfunction = "categorical_crossentropy", save_path=None, load_path=None):
+    timestamp = datetime.datetime.fromtimestamp(time()).strftime('%d-%m-%Y_%H-%M-%S')
+    if save_path is None and load_path is None:
+        raise ValueError("Either save_path or load_path must be specified")
+    elif save_path is not None and load_path is not None:
+        raise ValueError("Only one of save_path or load_path must be specified")
+    elif save_path is not None:
+        #Create a new directory for the models and logs
+        model_path = save_path + timestamp + "/models/"
+        os.makedirs(save_path + timestamp + "/models/")
+        log_path = save_path + timestamp + "/logs_" + timestamp + ".txt"
+    elif load_path is not None:
+        model_path = load_path + "models/"
+        log_path = load_path + "logs_" + timestamp + ".txt"
+
+    logger = Logger(log_path,
         time(),DATASET_ID,"full_dataset",
         model_creator.__name__,
-        model_save_path,
+        model_path,
+        epochs=epochs,
         lossfunction=lossfunction)
 
     logger.log("Training samples per class: " + str(train_samples_per_class))
@@ -154,24 +169,32 @@ def run_train_2_classify_three(model_creator, manager, save_path, n_experiments 
             y_base = y_base[:,[j for j in range(len(CLASSES)) if j in index_pair]] 
             input_shape = X_base.shape[1:]
             num_classes = y_base.shape[1]
-            ########## Train the classifier ##########
+            ########## Train the classifier ##########                
             model = model_creator(input_shape, num_classes)
+            if load_path is not None:
+                model = load_model(model_path + str(pair) + str(n_experiment) + ".h5")
+                # train_accuracy = model.evaluate(X_base, y_base, batch_size = 4)[1]
+                # val_accuracy = model.evaluate(X_base, y_base, batch_size = 4)[1]
+                # Set train_accuracy and val_accuracy to NAN
+                train_accuracy = np.nan
+                val_accuracy = np.nan
+            else:
             # model.summary()
             # stop_callback = EarlyStopping(monitor = "val_accuracy", patience = epochs, mode = "max", restore_best_weights = True)
-            model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
-            history = model.fit(
-                X_base, y_base, epochs = epochs, batch_size = 4,
-                validation_split = validation_samples_per_class/(train_samples_per_class+validation_samples_per_class),
-                # callbacks = [stop_callback]
-            )
+                model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
+                history = model.fit(
+                    X_base, y_base, epochs = epochs, batch_size = 4,
+                    validation_split = validation_samples_per_class/(train_samples_per_class+validation_samples_per_class),
+                    # callbacks = [stop_callback]
+                )
 
-            val_accuracy = history.history['val_accuracy'][-1]
-            train_accuracy = history.history['accuracy'][-1]
+                val_accuracy = history.history['val_accuracy'][-1]
+                train_accuracy = history.history['accuracy'][-1]
 
-            try:
-                model.save(model_save_path + str(pair) + ".h5")
-            except:
-                print("could not write model")
+                try:
+                    model.save(model_path + str(pair) + str(n_experiment) + ".h5")
+                except:
+                    print("could not write model")
 
             ########## Predict on the remaining classes ##########
             predict_on = [c for c in CLASSES if c not in pair]
@@ -214,6 +237,10 @@ def run_train_2_classify_three(model_creator, manager, save_path, n_experiments 
         logger.log("=====================================")
 
     ########## Log the overall results for all experiment runs ##########
+    logger.log("Training samples per class: " + str(train_samples_per_class))
+    logger.log("Validation samples per class: " + str(validation_samples_per_class))
+    logger.log("Test samples per class: " + str(test_samples_per_class))
+    logger.log("Number of experiments: " + str(n_experiments))
     logger.log("Accuracies over all runs:" + str(accuracies))
     logger.log("Average accuracy over all runs:" + str(np.mean(accuracies)))
     logger.log("Standard deviation over all runs:" + str(np.std(accuracies)))
@@ -274,4 +301,18 @@ if __name__ == "__main__":
     # run_with_less_data(get_ConvLSTM, manager, "model_dumps/less_data/", samples_per_class=1)
     
     # run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")
-    [results, accuracies, confusion_matrices] = run_train_2_classify_three(get_ConvLSTM, manager, "model_dumps/train_2_classify_three_", n_experiments=10, epochs = 100)
+    n_experiments = 10
+    epochs = 100
+    train_samples_per_class = 40
+    validation_samples_per_class = 0
+    test_samples_per_class = 40
+
+    [results, accuracies, confusion_matrices] = run_train_2_classify_three(
+                                                model_creator=get_ConvLSTM, 
+                                                manager=manager,
+                                                n_experiments=n_experiments,
+                                                epochs=epochs,
+                                                train_samples_per_class=train_samples_per_class,
+                                                validation_samples_per_class=validation_samples_per_class,
+                                                test_samples_per_class=test_samples_per_class,
+                                                save_path="model_dumps/train_2_classify_three/")
