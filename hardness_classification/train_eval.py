@@ -79,9 +79,9 @@ def run_leave_one_out(model_creator, manager, save_path):
 
         print("Leaving", comp_class, "out.")
 
-        X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i])
+        X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i], 40, seed = 42)
         y_base = y_base[:,[j for j in range(len(CLASSES)) if j != i]] 
-        X_comp, _ = manager.get_raw_with_classes([comp_class])
+        X_comp, _ = manager.get_raw_with_classes([comp_class], 40,seed = 42)
 
         input_shape = X_base.shape[1:]
         num_classes = y_base.shape[1]
@@ -307,12 +307,4 @@ if __name__ == "__main__":
     validation_samples_per_class = 0
     test_samples_per_class = 40
 
-    [results, accuracies, confusion_matrices] = run_train_2_classify_three(
-                                                model_creator=get_ConvLSTM, 
-                                                manager=manager,
-                                                n_experiments=n_experiments,
-                                                epochs=epochs,
-                                                train_samples_per_class=train_samples_per_class,
-                                                validation_samples_per_class=validation_samples_per_class,
-                                                test_samples_per_class=test_samples_per_class,
-                                                save_path="model_dumps/train_2_classify_three/")
+    [results, accuracies, confusion_matrices] = run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/")

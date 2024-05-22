@@ -1,0 +1,12 @@
+====================================================
+Wed May 22 21:44:34 2024
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/22-05-2024_21-44-34/models/
+Loss Function categorical_crossentropy
+Epochs: 20
+
+Number of experiments: 1
+Run: 0
+['epoch', 'train_acc', 'val_acc']
