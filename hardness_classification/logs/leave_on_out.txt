@@ -1,60 +1,9 @@
 ====================================================
-Sat Jan 28 10:18:26 2023
+Wed May 22 18:30:22 2024
 Dataset: 42
 Experiment: full_dataset
 Model: get_ConvLSTM
 Model save file: for save path see below
-Loss Function ordinal crossentropy loss
+Loss Function categorical_crossentropy
 Epochs: 100
 
-Model dump when leaving hardness1 out: d7460c64-b217-4fa8-a945-43e0d14bff13.h5
-test_loss: 0.23522771894931793
-test_acc: 0.9729729890823364
-Model dump when leaving hardness2 out: 570b6eb3-6dc9-483a-b175-9a0f17d722cc.h5
-test_loss: 0.5531083941459656
-test_acc: 0.8108108043670654
-Model dump when leaving hardness3 out: db66df34-e8c9-46d8-8d04-c90759ef2f99.h5
-test_loss: 0.6439015865325928
-test_acc: 0.8918918967247009
-Model dump when leaving hardness4 out: 27ab63ae-3424-488a-919b-1972e52a8c5f.h5
-test_loss: 0.3207171559333801
-test_acc: 0.8918918967247009
-Model dump when leaving hardness5 out: 07492c3a-d6dd-4441-9a16-ef467861e812.h5
-test_loss: 0.17100082337856293
-test_acc: 0.9459459185600281
-Confusion Matrix (row: actual class, column: prediction):
-[[ 0. 42.  2.  2.  0.]
- [23.  0. 23.  0.  0.]
- [ 1. 41.  0.  0.  4.]
- [ 2. 29. 14.  0.  0.]
- [ 4.  0. 33.  8.  0.]]
-====================================================
-Sat Jan 28 10:43:46 2023
-Dataset: 42
-Experiment: full_dataset
-Model: get_ConvLSTM
-Model save file: for save path see below
-Loss Function categorical crossentropy loss
-Epochs: 100
-
-Model dump when leaving hardness1 out: 7902135c-cb93-4e2b-9f6f-b50299624015.h5
-test_loss: 0.11666716635227203
-test_acc: 0.9459459185600281
-Model dump when leaving hardness2 out: 5c3c38be-98a8-4cf2-831c-f3408d216c22.h5
-test_loss: 0.3923596441745758
-test_acc: 0.9189189076423645
-Model dump when leaving hardness3 out: 46bb2174-b9fd-4558-9b4d-c81b4901a306.h5
-test_loss: 0.3926764130592346
-test_acc: 0.837837815284729
-Model dump when leaving hardness4 out: dd9a4eb4-d09f-4f34-8ec7-f2f5811c543b.h5
-test_loss: 0.3107345402240753
-test_acc: 0.9729729890823364
-Model dump when leaving hardness5 out: f8436bea-de5d-4f49-8431-9550d20229ee.h5
-test_loss: 0.40164852142333984
-test_acc: 0.8648648858070374
-Confusion Matrix (row: actual class, column: prediction):
-[[ 0. 42.  0.  4.  0.]
- [16.  0. 24.  6.  0.]
- [ 2.  5.  0.  8. 31.]
- [ 0.  1.  4.  0. 40.]
- [ 0.  0. 42.  3.  0.]]
