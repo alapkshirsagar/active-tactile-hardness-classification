@@ -19,7 +19,7 @@ CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs = 200):
+def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs = 200, strat = "random"):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -44,7 +44,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs 
         X_train = X_base
         y_train = y_base
         # create test set from 40 samples each class
-        X_test, y_test = manager.get_raw_with_classes(CLASSES, 40, seed = 42)
+        X_test, y_test = manager.get_raw_with_classes(CLASSES, 40, seed = 64) # TODO: It's possible to have some intersection with the training set, is it acceptable?
         y_test = y_test[:,[j for j in range(len(CLASSES))]]
 
         stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 30, mode = "max", restore_best_weights = True)
@@ -52,21 +52,26 @@ def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs 
         model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
         history = model.fit(
                 X_train, y_train, epochs = 1, batch_size = 4,
-                validation_split = 0, # TODO: if validation set is not empty, the accuracy on validation set will be all zero. Why?
+                # TODO: if validation set is not empty, the accuracy on validation set will be all zero. Why?
                 # TODO: if validation set is empty, it will train 2 examples intead of 1 per epoch.
                 callbacks = []
             ) # Initial training of 1 samples per class
         for i in range(epochs):
             # Random strategy
-            # TODO: Implement Variance, Entropy, Strategies
-            random_class = random.choice(CLASSES)
-            random_index = CLASSES.index(random_class)
-            print("Epoch ", i, "/", epochs, ", random class: ", random_class)
-            X_base, y_base = manager.get_raw_with_classes([random_class], 1, seed = 42) # Get 40 samples of the class
-            y_base = y_base[:,[random_index]] # Get the corresponding label
+            selected_class = None
+            if strat == "random":
+                selected_class = random.choice(CLASSES)
+            if strat == "variance":
+                pass             # TODO: Implement Variance, Entropy Strategies
+            if strat == "entropy": 
+                pass
+
+            selected_index = CLASSES.index(selected_class)
+            print("Epoch ", i, "/", epochs, ", random class: ", selected_class)
+            X_base, y_base = manager.get_raw_with_classes([selected_class], 1, seed = 42) # Get 40 samples of the class
+            y_base = y_base[:,[selected_index]] # Get the corresponding label
             history = model.fit(
                 X_train, y_train, epochs = 1, batch_size = 4,
-                validation_split = 0,
                 callbacks = []
             )
 
@@ -94,7 +99,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs 
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", epochs=20)
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", epochs=200)
    
 
     
