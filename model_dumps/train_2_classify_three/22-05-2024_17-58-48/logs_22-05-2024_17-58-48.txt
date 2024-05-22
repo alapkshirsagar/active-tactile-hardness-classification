@@ -1,0 +1,15 @@
+====================================================
+Wed May 22 17:58:48 2024
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: model_dumps/train_2_classify_three/22-05-2024_17-58-48/models/
+Loss Function categorical_crossentropy
+Epochs: 100
+
+Training samples per class: 40
+Validation samples per class: 0
+Test samples per class: 40
+Number of experiments: 10
+Run: 0
+['trial', 'seed', 'comparison1', 'comparison2', 'train_acc', 'val_acc', 'standard', 'prediction1', 'prediction2', 'accuracy']

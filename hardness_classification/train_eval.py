@@ -297,7 +297,7 @@ def run_with_less_data(model_creator, manager, save_path, samples_per_class = 10
 
 
 if __name__ == "__main__":
-    manager = DatasetManager(DATASET_ID, ["/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/data_collection/data/IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data/"], CLASSES)
+    manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
     # run_with_less_data(get_ConvLSTM, manager, "model_dumps/less_data/", samples_per_class=1)
     
     # run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")
