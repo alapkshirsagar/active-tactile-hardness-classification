@@ -19,8 +19,6 @@ CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-
-
 def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs = 200):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
@@ -54,10 +52,13 @@ def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs 
         model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
         history = model.fit(
                 X_train, y_train, epochs = 1, batch_size = 4,
-                validation_split = 0,
+                validation_split = 0, # TODO: if validation set is not empty, the accuracy on validation set will be all zero. Why?
+                # TODO: if validation set is empty, it will train 2 examples intead of 1 per epoch.
                 callbacks = []
             ) # Initial training of 1 samples per class
         for i in range(epochs):
+            # Random strategy
+            # TODO: Implement Variance, Entropy, Strategies
             random_class = random.choice(CLASSES)
             random_index = CLASSES.index(random_class)
             print("Epoch ", i, "/", epochs, ", random class: ", random_class)
@@ -78,21 +79,22 @@ def run_with_strat(model_creator, manager, save_path, n_experiments = 1, epochs 
         loss, acc = model.evaluate(X_test, y_test, batch_size= 4)
         print("test_loss", loss)
         print("test_acc", acc)
+        for class_index, class_name in enumerate(CLASSES):
+            X_comp, _ = manager.get_raw_with_classes([class_name], 10)
 
-        dist = model.predict(X_comp)
-        choice = np.argmax(dist, axis = 1)
-        prediction = np.zeros((choice.size, len(CLASSES)))
-        prediction[np.arange(choice.size), choice] = 1
+            dist = model.predict(X_comp)
+            choice = np.argmax(dist, axis=1)
+            prediction = np.zeros((choice.size, len(CLASSES)))
+            prediction[np.arange(choice.size), choice] = 1
 
-        row = np.insert(prediction.sum(axis = 0), i, 0)
-
-        confusion[i, :] = row
-
-    print(confusion)
+            row = prediction.sum(axis=0)
+            confusion[class_index, :] = row
+        print(confusion)
 
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
     run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", epochs=20)
+   
 
     
