@@ -1,0 +1,9 @@
+====================================================
+Thu May 23 16:32:34 2024
+Dataset: 42
+Experiment: full_dataset
+Model: get_ConvLSTM
+Model save file: for save path see below
+Loss Function categorical_crossentropy
+Epochs: 100
+
