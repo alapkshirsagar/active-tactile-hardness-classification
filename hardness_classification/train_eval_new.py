@@ -20,7 +20,14 @@ CLASSES = ["hardness" + str(i + 1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200, strat="random"):
+def calculate_entropy_with_dropout(model, X_val, num_samples=10):
+    preds = np.array([model(X_val, training=True) for _ in range(num_samples)])
+    mean_preds = np.mean(preds, axis=0)
+    entropy = -np.sum(mean_preds * np.log(mean_preds + 1e-9), axis=1)
+    return np.mean(entropy)
+
+
+def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4,  strat="random"):
     overall_confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -50,10 +57,31 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         model.summary()
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+
+        # initial training with 1 sample per class
         model.fit(X_train, y_train, epochs=1, batch_size=4, callbacks=[])
 
+        # further training with random samples, one example per epoch
+
         for epoch in range(epochs):
-            selected_class = random.choice(training_classes)
+            selected_class = None 
+            if strat == "random":
+                selected_class = random.choice(training_classes)
+            elif strat == "entropy": 
+                entropies = []
+
+                for cls in training_classes: # Calculate entropy for each class
+                    X_val_cls, y_val_cls = manager.get_raw_with_classes([cls], validation_size) # Get one sample from each class
+                    y_val_cls_full = np.zeros((y_val_cls.shape[0], len(CLASSES))) # Adjust y_val_cls to reflect all classes
+                    class_idx = CLASSES.index(cls) # Get the index of the class
+                    y_val_cls_full[:, class_idx] = y_val_cls[:, 0] # Set the index of the class to the value of y_val_cls
+                    y_val_cls = y_val_cls_full # Set y_val_cls to the full value
+                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_samples=validation_size) # Calculate entropy
+                    entropies.append(entropy)
+                print("Entropies: ", entropies)
+                selected_class = training_classes[np.argmax(entropies)]
+
+             
             print("Epoch ", epoch + 1, "/", epochs, ", selected class: ", selected_class)
             X_train_epoch, y_train_epoch = manager.get_raw_with_classes([selected_class], 1)
 
@@ -93,4 +121,4 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=40)
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=10, strat="entropy")
