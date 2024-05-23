@@ -22,9 +22,14 @@ LOG_PATH = "logs/"
 
 def calculate_entropy_with_dropout(model, X_val, num_samples=10):
     preds = np.array([model(X_val, training=True) for _ in range(num_samples)])
-    mean_preds = np.mean(preds, axis=0)
-    entropy = -np.sum(mean_preds * np.log(mean_preds + 1e-9), axis=1)
-    return np.mean(entropy)
+    
+    # Calculate entropy for each prediction
+    entropies = -np.sum(preds * np.log(preds + 1e-9), axis=2)
+    
+    # Average the entropies over the number of samples
+    mean_entropy = np.mean(entropies, axis=0)
+    
+    return np.mean(mean_entropy)
 
 
 def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4,  strat="random"):
@@ -40,13 +45,13 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
     # Create validation set, validation_size samples per class
     validation_set = {} # Dictionary to store validation set
     if strat == "entropy" or strat == "variance":
-            for cls in CLASSES: # Calculate entropy for each class
-                X_val_cls, y_val_cls = manager.get_raw_with_classes([cls], validation_size) # Get one sample from each class
-                y_val_cls_full = np.zeros((y_val_cls.shape[0], len(CLASSES))) # Adjust y_val_cls to reflect all classes
-                class_idx = CLASSES.index(cls) # Get the index of the class
-                y_val_cls_full[:, class_idx] = y_val_cls[:, 0] # Set the index of the class to the value of y_val_cls
-                y_val_cls = y_val_cls_full # Set y_val_cls to the full value
-                validation_set[cls] = (X_val_cls, y_val_cls)
+        for cls in CLASSES: # Calculate entropy for each class
+            X_val_cls, y_val_cls = manager.get_raw_with_classes([cls], validation_size) # Get one sample from each class
+            y_val_cls_full = np.zeros((y_val_cls.shape[0], len(CLASSES))) # Adjust y_val_cls to reflect all classes
+            class_idx = CLASSES.index(cls) # Get the index of the class
+            y_val_cls_full[:, class_idx] = y_val_cls[:, 0] # Set the index of the class to the value of y_val_cls
+            y_val_cls = y_val_cls_full # Set y_val_cls to the full value
+            validation_set[cls] = (X_val_cls, y_val_cls)
 
     for test_class_index, test_class in enumerate(CLASSES):
         print("Test class: ", test_class)
@@ -80,6 +85,16 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
             selected_class = None 
             if strat == "random":
                 selected_class = random.choice(training_classes)
+            elif strat == "variance":
+                variances = []
+
+                for cls in training_classes:
+                    X_val_cls, y_val_cls = validation_set[cls]
+                    variance = np.var(model(X_val_cls, training=True).numpy())
+                    variances.append(variance)
+                print("Variances: ", variances)
+                selected_class = training_classes[np.argmax(variances)]
+            
             elif strat == "entropy": 
                 entropies = []
 
