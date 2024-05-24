@@ -20,16 +20,27 @@ CLASSES = ["hardness" + str(i + 1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-def calculate_entropy_with_dropout(model, X_val, num_samples=10):
-    preds = np.array([model(X_val, training=True) for _ in range(num_samples)])
+def calculate_entropy_with_dropout(model, X_val, num_dropouts=10):
+    preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
     
-    # Calculate entropy for each prediction
-    entropies = -np.sum(preds * np.log(preds + 1e-9), axis=2)
+    # calculate the entropy of each sample over the number of dropouts
+    entropies = -np.sum(preds * np.log(preds + 1e-10), axis=-1)
     
     # Average the entropies over the number of samples
     mean_entropy = np.mean(entropies, axis=0)
     
     return np.mean(mean_entropy)
+
+def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
+    preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
+    
+    # calculate the variance of each sample over the number of dropouts
+    variances = np.var(preds, axis=0)
+    
+    # Average the variances over the number of samples
+    mean_variance = np.mean(variances)
+    
+    return mean_variance
 
 
 def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4,  strat="random"):
@@ -70,7 +81,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         num_classes = y_train.shape[1]
 
         model = model_creator(input_shape, num_classes)
-        model.summary()
+        # model.summary()
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
@@ -90,7 +101,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
                 for cls in training_classes:
                     X_val_cls, y_val_cls = validation_set[cls]
-                    variance = np.var(model(X_val_cls, training=True).numpy())
+                    variance = calculate_variance_with_dropout(model, X_val_cls, num_dropouts=validation_size)
                     variances.append(variance)
                 print("Variances: ", variances)
                 selected_class = training_classes[np.argmax(variances)]
@@ -98,24 +109,29 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
             elif strat == "entropy": 
                 entropies = []
 
-                for cls in training_classes: # Calculate entropy for each class
-                    X_val_cls, y_val_cls = validation_set[cls] # Get the validation set for the class
-                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_samples=validation_size) # Calculate entropy
+                for cls in training_classes:
+                    X_val_cls, y_val_cls = validation_set[cls]
+                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_dropouts=validation_size)
                     entropies.append(entropy)
                 print("Entropies: ", entropies)
                 selected_class = training_classes[np.argmax(entropies)]
 
-             
             print("Epoch ", epoch + 1, "/", epochs, ", selected class: ", selected_class)
-            X_train_epoch, y_train_epoch = manager.get_raw_with_classes([selected_class], 1)
-
-            # Adjust y_train_epoch to reflect all classes
+            
+            # Add an example from the selected class to the training set
+            X_train_epoch, y_train_epoch = manager.get_raw_with_classes([selected_class], 1, seed=42)
             y_train_epoch_full = np.zeros((y_train_epoch.shape[0], len(CLASSES)))
             class_idx = CLASSES.index(selected_class)
             y_train_epoch_full[:, class_idx] = y_train_epoch[:, 0]
             y_train_epoch = y_train_epoch_full
 
-            model.fit(X_train_epoch, y_train_epoch, epochs=1, batch_size=4, callbacks=[])
+            # Concatenate the new example to the existing training set
+            X_train = np.concatenate([X_train, X_train_epoch])
+            y_train = np.concatenate([y_train, y_train_epoch])
+
+            # Train the model on the entire training set
+            model.fit(X_train, y_train, epochs=1, callbacks=[])
+
 
         model_id = str(uuid.uuid4())
         try:
@@ -145,4 +161,4 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=10, strat="entropy")
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=4, strat="variance")

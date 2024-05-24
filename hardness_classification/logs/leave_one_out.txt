@@ -1,5 +1,5 @@
 ====================================================
-Thu May 23 23:07:58 2024
+Sat May 25 00:36:08 2024
 Dataset: 42
 Experiment: full_dataset
 Model: get_ConvLSTM
