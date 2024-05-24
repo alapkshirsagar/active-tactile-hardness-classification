@@ -73,6 +73,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         print("Test class: ", test_class)
         training_classes = [c for c in CLASSES if c != test_class]
         print("Training classes: ", training_classes)
+    
         X_train, y_train = manager.get_raw_with_classes(training_classes, 1, seed=42)
 
         # Ensure y_train covers all classes and adjust labels
@@ -95,6 +96,12 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
         
 
+        # concatenate the validation sets of training classes, 
+        # to ensure that the validation set only contains samples from the training classes 
+        # and have the same number of examples over each training class to avoid sampling bias
+
+        X_val = np.concatenate([validation_set[cls][0] for cls in training_classes])
+
         # further training with random samples, one example per epoch
 
         for epoch in range(epochs):
@@ -112,14 +119,15 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
                 selected_class = training_classes[np.argmax(variances)]
             
             elif strat == "entropy": 
-                entropies = []
-
-                for cls in training_classes:
-                    X_val_cls, y_val_cls = validation_set[cls]
-                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_dropouts=num_dropouts)
-                    entropies.append(entropy)
-                print("Entropies: ", entropies)
-                selected_class = training_classes[np.argmax(entropies)]
+                entropy = calculate_entropy_with_dropout(model, X_val, num_dropouts=num_dropouts)
+                print("Entropies: ", 
+                entropy)
+                selected_index = -1
+                # Select the class with the highest entropy, but not the test class
+                for i in range(len(CLASSES)):
+                    if CLASSES[i] != test_class and (selected_index == -1 or entropy[i] > entropy[selected_index]):
+                        selected_index = i
+                selected_class = CLASSES[selected_index]
 
             print("Epoch ", epoch + 1, "/", epochs, ", selected class: ", selected_class)
             
@@ -166,4 +174,4 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=4, validation_size=4, num_dropouts=3, strat="entropy")
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=20, validation_size=4, num_dropouts=3, strat="entropy")
