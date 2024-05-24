@@ -23,13 +23,18 @@ LOG_PATH = "logs/"
 def calculate_entropy_with_dropout(model, X_val, num_dropouts=10):
     preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
     
-    # calculate the entropy of each sample over the number of dropouts
-    entropies = -np.sum(preds * np.log(preds + 1e-10), axis=-1)
+    # preds shape: (num_dropouts, num_samples, num_classes)
+
+    # calculate the entropy expectation of each sample over the number of dropouts
+    entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     
-    # Average the entropies over the number of samples
-    mean_entropy = np.mean(entropies, axis=0)
+    # entropies shape: (num_samples, num_classes)
+
+
+    # Sum the entropies over the examples
+    sum_entropy = np.sum(entropies, axis=0)
     
-    return np.mean(mean_entropy)
+    return sum_entropy
 
 def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
@@ -43,7 +48,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     return mean_variance
 
 
-def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4,  strat="random"):
+def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4, num_dropouts=10,  strat="random"):
     overall_confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -101,7 +106,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
                 for cls in training_classes:
                     X_val_cls, y_val_cls = validation_set[cls]
-                    variance = calculate_variance_with_dropout(model, X_val_cls, num_dropouts=validation_size)
+                    variance = calculate_variance_with_dropout(model, X_val_cls, num_dropouts=num_dropouts)
                     variances.append(variance)
                 print("Variances: ", variances)
                 selected_class = training_classes[np.argmax(variances)]
@@ -111,7 +116,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
                 for cls in training_classes:
                     X_val_cls, y_val_cls = validation_set[cls]
-                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_dropouts=validation_size)
+                    entropy = calculate_entropy_with_dropout(model, X_val_cls, num_dropouts=num_dropouts)
                     entropies.append(entropy)
                 print("Entropies: ", entropies)
                 selected_class = training_classes[np.argmax(entropies)]
@@ -161,4 +166,4 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=4, strat="variance")
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=4, validation_size=4, num_dropouts=3, strat="entropy")
