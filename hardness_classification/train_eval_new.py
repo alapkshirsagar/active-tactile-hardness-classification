@@ -30,20 +30,27 @@ def calculate_entropy_with_dropout(model, X_val, num_dropouts=10):
     
     # entropies shape: (num_samples, num_classes)
 
-
     # Sum the entropies over the examples
     sum_entropy = np.sum(entropies, axis=0)
+
+    # sum_entropy shape: (num_classes,)
     
     return sum_entropy
 
 def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
+
+    # preds shape: (num_dropouts, num_samples, num_classes)
     
     # calculate the variance of each sample over the number of dropouts
     variances = np.var(preds, axis=0)
+
+    # variances shape: (num_samples, num_classes)
     
     # Average the variances over the number of samples
-    mean_variance = np.mean(variances)
+    mean_variance = np.mean(variances, axis=0)
+
+    # mean_variance shape: (num_classes,)
     
     return mean_variance
 
@@ -108,24 +115,20 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
             selected_class = None 
             if strat == "random":
                 selected_class = random.choice(training_classes)
-            elif strat == "variance":
-                variances = []
-
-                for cls in training_classes:
-                    X_val_cls, y_val_cls = validation_set[cls]
-                    variance = calculate_variance_with_dropout(model, X_val_cls, num_dropouts=num_dropouts)
-                    variances.append(variance)
-                print("Variances: ", variances)
-                selected_class = training_classes[np.argmax(variances)]
             
-            elif strat == "entropy": 
-                entropy = calculate_entropy_with_dropout(model, X_val, num_dropouts=num_dropouts)
-                print("Entropies: ", 
-                entropy)
+            elif strat == "entropy" or strat == "variance":
+                uncertainty = None
+                if strat == "variance":
+                    uncertainty = calculate_variance_with_dropout(model, X_val, num_dropouts=num_dropouts)
+                    print("Variances: ", uncertainty)
+                else: 
+                    uncertainty = calculate_entropy_with_dropout(model, X_val, num_dropouts=num_dropouts)
+                    print("Entropies: ", uncertainty)
+                
                 selected_index = -1
                 # Select the class with the highest entropy, but not the test class
-                for i in range(len(CLASSES)):
-                    if CLASSES[i] != test_class and (selected_index == -1 or entropy[i] > entropy[selected_index]):
+                for i, _ in enumerate(len(CLASSES)):
+                    if CLASSES[i] != test_class and (selected_index == -1 or uncertainty[i] > uncertainty[selected_index]):
                         selected_index = i
                 selected_class = CLASSES[selected_index]
 
@@ -174,4 +177,4 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=20, validation_size=4, num_dropouts=3, strat="entropy")
+    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=20, validation_size=4, num_dropouts=3, strat="variance")
