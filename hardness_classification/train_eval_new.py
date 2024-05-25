@@ -127,7 +127,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
                 
                 selected_index = -1
                 # Select the class with the highest entropy, but not the test class
-                for i, _ in enumerate(len(CLASSES)):
+                for i, _ in enumerate(CLASSES):
                     if CLASSES[i] != test_class and (selected_index == -1 or uncertainty[i] > uncertainty[selected_index]):
                         selected_index = i
                 selected_class = CLASSES[selected_index]
