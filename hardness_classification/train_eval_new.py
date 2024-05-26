@@ -14,6 +14,8 @@ from utils import *
 from models import get_ConvLSTM
 from preprocessing import DatasetManager
 from os.path import join  # Added import for join
+import tensorflow as tf
+
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i + 1) for i in range(5)]
@@ -54,8 +56,101 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     
     return mean_variance
 
+# train on 5 classes, test on 1
+def train_5_test_1(model_creator, manager, save_path, epochs=200, validation_size=4, num_dropouts=10, strat="random"):
+    overall_confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
-def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4, num_dropouts=10,  strat="random"):
+    lossfunction = "categorical_crossentropy"
+    logger = Logger(join(LOG_PATH, "train_5_test_1.txt"),
+                    time(), DATASET_ID, "full_dataset",
+                    model_creator.__name__,
+                    "for save path see below",
+                    lossfunction=lossfunction)
+    
+    # Create validation set, validation_size samples per class
+    validation_set = {} # Dictionary to store validation set
+    if strat == "entropy" or strat == "variance":
+        for cls in CLASSES: # Calculate entropy for each class
+            X_val_cls, y_val_cls = manager.get_raw_with_classes([cls], validation_size) # Get one sample from each class
+            y_val_cls = y_val_cls[:,[j for j in range(len(CLASSES))]] 
+            validation_set[cls] = (X_val_cls, y_val_cls)
+
+    
+    X_train, y_train = manager.get_raw_with_classes(CLASSES, 1, seed=42)
+    y_train = y_train[:,[j for j in range(len(CLASSES))]]
+
+    input_shape = X_train.shape[1:]
+    num_classes = y_train.shape[1]
+
+    model = model_creator(input_shape, num_classes)
+    # model.summary()
+
+    model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+
+    # initial training with 1 sample per class
+    model.fit(X_train, y_train, epochs=1, batch_size=4, callbacks=[])
+
+    
+
+    # concatenate the validation sets of training classes, 
+    # to ensure that the validation set only contains samples from the training classes 
+    # and have the same number of examples over each training class to avoid sampling bias
+
+    X_val = np.concatenate([validation_set[cls][0] for cls in CLASSES])
+
+    # further training with random samples, one example per epoch
+
+    for epoch in range(epochs):
+        selected_class = None 
+        if strat == "random":
+            selected_class = random.choice(CLASSES)
+        
+        elif strat == "entropy" or strat == "variance":
+            uncertainty = None
+            if strat == "variance":
+                uncertainty = calculate_variance_with_dropout(model, X_val, num_dropouts=num_dropouts)
+                print("Variances: ", uncertainty)
+            else: 
+                uncertainty = calculate_entropy_with_dropout(model, X_val, num_dropouts=num_dropouts)
+                print("Entropies: ", uncertainty)
+            
+            
+            # Select the class with the highest entropy
+            selected_index = np.argmax(uncertainty)
+            selected_class = CLASSES[selected_index]
+
+        print("Epoch ", epoch + 1, "/", epochs, ", selected class: ", selected_class)
+        
+        # Add an example from the selected class to the training set
+        X_train_epoch, y_train_epoch = manager.get_raw_with_classes([selected_class], 1, seed=42)
+        y_train_epoch = y_train_epoch[:,[j for j in range(len(CLASSES))]]
+
+        # Concatenate the new example to the existing training set
+        X_train = np.concatenate([X_train, X_train_epoch])
+        y_train = np.concatenate([y_train, y_train_epoch])
+
+        # Train the model on the entire training set
+        model.fit(X_train, y_train, epochs=1, callbacks=[])
+
+
+    model_id = str(uuid.uuid4())
+    try:
+        model_save_path = f"{save_path}_{model_id}.h5"
+        model.save(model_save_path)
+    except:
+        print("could not write")
+
+    X_test, y_test = manager.get_raw_with_classes(CLASSES, 10, seed=42)
+
+    # Adjust y_test to reflect all classes
+    y_test = y_test[:,[j for j in range(len(CLASSES))]]
+    dist = model.predict(X_test)
+    # print prediction accuracy
+    print("Prediction accuracy: ", np.mean(np.argmax(dist, axis=1) == np.argmax(y_test, axis=1)))
+    
+
+# train on 4 classes, test on the rest 1
+def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4, num_dropouts=10,  strat="random"):
     overall_confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -84,10 +179,10 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         X_train, y_train = manager.get_raw_with_classes(training_classes, 1, seed=42)
 
         # Ensure y_train covers all classes and adjust labels
-        y_train_full = np.zeros((y_train.shape[0], len(CLASSES)))
+        y_train_full = np.zeros((y_train.shape[0], len(CLASSES))) # Adjust y_train to reflect all classes
         for i, c in enumerate(training_classes):
             class_idx = CLASSES.index(c)
-            y_train_full[:, class_idx] = y_train[:, i]
+            y_train_full[:, class_idx] = y_train[:, i] # Set the index of the class to the value of y_train
         y_train = y_train_full
 
         input_shape = X_train.shape[1:]
@@ -106,8 +201,8 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         # concatenate the validation sets of training classes, 
         # to ensure that the validation set only contains samples from the training classes 
         # and have the same number of examples over each training class to avoid sampling bias
-
-        X_val = np.concatenate([validation_set[cls][0] for cls in training_classes])
+        if(strat == "entropy" or strat == "variance"):
+            X_val = np.concatenate([validation_set[cls][0] for cls in training_classes])
 
         # further training with random samples, one example per epoch
 
@@ -156,7 +251,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
         except:
             print("could not write")
 
-        X_test, y_test = manager.get_raw_with_classes([test_class], 10, seed=42)
+        X_test, y_test = manager.get_raw_with_classes([test_class], 20, seed=42)
 
         # Adjust y_test to reflect all classes
         y_test_full = np.zeros((y_test.shape[0], len(CLASSES)))
@@ -175,6 +270,7 @@ def run_with_strat(model_creator, manager, save_path, n_experiments=1, epochs=20
     print(overall_confusion)
 
 
+
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_with_strat(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=20, validation_size=4, num_dropouts=3, strat="variance")
+    train_4_test_1(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=40, validation_size=10, num_dropouts=5, strat="random")
