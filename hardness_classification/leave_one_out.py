@@ -54,10 +54,13 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     return mean_variance
 
 def get_validation_set(manager, classes, samples_per_class):
-    X_val, y_val = manager.get_raw_with_classes(classes, samples_per_class, seed=42)
-    return X_val, y_val
+    validation_set = []
+    for cls in classes: # Calculate entropy for each class
+        X_val_cls, _ = manager.get_raw_with_classes([cls], samples_per_class) # Get one sample from each 
+        validation_set.append(X_val_cls)
+    return validation_set
 
-def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init_epochs = 10, iterations=20, validation_size = 4, num_dropouts=10,  strat="random"):
+def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init_epochs = 10, iterations=10, validation_size = 4, num_dropouts=10, samples_per_iter = 10, epochs_per_iter = 5, strat="random"):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -68,12 +71,13 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
         lossfunction=lossfunction)
 
 
+    # additional selective training on selected class
     for i, comp_class in enumerate(CLASSES):
     
         base_classes = [x for j,x in enumerate(CLASSES) if j!=i]
         comp_class = CLASSES[i]
 
-        print("Leaving", comp_class, "out.")
+        print("Base class: ", base_classes, "Leaving", comp_class, "out.")
 
         X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i], init_samples, seed = 42)
         y_base = y_base[:,[j for j in range(len(CLASSES)) if j != i]] 
@@ -90,29 +94,45 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
 
         model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
         history = model.fit(
-            X_train, y_train, epochs = init_epochs, batch_size = 4,
+            X_train, y_train, epochs = init_epochs, batch_size = 1,
             validation_split = 0.1,
             callbacks = [stop_callback]
         )
-        x_val, y_val = get_validation_set(manager, base_classes, 40)
+        x_val = get_validation_set(manager, base_classes, validation_size)
         for iter in range(iterations) :
+            print("Iteration: ", iter, " of ", iterations)
+            selected_class = None
+            selected_index = -1
+            if strat == "random":
+                selected_class = random.choice(base_classes)
             
-            X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i], init_samples, seed = 42)
+            elif strat == "entropy" or strat == "variance":
+                uncertainty = None
+                if strat == "variance":
+                    uncertainty = calculate_variance_with_dropout(model, x_val, num_dropouts=num_dropouts)
+                    print("Variances: ", uncertainty)
+                else: 
+                    uncertainty = calculate_entropy_with_dropout(model, x_val, num_dropouts=num_dropouts)
+                    print("Entropies: ", uncertainty)
+                
+                selected_index = np.argmax(uncertainty)
+            
+            selected_class = base_classes[selected_index]
+            print("Selected class: ", selected_class)
+            X_base, y_base = manager.get_raw_with_classes([selected_class], samples_per_iter, seed = 42)
             y_base = y_base[:,[j for j in range(len(CLASSES)) if j != i]] 
-            X_comp, _ = manager.get_raw_with_classes([comp_class], init_samples, seed = 42)
+            X_comp, _ = manager.get_raw_with_classes([comp_class], samples_per_iter, seed = 42)
 
             input_shape = X_base.shape[1:]
             num_classes = y_base.shape[1]
 
-            model = model_creator(input_shape, num_classes)
-            X_train, X_test, y_train, y_test = train_test_split(X_base,y_base, train_size = .8)
-
+            X_train, X_test, y_train, y_test = train_test_split(X_base, y_base, train_size=0.8)
 
             stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 30, mode = "max", restore_best_weights = True)
 
             model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
             history = model.fit(
-                X_train, y_train, epochs = init_epochs, batch_size = 4,
+                X_train, y_train, epochs = epochs_per_iter, batch_size = 1,
                 validation_split = 0.1,
                 callbacks = [stop_callback]
             )
@@ -150,4 +170,4 @@ if __name__ == "__main__":
     validation_samples_per_class = 0
     test_samples_per_class = 40
 
-    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/")
+    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=1, init_samples=1, iterations=1, validation_size=4, num_dropouts=3, samples_per_iter=20, epochs_per_iter=5, strat="entropy")
