@@ -150,7 +150,7 @@ def train_5_test_1(model_creator, manager, save_path, epochs=200, validation_siz
     
 
 # train on 4 classes, test on the rest 1
-def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=200,validation_size = 4, num_dropouts=10,  strat="random"):
+def train_4_test_1(model_creator, manager, save_path, iterations=20,validation_size = 4, num_dropouts=10,  strat="random"):
     overall_confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -176,7 +176,7 @@ def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=20
         training_classes = [c for c in CLASSES if c != test_class]
         print("Training classes: ", training_classes)
     
-        X_train, y_train = manager.get_raw_with_classes(training_classes, 1, seed=42)
+        X_train, y_train = manager.get_raw_with_classes(training_classes, 5, seed=42)
 
         # Ensure y_train covers all classes and adjust labels
         y_train_full = np.zeros((y_train.shape[0], len(CLASSES))) # Adjust y_train to reflect all classes
@@ -206,7 +206,7 @@ def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=20
 
         # further training with random samples, one example per epoch
 
-        for epoch in range(epochs):
+        for epoch in range(iterations):
             selected_class = None 
             if strat == "random":
                 selected_class = random.choice(training_classes)
@@ -227,21 +227,23 @@ def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=20
                         selected_index = i
                 selected_class = CLASSES[selected_index]
 
-            print("Epoch ", epoch + 1, "/", epochs, ", selected class: ", selected_class)
+            print("Epoch ", epoch + 1, "/", iterations, ", selected class: ", selected_class)
             
-            # Add an example from the selected class to the training set
-            X_train_epoch, y_train_epoch = manager.get_raw_with_classes([selected_class], 1, seed=42)
-            y_train_epoch_full = np.zeros((y_train_epoch.shape[0], len(CLASSES)))
-            class_idx = CLASSES.index(selected_class)
-            y_train_epoch_full[:, class_idx] = y_train_epoch[:, 0]
-            y_train_epoch = y_train_epoch_full
+            # Add examples from the selected class to the training set
+            X_train, y_train = manager.get_raw_with_classes([selected_class], 10, seed=42)
+            # Ensure y_train covers all classes and adjust labels
+            y_train_full = np.zeros((y_train.shape[0], len(CLASSES))) # Adjust y_train to reflect all classes
+            for i, c in enumerate(training_classes):
+                class_idx = CLASSES.index(c)
+                y_train_full[:, class_idx] = y_train[:, i] # Set the index of the class to the value of y_train
+            y_train = y_train_full
 
             # Concatenate the new example to the existing training set
-            X_train = np.concatenate([X_train, X_train_epoch])
-            y_train = np.concatenate([y_train, y_train_epoch])
+            # X_train = np.concatenate([X_train, X_train_epoch])
+            # y_train = np.concatenate([y_train, y_train_epoch])
 
             # Train the model on the entire training set
-            model.fit(X_train, y_train, epochs=1, callbacks=[])
+            model.fit(X_train, y_train, epochs=5, callbacks=[])
 
 
         model_id = str(uuid.uuid4())
@@ -273,4 +275,4 @@ def train_4_test_1(model_creator, manager, save_path, n_experiments=1, epochs=20
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    train_4_test_1(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, epochs=40, validation_size=10, num_dropouts=5, strat="random")
+    train_4_test_1(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, iterations=40, validation_size=10, num_dropouts=5, strat="random")
