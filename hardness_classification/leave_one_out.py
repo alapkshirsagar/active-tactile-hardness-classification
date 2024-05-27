@@ -170,4 +170,4 @@ if __name__ == "__main__":
     validation_samples_per_class = 0
     test_samples_per_class = 40
 
-    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=1, init_samples=1, iterations=1, validation_size=4, num_dropouts=3, samples_per_iter=20, epochs_per_iter=5, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=10, init_samples=10, iterations=50, validation_size=10, num_dropouts=10, samples_per_iter=5, epochs_per_iter=10, strat="entropy")
