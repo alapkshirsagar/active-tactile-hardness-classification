@@ -13,6 +13,7 @@ from log import Logger
 import uuid
 import pandas as pd
 from utils import *
+import wandb
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
@@ -70,7 +71,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
         "for save path see below",
         lossfunction=lossfunction)
 
-
+    wandb.init(project="leave_one_out", config={"dataset_id": DATASET_ID, "model": model_creator.__name__})
     # additional selective training on selected class
     for i, comp_class in enumerate(CLASSES):
     
@@ -78,6 +79,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
         comp_class = CLASSES[i]
 
         print("Base class: ", base_classes, "Leaving", comp_class, "out.")
+        wandb.log({"base_classes": base_classes, "comp_class": comp_class})
 
         X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i], init_samples, seed = 42)
         y_base = y_base[:,[j for j in range(len(CLASSES)) if j != i]] 
@@ -101,6 +103,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
         x_val = get_validation_set(manager, base_classes, validation_size)
         for iter in range(iterations) :
             print("Iteration: ", iter, " of ", iterations)
+        
             selected_class = None
             selected_index = -1
             if strat == "random":
@@ -111,9 +114,11 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
                 if strat == "variance":
                     uncertainty = calculate_variance_with_dropout(model, x_val, num_dropouts=num_dropouts)
                     print("Variances: ", uncertainty)
+                    wandb.log({"variances": uncertainty})
                 else: 
                     uncertainty = calculate_entropy_with_dropout(model, x_val, num_dropouts=num_dropouts)
                     print("Entropies: ", uncertainty)
+                    wandb.log({"entropies": uncertainty})
                 
                 selected_index = np.argmax(uncertainty)
             
@@ -136,6 +141,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
                 validation_split = 0.1,
                 callbacks = [stop_callback]
             )
+            wandb.log({"selected_class": selected_class, "accuracy": history.history["accuracy"][-1], "val_accuracy": history.history["val_accuracy"][-1], "loss": history.history["loss"][-1], "val_loss": history.history["val_loss"][-1]})
 
 
         id = str(uuid.uuid4())
@@ -170,4 +176,4 @@ if __name__ == "__main__":
     validation_samples_per_class = 0
     test_samples_per_class = 40
 
-    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=10, init_samples=10, iterations=50, validation_size=10, num_dropouts=10, samples_per_iter=5, epochs_per_iter=10, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=10, init_samples=10, iterations=50, validation_size=10, num_dropouts=10, samples_per_iter=10, epochs_per_iter=100, strat="entropy")

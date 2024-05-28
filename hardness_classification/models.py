@@ -188,7 +188,7 @@ def get_spatio_temporal_Conv(input_shape, num_classes):
 
     x = GlobalAveragePooling3D()(x)
     x = Flatten()(x)
-    x = Dropdout(0.5)(x) # add dropout layer
+    x = Dropdout(.15)(x) # add dropout layer 
     x = Dense(num_classes)(x)
 
     model = Model(input, x)

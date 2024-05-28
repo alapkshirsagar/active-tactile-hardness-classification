@@ -1,0 +1,1 @@
+{"base_classes": ["hardness2", "hardness3", "hardness4", "hardness5"], "comp_class": "hardness1", "_timestamp": 1716889897.8514163, "_runtime": 78.68552827835083, "_step": 1, "entropies": [3.3506319522857666, 3.504251480102539, 3.504734992980957, 3.484245538711548], "_wandb": {"runtime": 150}}

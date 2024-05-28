@@ -1,0 +1,126 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+Epoch 1/10
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m9s[22m 156ms/step - accuracy: 0.3240 - loss: 1.4307 - val_accuracy: 0.2500 - val_loss: 1.3865
+Epoch 2/10
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m4s[22m 132ms/step - accuracy: 0.2081 - loss: 1.4029 - val_accuracy: 0.2500 - val_loss: 1.4139
+Epoch 3/10
+
+
+
+
+
+
+
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m20s[22m 721ms/step - accuracy: 0.2056 - loss: 1.4615 - val_accuracy: 0.2500 - val_loss: 1.3864
+Epoch 4/10
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 104ms/step - accuracy: 0.3554 - loss: 1.4022 - val_accuracy: 0.2500 - val_loss: 1.3866
+Epoch 5/10
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 103ms/step - accuracy: 0.3168 - loss: 1.3919 - val_accuracy: 0.2500 - val_loss: 1.3859
+Epoch 6/10
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 103ms/step - accuracy: 0.2542 - loss: 1.3970 - val_accuracy: 0.2500 - val_loss: 1.3882
+Epoch 7/10
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 101ms/step - accuracy: 0.1557 - loss: 1.3846 - val_accuracy: 0.5000 - val_loss: 1.3878
+Epoch 8/10
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 103ms/step - accuracy: 0.4741 - loss: 1.3910 - val_accuracy: 0.2500 - val_loss: 1.3867
+Epoch 9/10
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 103ms/step - accuracy: 0.2195 - loss: 1.3928 - val_accuracy: 0.2500 - val_loss: 1.4064
+Epoch 10/10
+
+[1m28/28[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 104ms/step - accuracy: 0.3749 - loss: 1.4207 - val_accuracy: 0.2500 - val_loss: 1.3855
+Iteration:  0  of  50
+Entropies:  [3.350632  3.5042515 3.504735  3.4842455]
+Selected class:  hardness4
+Epoch 1/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 222ms/step - accuracy: 1.0000 - loss: 0.7888 - val_accuracy: 1.0000 - val_loss: 0.0042
+Epoch 2/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 125ms/step - accuracy: 1.0000 - loss: 0.0033 - val_accuracy: 1.0000 - val_loss: 9.4929e-04
+Epoch 3/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 109ms/step - accuracy: 1.0000 - loss: 8.8129e-04 - val_accuracy: 1.0000 - val_loss: 3.9033e-04
+Epoch 4/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 122ms/step - accuracy: 1.0000 - loss: 3.8514e-04 - val_accuracy: 1.0000 - val_loss: 1.9787e-04
+Epoch 5/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 111ms/step - accuracy: 1.0000 - loss: 2.0422e-04 - val_accuracy: 1.0000 - val_loss: 1.1217e-04
+Epoch 6/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 103ms/step - accuracy: 1.0000 - loss: 1.1884e-04 - val_accuracy: 1.0000 - val_loss: 6.8543e-05
+Epoch 7/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 108ms/step - accuracy: 1.0000 - loss: 7.3890e-05 - val_accuracy: 1.0000 - val_loss: 4.4106e-05
+Epoch 8/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m2s[22m 240ms/step - accuracy: 1.0000 - loss: 4.7849e-05 - val_accuracy: 1.0000 - val_loss: 2.9683e-05
+Epoch 9/100
+
+
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m9s[22m 1s/step - accuracy: 1.0000 - loss: 3.2846e-05 - val_accuracy: 1.0000 - val_loss: 2.0623e-05
+Epoch 10/100
+
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m9s[22m 860ms/step - accuracy: 1.0000 - loss: 2.3152e-05 - val_accuracy: 1.0000 - val_loss: 1.4782e-05
+Epoch 11/100
+
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m11s[22m 862ms/step - accuracy: 1.0000 - loss: 1.6774e-05 - val_accuracy: 1.0000 - val_loss: 1.0729e-05
+Epoch 12/100
+
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m9s[22m 643ms/step - accuracy: 1.0000 - loss: 1.2200e-05 - val_accuracy: 1.0000 - val_loss: 7.8678e-06
+Epoch 13/100
+
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 777ms/step - accuracy: 1.0000 - loss: 8.9163e-06 - val_accuracy: 1.0000 - val_loss: 5.8412e-06
+Epoch 14/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 348ms/step - accuracy: 1.0000 - loss: 6.6879e-06 - val_accuracy: 1.0000 - val_loss: 4.2915e-06
+Epoch 15/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 108ms/step - accuracy: 1.0000 - loss: 4.9778e-06 - val_accuracy: 1.0000 - val_loss: 3.2186e-06
+Epoch 16/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 105ms/step - accuracy: 1.0000 - loss: 3.7377e-06 - val_accuracy: 1.0000 - val_loss: 2.3842e-06
+Epoch 17/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 108ms/step - accuracy: 1.0000 - loss: 2.8025e-06 - val_accuracy: 1.0000 - val_loss: 1.7881e-06
+Epoch 18/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 109ms/step - accuracy: 1.0000 - loss: 2.0666e-06 - val_accuracy: 1.0000 - val_loss: 1.3113e-06
+Epoch 19/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 104ms/step - accuracy: 1.0000 - loss: 1.5655e-06 - val_accuracy: 1.0000 - val_loss: 9.5367e-07
+Epoch 20/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 108ms/step - accuracy: 1.0000 - loss: 1.2435e-06 - val_accuracy: 1.0000 - val_loss: 7.1526e-07
+Epoch 21/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 114ms/step - accuracy: 1.0000 - loss: 9.3842e-07 - val_accuracy: 1.0000 - val_loss: 5.9605e-07
+Epoch 22/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 102ms/step - accuracy: 1.0000 - loss: 7.1526e-07 - val_accuracy: 1.0000 - val_loss: 4.7684e-07
+Epoch 23/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 104ms/step - accuracy: 1.0000 - loss: 5.5837e-07 - val_accuracy: 1.0000 - val_loss: 4.7684e-07
+Epoch 24/100
+[1m3/7[22m [32m━━━━━━━━[37m━━━━━━━━━━━━[39m [1m0s[22m 97ms/step - accuracy: 1.0000 - loss: 4.7684e-07
+Traceback (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 179, in <module>
+    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/", init_epochs=10, init_samples=10, iterations=50, validation_size=10, num_dropouts=10, samples_per_iter=10, epochs_per_iter=100, strat="entropy")
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 139, in run_leave_one_out
+    history = model.fit(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\utils\traceback_utils.py", line 117, in error_handler
+    return fn(*args, **kwargs)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 314, in fit
+    logs = self.train_function(iterator)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\util\traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\polymorphic_function.py", line 833, in __call__
+    result = self._call(*args, **kwds)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\polymorphic_function.py", line 878, in _call
+    results = tracing_compilation.call_function(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\tracing_compilation.py", line 139, in call_function
+    return function._call_flat(  # pylint: disable=protected-access
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\concrete_function.py", line 1322, in _call_flat
+    return self._inference_function.call_preflattened(args)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\atomic_function.py", line 216, in call_preflattened
+    flat_outputs = self.call_flat(*args)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\atomic_function.py", line 251, in call_flat
+    outputs = self._bound_context.call_function(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\context.py", line 1500, in call_function
+    outputs = execute.execute(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 119ms/step - accuracy: 1.0000 - loss: 4.7684e-07 - val_accuracy: 1.0000 - val_loss: 2.3842e-07
+Epoch 25/100
+[1m7/7[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 99ms/step - accuracy: 1.0000 - loss: 4.7010e-07 - val_accuracy: 1.0000 - val_loss: 2.3842e-07
+Epoch 26/100
+[1m6/7[22m [32m━━━━━━━━━━━━━━━━━[37m━━━[39m [1m0s[22m 90ms/step - accuracy: 1.0000 - loss: 2.3842e-07
