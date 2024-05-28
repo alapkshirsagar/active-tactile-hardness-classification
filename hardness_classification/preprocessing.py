@@ -5,9 +5,10 @@ import numpy as np
 import json
 import matplotlib.pyplot as plt
 import random
+from scipy.ndimage import rotate
 
 SEQ_LENGTH = 5
-VISUALIZE_FRAME_SELECTION = True
+VISUALIZE_FRAME_SELECTION = False
 SELECT_ON_VISUAL_CUES = True
 EXCLUDE_CORRUPTED_DATA = True
 
@@ -136,7 +137,7 @@ class DatasetManager():
         return X,y
 
 
-    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None):
+    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None, augment_factor=0):
         X,y = self.get_raw()
         labels = self.encoder.transform(classes)
         # Create a list of indices and shuffle it if necessary
@@ -164,10 +165,29 @@ class DatasetManager():
             # Break the loop if all classes have enough samples
             if all(count >= num_samples_per_class for count in class_counts.values()):
                 break
-
+        if augment_factor:
+            X_out, y_out = self.augment_data(X_out, y_out, augment_factor=augment_factor)
         return np.array(X_out), np.array(y_out)
 
-        
+    def augment_data(self, X, y, augment_factor):
+        # X is assumed to be a list of 4D numpy arrays (num_images, height, width, channels)
+        # y is assumed to be a list of 1D numpy arrays (num_images, num_classes)
+        # Initialize output lists
+        X_aug = []
+        y_aug = []
+
+        # Iterate over each sample in the list
+        for s in range(len(X)):
+            # Add 10 rotations of each image in the sample
+            for angle in range(0, 360, int(360/augment_factor)): # This will give 10 equally spaced angles between 0 and 360
+                rotated_sample = np.zeros((X[s].shape[0], X[s].shape[1], X[s].shape[2], X[s].shape[3]))
+                for i in range(X[s].shape[0]):
+                    rotated_img = rotate(X[s][i], angle, reshape=False) # Rotate the image without changing its shape
+                    rotated_sample[i] = rotated_img
+                X_aug.append(rotated_sample)
+                y_aug.append(y[s])
+        return X_aug, y_aug
+
 if __name__ == "__main__":
     manager = DatasetManager("no_noise__visual_selection__filtered", ["data/data_no_noise/"], ["hardness" + str(i+1) for i in range(5)])
     X,y = manager.get_raw_with_classes(["hardness1", "hardness2", "hardness3", "hardness4", "hardness5"])

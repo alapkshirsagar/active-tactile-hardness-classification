@@ -121,7 +121,7 @@ def run_leave_one_out(model_creator, manager, save_path):
 
     print(confusion)
 
-def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, train_samples_per_class, validation_samples_per_class, test_samples_per_class, lossfunction = "categorical_crossentropy", save_path=None, load_path=None):
+def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, train_samples_per_class, validation_samples_per_class, test_samples_per_class, lossfunction = "categorical_crossentropy", save_path=None, load_path=None, augment_factor=0):
     timestamp = datetime.datetime.fromtimestamp(time()).strftime('%d-%m-%Y_%H-%M-%S')
     if save_path is None and load_path is None:
         raise ValueError("Either save_path or load_path must be specified")
@@ -147,6 +147,8 @@ def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, tr
     logger.log("Validation samples per class: " + str(validation_samples_per_class))
     logger.log("Test samples per class: " + str(test_samples_per_class))
     logger.log("Number of experiments: " + str(n_experiments))
+    logger.log("Augmented Samples: " + str(augment_factor))
+
     results_all_runs = []
     accuracies = []
     confusion_matrices = []
@@ -165,7 +167,7 @@ def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, tr
             ########## Create the training pairs ##########
             pair = train_pairs[n_trial]
             index_pair = train_indices[n_trial]
-            X_base, y_base = manager.get_raw_with_classes(pair, train_samples_per_class+validation_samples_per_class, shuffle = True, seed=seed)
+            X_base, y_base = manager.get_raw_with_classes(pair, train_samples_per_class+validation_samples_per_class, shuffle = True, seed=seed, augment_factor=augment_factor)
             y_base = y_base[:,[j for j in range(len(CLASSES)) if j in index_pair]] 
             input_shape = X_base.shape[1:]
             num_classes = y_base.shape[1]
@@ -187,8 +189,10 @@ def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, tr
                     validation_split = validation_samples_per_class/(train_samples_per_class+validation_samples_per_class),
                     # callbacks = [stop_callback]
                 )
-
-                val_accuracy = history.history['val_accuracy'][-1]
+                if validation_samples_per_class > 0:
+                    val_accuracy = history.history['val_accuracy'][-1]
+                else:
+                    val_accuracy = np.nan
                 train_accuracy = history.history['accuracy'][-1]
 
                 try:
@@ -240,6 +244,7 @@ def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, tr
     logger.log("Training samples per class: " + str(train_samples_per_class))
     logger.log("Validation samples per class: " + str(validation_samples_per_class))
     logger.log("Test samples per class: " + str(test_samples_per_class))
+    logger.log("Augmented Samples: " + str(augment_factor))
     logger.log("Number of experiments: " + str(n_experiments))
     logger.log("Accuracies over all runs:" + str(accuracies))
     logger.log("Average accuracy over all runs:" + str(np.mean(accuracies)))
@@ -303,9 +308,10 @@ if __name__ == "__main__":
     # run_on_full_dataset(get_ConvLSTM, manager, "model_dumps/without_corrupted_full_dataset/")
     n_experiments = 10
     epochs = 100
-    train_samples_per_class = 40
+    train_samples_per_class = 10
     validation_samples_per_class = 0
-    test_samples_per_class = 40
+    test_samples_per_class = 10
+    augment_factor = 10 # Number of augmented samples per sample, set to 0 for no augmentation
 
     [results, accuracies, confusion_matrices] = run_train_2_classify_three(
                                                 model_creator=get_ConvLSTM, 
@@ -315,4 +321,5 @@ if __name__ == "__main__":
                                                 train_samples_per_class=train_samples_per_class,
                                                 validation_samples_per_class=validation_samples_per_class,
                                                 test_samples_per_class=test_samples_per_class,
-                                                save_path="model_dumps/train_2_classify_three/")
+                                                save_path="model_dumps/train_2_classify_three/",
+                                                augment_factor=augment_factor)
