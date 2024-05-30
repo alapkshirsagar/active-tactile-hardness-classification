@@ -54,14 +54,8 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     
     return mean_variance
 
-def get_validation_set(manager, classes, samples_per_class):
-    validation_set = []
-    for cls in classes: # Calculate entropy for each class
-        X_val_cls, _ = manager.get_raw_with_classes([cls], samples_per_class) # Get one sample from each 
-        validation_set.append(X_val_cls)
-    return validation_set
 
-def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init_epochs = 10, iterations=10, validation_size = 4, num_dropouts=10, samples_per_iter = 10, epochs_per_iter = 5, strat="random"):
+def run_leave_one_out(model_creator, manager, save_path, test_samples = 10, init_samples = 10, init_epochs = 10, iterations=10, validation_size = 4, num_dropouts=10, samples_per_iter = 10, epochs_per_iter = 5, strat="random"):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -83,14 +77,13 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
 
         X_base, y_base = manager.get_raw_with_classes([x for j,x in enumerate(CLASSES) if j!=i], init_samples, seed = 42)
         y_base = y_base[:,[j for j in range(len(CLASSES)) if j != i]] 
-        X_comp, _ = manager.get_raw_with_classes([comp_class], init_samples, seed = 42)
+        X_comp, _ = manager.get_raw_with_classes([comp_class], test_samples, seed = 42)
 
         input_shape = X_base.shape[1:]
         num_classes = y_base.shape[1]
 
         model = model_creator(input_shape, num_classes)
-        X_train, X_test, y_train, y_test = train_test_split(X_base,y_base, train_size = .8)
-
+        X_train, y_train = X_base, y_base
 
         stop_callback = EarlyStopping(monitor = "val_accuracy", patience = 30, mode = "max", restore_best_weights = True)
 
@@ -100,7 +93,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
             validation_split = 0.1,
             callbacks = [stop_callback]
         )
-        x_val = get_validation_set(manager, base_classes, validation_size)
+
         for iter in range(iterations) :
             print("Iteration: ", iter, " of ", iterations)
         
@@ -112,11 +105,11 @@ def run_leave_one_out(model_creator, manager, save_path, init_samples = 10, init
             elif strat == "entropy" or strat == "variance":
                 uncertainty = None
                 if strat == "variance":
-                    uncertainty = calculate_variance_with_dropout(model, x_val, num_dropouts=num_dropouts)
+                    uncertainty = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts)
                     print("Variances: ", uncertainty)
                     wandb.log({"variances": uncertainty})
                 else: 
-                    uncertainty = calculate_entropy_with_dropout(model, x_val, num_dropouts=num_dropouts)
+                    uncertainty = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
                     print("Entropies: ", uncertainty)
                     wandb.log({"entropies": uncertainty})
                 
