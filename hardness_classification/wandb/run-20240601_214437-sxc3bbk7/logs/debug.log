@@ -1,0 +1,15 @@
+2024-06-01 21:44:37,060 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-06-01 21:44:37,060 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Configure stats pid to 25016
+2024-06-01 21:44:37,060 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Loading settings from C:\Users\bnkrg\.config\wandb\settings
+2024-06-01 21:44:37,060 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Loading settings from C:\Work\ip-hardness\hardness_classification\wandb\settings
+2024-06-01 21:44:37,061 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-06-01 21:44:37,061 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-06-01 21:44:37,061 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'hardness_classification\\leave_one_out.py', 'program_abspath': 'c:\\Work\\ip-hardness\\hardness_classification\\leave_one_out.py', 'program': 'c:\\Work\\ip-hardness\\hardness_classification\\leave_one_out.py'}
+2024-06-01 21:44:37,061 INFO    MainThread:25016 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-06-01 21:44:37,061 INFO    MainThread:25016 [wandb_init.py:_log_setup():520] Logging user logs to C:\Work\ip-hardness\hardness_classification\wandb\run-20240601_214437-sxc3bbk7\logs\debug.log
+2024-06-01 21:44:37,062 INFO    MainThread:25016 [wandb_init.py:_log_setup():521] Logging internal logs to C:\Work\ip-hardness\hardness_classification\wandb\run-20240601_214437-sxc3bbk7\logs\debug-internal.log
+2024-06-01 21:44:37,062 INFO    MainThread:25016 [wandb_init.py:init():560] calling init triggers
+2024-06-01 21:44:37,062 INFO    MainThread:25016 [wandb_init.py:init():567] wandb.init called with sweep_config: {}
+config: {'dataset_id': '42', 'model': 'get_ConvLSTM', 'name': 'leave_hardness4_out', 'lossfunction': 'categorical_crossentropy', 'epochs': 42}
+2024-06-01 21:44:37,062 INFO    MainThread:25016 [wandb_init.py:init():605] wandb.init() called when a run is still active
+2024-06-01 21:45:22,943 WARNING MsgRouterThr:25016 [router.py:message_loop():77] message_loop has been closed

@@ -1,0 +1,31 @@
+
+Base class:  ['hardness1', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness2 out.
+Epoch 1/2
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 6s/step - accuracy: 0.3333 - loss: 1.3835 - val_accuracy: 0.0000e+00 - val_loss: 1.8509
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 289ms/step - accuracy: 0.3333 - loss: 1.2356 - val_accuracy: 0.0000e+00 - val_loss: 4.1683
+Iteration:  0  of  2
+WARNING:tensorflow:5 out of the last 8 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x0000025449842050> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:5 out of the last 8 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x0000025449842050> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+Entropy values:  [3.5855489 3.5900435 3.5969226 2.6379604]
+Selected class:  hardness4
+Epoch 1/2
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 69ms/step - accuracy: 0.0000e+00 - loss: 1.8100
+WARNING:tensorflow:6 out of the last 10 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x000002543C693E20> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 629ms/step - accuracy: 0.0000e+00 - loss: 1.7670 - val_accuracy: 1.0000 - val_loss: 1.2971
+Epoch 2/2
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 107ms/step - accuracy: 0.5417 - loss: 1.4015 - val_accuracy: 0.0000e+00 - val_loss: 1.3297
+Iteration:  1  of  2
+Entropy values:  [3.4281037 3.4900305 3.54029   3.3854806]
+Selected class:  hardness4
+Epoch 1/2
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 405ms/step - accuracy: 0.0000e+00 - loss: 1.4850 - val_accuracy: 1.0000 - val_loss: 1.2806
+Epoch 2/2
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 111ms/step - accuracy: 0.5417 - loss: 1.3938 - val_accuracy: 0.0000e+00 - val_loss: 1.3230
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 665ms/step - accuracy: 0.5000 - loss: 1.3788
+test_loss 1.3787589073181152
+test_acc 0.5
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 769ms/step

@@ -1,0 +1,269 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 6s/step - accuracy: 0.3333 - loss: 1.3846 - val_accuracy: 0.0000e+00 - val_loss: 1.6463
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 221ms/step - accuracy: 0.3333 - loss: 1.2916 - val_accuracy: 0.0000e+00 - val_loss: 2.9795
+Iteration:  0  of  4
+Entropy values:  [3.5321245 3.5537996 3.563051  3.0515604]
+Selected class:  hardness4
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 518ms/step - accuracy: 0.8333 - loss: 2.4813 - val_accuracy: 0.0000e+00 - val_loss: 2.6931
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 113ms/step - accuracy: 0.8333 - loss: 0.6490 - val_accuracy: 0.0000e+00 - val_loss: 2.9619
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 106ms/step - accuracy: 0.7083 - loss: 0.7763 - val_accuracy: 0.0000e+00 - val_loss: 3.6270
+Iteration:  1  of  4
+Entropy values:  [3.0895123 1.5248505 2.2275736 1.0048207]
+Selected class:  hardness2
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 724ms/step - accuracy: 0.0000e+00 - loss: 1.8396 - val_accuracy: 0.0000e+00 - val_loss: 1.4311
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 105ms/step - accuracy: 0.0000e+00 - loss: 1.4471 - val_accuracy: 0.0000e+00 - val_loss: 1.5701
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 95ms/step - accuracy: 0.0000e+00 - loss: 1.3556 - val_accuracy: 0.0000e+00 - val_loss: 1.6936
+Iteration:  2  of  4
+Entropy values:  [3.3707395 3.4732347 3.4136174 3.5715206]
+Selected class:  hardness5
+Epoch 1/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 312ms/step - accuracy: 0.0000e+00 - loss: 1.4946 - val_accuracy: 0.0000e+00 - val_loss: 1.3903
+Epoch 2/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 89ms/step - accuracy: 0.4667 - loss: 1.4058 - val_accuracy: 0.0000e+00 - val_loss: 1.3801
+Epoch 3/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 84ms/step - accuracy: 0.0000e+00 - loss: 1.4052 - val_accuracy: 0.0000e+00 - val_loss: 1.3925
+Iteration:  3  of  4
+Entropy values:  [3.4268086 3.4369898 3.4605572 3.5292492]
+Selected class:  hardness5
+Epoch 1/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 62ms/step - accuracy: 0.0900 - loss: 1.4458
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m7s[22m 370ms/step - accuracy: 0.1083 - loss: 1.4468 - val_accuracy: 1.0000 - val_loss: 1.2101
+Epoch 2/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 92ms/step - accuracy: 0.2472 - loss: 1.3331 - val_accuracy: 1.0000 - val_loss: 1.0499
+Epoch 3/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 78ms/step - accuracy: 0.2472 - loss: 1.3069 - val_accuracy: 1.0000 - val_loss: 0.9279
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 905ms/step - accuracy: 0.0000e+00 - loss: 1.5496
+test_loss 1.549620509147644
+test_acc 0.0
+WARNING:tensorflow:5 out of the last 13 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x0000027BAAB9FAC0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:5 out of the last 13 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x0000027BAAB9FAC0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 961ms/step
+Base class:  ['hardness1', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness2 out.
+Epoch 1/2
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 8s/step - accuracy: 0.3333 - loss: 1.3860 - val_accuracy: 0.0000e+00 - val_loss: 1.5753
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 243ms/step - accuracy: 0.3333 - loss: 1.3218 - val_accuracy: 0.0000e+00 - val_loss: 2.1532
+Iteration:  0  of  4
+Entropy values:  [3.5188246 3.5168285 3.5371444 3.2202754]
+Selected class:  hardness4
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m7s[22m 729ms/step - accuracy: 0.0000e+00 - loss: 1.5138 - val_accuracy: 0.0000e+00 - val_loss: 1.3875
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 90ms/step - accuracy: 0.0000e+00 - loss: 1.4468 - val_accuracy: 0.0000e+00 - val_loss: 1.4597
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 97ms/step - accuracy: 0.0000e+00 - loss: 1.3999 - val_accuracy: 0.0000e+00 - val_loss: 1.5528
+Iteration:  1  of  4
+Entropy values:  [3.5592356 3.4662974 3.4452739 3.3652098]
+Selected class:  hardness1
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 598ms/step - accuracy: 0.0000e+00 - loss: 1.4526 - val_accuracy: 1.0000 - val_loss: 1.2903
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 95ms/step - accuracy: 0.5417 - loss: 1.3787 - val_accuracy: 0.0000e+00 - val_loss: 1.3178
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 101ms/step - accuracy: 0.0000e+00 - loss: 1.3508 - val_accuracy: 0.0000e+00 - val_loss: 1.2679
+Iteration:  2  of  4
+Entropy values:  [3.5513256 3.378788  3.4805772 3.4293513]
+Selected class:  hardness1
+Epoch 1/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 444ms/step - accuracy: 0.0000e+00 - loss: 1.4469 - val_accuracy: 0.0000e+00 - val_loss: 1.4521
+Epoch 2/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 147ms/step - accuracy: 0.0000e+00 - loss: 1.5061 - val_accuracy: 0.0000e+00 - val_loss: 1.4004
+Epoch 3/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 161ms/step - accuracy: 0.0000e+00 - loss: 1.4009 - val_accuracy: 0.0000e+00 - val_loss: 1.3950
+Iteration:  3  of  4
+Entropy values:  [3.3986657 3.3817096 3.4761336 3.5722418]
+Selected class:  hardness5
+Epoch 1/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 325ms/step - accuracy: 0.5778 - loss: 1.4665 - val_accuracy: 0.0000e+00 - val_loss: 1.3722
+Epoch 2/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 96ms/step - accuracy: 0.5222 - loss: 1.3189 - val_accuracy: 0.0000e+00 - val_loss: 1.3533
+Epoch 3/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 100ms/step - accuracy: 0.0000e+00 - loss: 1.2251 - val_accuracy: 0.0000e+00 - val_loss: 1.3602
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 680ms/step - accuracy: 0.0000e+00 - loss: 1.4616
+test_loss 1.4616191387176514
+test_acc 0.0
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 778ms/step
+Base class:  ['hardness1', 'hardness2', 'hardness4', 'hardness5'] Leaving hardness3 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 5s/step - accuracy: 0.6667 - loss: 1.3843 - val_accuracy: 0.0000e+00 - val_loss: 1.5310
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 236ms/step - accuracy: 0.3333 - loss: 1.3182 - val_accuracy: 0.0000e+00 - val_loss: 2.5963
+Iteration:  0  of  4
+Entropy values:  [3.5205033 3.5228133 3.534096  3.2120566]
+Selected class:  hardness4
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m4s[22m 406ms/step - accuracy: 0.0000e+00 - loss: 1.5349 - val_accuracy: 0.0000e+00 - val_loss: 1.4201
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 101ms/step - accuracy: 0.5417 - loss: 1.4018 - val_accuracy: 0.0000e+00 - val_loss: 1.5811
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 117ms/step - accuracy: 0.0000e+00 - loss: 1.3474 - val_accuracy: 0.0000e+00 - val_loss: 1.7552
+Iteration:  1  of  4
+Entropy values:  [3.437867  3.5420394 3.4794967 3.3853436]
+Selected class:  hardness2
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 639ms/step - accuracy: 0.5417 - loss: 1.5017 - val_accuracy: 0.0000e+00 - val_loss: 1.5141
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 91ms/step - accuracy: 0.5417 - loss: 1.3457 - val_accuracy: 0.0000e+00 - val_loss: 1.6714
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 88ms/step - accuracy: 0.0000e+00 - loss: 1.3401 - val_accuracy: 0.0000e+00 - val_loss: 1.9316
+Iteration:  2  of  4
+Entropy values:  [3.474924  3.5654879 3.3281012 3.4568796]
+Selected class:  hardness2
+Epoch 1/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 280ms/step - accuracy: 0.5667 - loss: 1.4512 - val_accuracy: 0.0000e+00 - val_loss: 1.6430
+Epoch 2/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 86ms/step - accuracy: 0.4667 - loss: 1.1698 - val_accuracy: 0.0000e+00 - val_loss: 2.4784
+Epoch 3/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 90ms/step - accuracy: 0.7333 - loss: 0.9444 - val_accuracy: 0.0000e+00 - val_loss: 3.0074
+Iteration:  3  of  4
+Entropy values:  [3.190086  3.6739328 3.5063367 3.1836336]
+Selected class:  hardness2
+Epoch 1/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 220ms/step - accuracy: 0.5194 - loss: 1.4316 - val_accuracy: 0.0000e+00 - val_loss: 2.1955
+Epoch 2/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 87ms/step - accuracy: 0.3389 - loss: 1.3439 - val_accuracy: 0.0000e+00 - val_loss: 3.0688
+Epoch 3/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 103ms/step - accuracy: 0.7278 - loss: 0.9578 - val_accuracy: 0.0000e+00 - val_loss: 3.0460
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 702ms/step - accuracy: 0.5000 - loss: 1.1246
+test_loss 1.12456214427948
+test_acc 0.5
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 786ms/step
+Base class:  ['hardness1', 'hardness2', 'hardness3', 'hardness5'] Leaving hardness4 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 5s/step - accuracy: 0.3333 - loss: 1.3835 - val_accuracy: 0.0000e+00 - val_loss: 1.9503
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 223ms/step - accuracy: 0.3333 - loss: 1.2394 - val_accuracy: 0.0000e+00 - val_loss: 3.8589
+Iteration:  0  of  4
+Entropy values:  [3.5765567 3.5941267 3.5950065 2.66596  ]
+Selected class:  hardness3
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 376ms/step - accuracy: 0.0000e+00 - loss: 2.1366 - val_accuracy: 0.0000e+00 - val_loss: 1.6895
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 90ms/step - accuracy: 0.5417 - loss: 1.4047 - val_accuracy: 0.0000e+00 - val_loss: 1.9231
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 103ms/step - accuracy: 0.0000e+00 - loss: 1.3314 - val_accuracy: 0.0000e+00 - val_loss: 2.1753
+Iteration:  1  of  4
+Entropy values:  [3.4418848 3.6725376 2.8986628 3.279632 ]
+Selected class:  hardness2
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m4s[22m 383ms/step - accuracy: 0.0000e+00 - loss: 1.7625 - val_accuracy: 0.0000e+00 - val_loss: 1.6405
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 92ms/step - accuracy: 0.5417 - loss: 1.5086 - val_accuracy: 0.0000e+00 - val_loss: 1.4389
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 101ms/step - accuracy: 0.0000e+00 - loss: 1.3965 - val_accuracy: 0.0000e+00 - val_loss: 1.3691
+Iteration:  2  of  4
+Entropy values:  [3.6751924 3.3770404 3.229733  3.3161187]
+Selected class:  hardness1
+Epoch 1/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 280ms/step - accuracy: 0.0000e+00 - loss: 1.5125 - val_accuracy: 0.0000e+00 - val_loss: 1.6482
+Epoch 2/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 84ms/step - accuracy: 0.0000e+00 - loss: 1.6352 - val_accuracy: 0.0000e+00 - val_loss: 1.4061
+Epoch 3/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 104ms/step - accuracy: 0.0000e+00 - loss: 1.4234 - val_accuracy: 0.0000e+00 - val_loss: 1.3736
+Iteration:  3  of  4
+Entropy values:  [3.0329201 3.3734372 3.5818164 2.7833378]
+Selected class:  hardness3
+Epoch 1/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 254ms/step - accuracy: 0.0000e+00 - loss: 1.5167 - val_accuracy: 1.0000 - val_loss: 1.0517
+Epoch 2/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 100ms/step - accuracy: 0.5222 - loss: 1.2740 - val_accuracy: 0.0000e+00 - val_loss: 1.0467
+Epoch 3/3
+
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 112ms/step - accuracy: 0.5222 - loss: 1.1962 - val_accuracy: 1.0000 - val_loss: 1.0000
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 764ms/step - accuracy: 0.0000e+00 - loss: 1.7949
+test_loss 1.7948675155639648
+test_acc 0.0
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 895ms/step
+Base class:  ['hardness1', 'hardness2', 'hardness3', 'hardness4'] Leaving hardness5 out.
+Epoch 1/2
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m7s[22m 7s/step - accuracy: 0.3333 - loss: 1.3859 - val_accuracy: 0.0000e+00 - val_loss: 1.4091
+Epoch 2/2
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 236ms/step - accuracy: 0.3333 - loss: 1.3779 - val_accuracy: 0.0000e+00 - val_loss: 1.5637
+Iteration:  0  of  4
+Entropy values:  [3.4432528 3.4768007 3.4723835 3.4696121]
+Selected class:  hardness2
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 425ms/step - accuracy: 0.8333 - loss: 1.4153 - val_accuracy: 0.0000e+00 - val_loss: 1.7283
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 103ms/step - accuracy: 0.8333 - loss: 1.0161 - val_accuracy: 0.0000e+00 - val_loss: 2.2554
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 111ms/step - accuracy: 0.8333 - loss: 0.8239 - val_accuracy: 0.0000e+00 - val_loss: 2.7037
+Iteration:  1  of  4
+Entropy values:  [3.0580816 3.678785  3.5506692 3.0910523]
+Selected class:  hardness2
+Epoch 1/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 395ms/step - accuracy: 0.8333 - loss: 1.4711 - val_accuracy: 0.0000e+00 - val_loss: 2.5008
+Epoch 2/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 100ms/step - accuracy: 0.4583 - loss: 1.3501 - val_accuracy: 0.0000e+00 - val_loss: 3.0475
+Epoch 3/3
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 111ms/step - accuracy: 0.7083 - loss: 0.8605 - val_accuracy: 0.0000e+00 - val_loss: 3.2044
+Iteration:  2  of  4
+Entropy values:  [2.0041897 2.8166454 2.779009  2.664958 ]
+Selected class:  hardness2
+Epoch 1/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 293ms/step - accuracy: 0.2667 - loss: 1.9114 - val_accuracy: 1.0000 - val_loss: 0.6662
+Epoch 2/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 101ms/step - accuracy: 0.4333 - loss: 1.3289 - val_accuracy: 1.0000 - val_loss: 0.7684
+Epoch 3/3
+[1m4/4[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 116ms/step - accuracy: 0.6333 - loss: 1.1060 - val_accuracy: 1.0000 - val_loss: 0.7971
+Iteration:  3  of  4
+Entropy values:  [3.0421839 3.4100611 3.1839068 2.481321 ]
+Selected class:  hardness2
+Epoch 1/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 329ms/step - accuracy: 0.4222 - loss: 1.5238 - val_accuracy: 1.0000 - val_loss: 0.7028
+Epoch 2/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 93ms/step - accuracy: 0.5194 - loss: 1.3580 - val_accuracy: 1.0000 - val_loss: 0.6606
+Epoch 3/3
+[1m5/5[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 104ms/step - accuracy: 0.7694 - loss: 0.9141 - val_accuracy: 1.0000 - val_loss: 0.6973
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Traceback (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 133, in <module>
+    manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 113, in run_leave_one_out
+    loss, acc = model.evaluate(X_test, y_test, batch_size=4)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\utils\traceback_utils.py", line 117, in error_handler
+    return fn(*args, **kwargs)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 425, in evaluate
+    logs = self.test_function(iterator)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\util\traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\polymorphic_function.py", line 833, in __call__
+    result = self._call(*args, **kwds)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\polymorphic_function.py", line 878, in _call
+    results = tracing_compilation.call_function(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\tracing_compilation.py", line 139, in call_function
+    return function._call_flat(  # pylint: disable=protected-access
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\concrete_function.py", line 1322, in _call_flat
+    return self._inference_function.call_preflattened(args)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\atomic_function.py", line 216, in call_preflattened
+    flat_outputs = self.call_flat(*args)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\polymorphic_function\atomic_function.py", line 251, in call_flat
+    outputs = self._bound_context.call_function(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\context.py", line 1500, in call_function
+    outputs = execute.execute(
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+KeyboardInterrupt

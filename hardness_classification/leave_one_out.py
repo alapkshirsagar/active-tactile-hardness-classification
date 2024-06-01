@@ -37,18 +37,20 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
     lossfunction = "categorical_crossentropy"
     lossfunction = "categorical_crossentropy"
     logger = Logger(join(LOG_PATH, "leave_on_out.txt"), time(), DATASET_ID, "full_dataset", model_creator.__name__, "for save path see below", lossfunction=lossfunction)
+    wandb_preds = []
+    wandb_true = []
 
     for i, comp_class in enumerate(CLASSES):
-        wandb.init(project="leave_one_out", config={"dataset_id": DATASET_ID, 
+        run = wandb.init(project="leave_one_out", name= f"leave_{comp_class}_out",
+                                            config={"dataset_id": DATASET_ID, 
                                                     "model": model_creator.__name__, 
-                                                    "name": f"leave_{comp_class}_out",
                                                     "lossfunction": lossfunction,
                                                     "epochs": init_epochs + iterations * epochs_per_iter,
                                                     })
 
         base_classes = [x for j, x in enumerate(CLASSES) if j != i]
         print("Base class: ", base_classes, "Leaving", comp_class, "out.")
-        wandb.log({"base_classes": base_classes, "comp_class": comp_class})
+        run.log({"base_classes": base_classes, "comp_class": comp_class})
 
         X_base, y_base = manager.get_raw_with_classes(base_classes, init_samples, seed=42)
         y_base = y_base[:, [j for j in range(len(CLASSES)) if j != i]]
@@ -65,7 +67,7 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
 
         history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=0.1, callbacks=[stop_callback])
         for epoch in range(init_epochs):
-            wandb.log({"train_accuracy": history.history["accuracy"][epoch], 
+            run.log({"train_accuracy": history.history["accuracy"][epoch], 
                        "val_accuracy": history.history["val_accuracy"][epoch], 
                        "train_loss": history.history["loss"][epoch], 
                        "val_loss": history.history["val_loss"][epoch]})
@@ -93,7 +95,7 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
             history = model.fit(X_train_split, y_train_split, epochs=epochs_per_iter, batch_size=1, validation_split=0.1, callbacks=[stop_callback])
 
             for epoch in range(epochs_per_iter):
-                wandb.log({
+                run.log({
                     "train_accuracy": history.history["accuracy"][epoch], 
                     "val_accuracy": history.history["val_accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch], 
@@ -101,7 +103,7 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
 
             avg_entropy =np.mean(calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)) 
             avg_var = np.mean(calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts))
-            wandb.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
+            run.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
         model_save_path = f"{save_path}{uuid.uuid4()}.h5"
         try:
             model.save(model_save_path)
@@ -111,20 +113,22 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
         loss, acc = model.evaluate(X_test, y_test, batch_size=4)
         print("test_loss", loss)
         print("test_acc", acc)
-        wandb.log({"test_loss": loss, "test_accuracy": acc})
+        run.log({"test_loss": loss, "test_accuracy": acc})
 
         dist = model.predict(X_comp)
-        choice = np.argmax(dist, axis=1)
+        choice = np.argmax(dist, axis = 1)
         prediction = np.zeros((choice.size, len(base_classes)))
         prediction[np.arange(choice.size), choice] = 1
 
-        row = np.insert(prediction.sum(axis=0), i, 0)
+        row = np.insert(prediction.sum(axis = 0), i, 0)
+
         confusion[i, :] = row
+        run.finish()
+
 
     print(confusion)
-    wandb.log({"confusion_matrix": confusion.tolist()})
-    wandb.finish()
+
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, init_samples=1, iterations=4, num_dropouts=10, samples_per_iter=1, epochs_per_iter=10, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, init_samples=1, iterations=2, num_dropouts=1, samples_per_iter=1, epochs_per_iter=2, strat="entropy")
