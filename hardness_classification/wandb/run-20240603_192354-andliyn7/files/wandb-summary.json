@@ -1,0 +1,1 @@
+{"base_classes": ["hardness2", "hardness3", "hardness4", "hardness5"], "comp_class": "hardness1", "_timestamp": 1717435522.7564385, "_runtime": 88.72013354301453, "_step": 8, "train_accuracy": 1.0, "val_accuracy": 1.0, "train_loss": 0.010915919207036495, "val_loss": 0.0032248892821371555, "avg_entropy": 0.3018645644187927, "avg_variance": 0.0, "_wandb": {"runtime": 316}}

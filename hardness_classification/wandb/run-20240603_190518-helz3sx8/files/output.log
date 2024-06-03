@@ -1,0 +1,28 @@
+
+Base class:  ['hardness1', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness2 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m11s[22m 1s/step - accuracy: 0.2025 - loss: 1.3872 - val_accuracy: 0.0000e+00 - val_loss: 1.4262
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m2s[22m 305ms/step - accuracy: 0.2789 - loss: 1.3814 - val_accuracy: 0.0000e+00 - val_loss: 1.6425
+Iteration:  0  of  2
+Entropy values:  [3.425279  3.4766026 3.5262766 3.4225526]
+Selected class:  hardness4
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 210ms/step - accuracy: 1.0000 - loss: 0.4760 - val_accuracy: 1.0000 - val_loss: 0.0014
+Epoch 2/2
+[1m4/9[22m [32m━━━━━━━━[37m━━━━━━━━━━━━[39m [1m0s[22m 71ms/step - accuracy: 1.0000 - loss: 2.6357e-04
+WARNING:tensorflow:5 out of the last 9 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x000002317E659120> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 75ms/step - accuracy: 1.0000 - loss: 2.8099e-04 - val_accuracy: 1.0000 - val_loss: 7.4323e-04
+Iteration:  1  of  2
+Entropy values:  [0.00792604 0.01743282 0.00396035 0.00935974]
+Selected class:  hardness3
+Epoch 1/2
+[1m5/9[22m [32m━━━━━━━━━━━[37m━━━━━━━━━[39m [1m0s[22m 67ms/step - accuracy: 0.0400 - loss: 4.4054
+WARNING:tensorflow:6 out of the last 11 calls to <function TensorFlowTrainer.make_test_function.<locals>.one_step_on_iterator at 0x000002318EC86EF0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m7s[22m 180ms/step - accuracy: 0.2573 - loss: 3.0605 - val_accuracy: 1.0000 - val_loss: 0.0700
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 69ms/step - accuracy: 1.0000 - loss: 0.0215 - val_accuracy: 1.0000 - val_loss: 0.0114
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 966ms/step

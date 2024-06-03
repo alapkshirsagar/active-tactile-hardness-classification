@@ -31,14 +31,14 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
-def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random"):
+def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random"):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
     lossfunction = "categorical_crossentropy"
     logger = Logger(join(LOG_PATH, "leave_on_out.txt"), time(), DATASET_ID, "full_dataset", model_creator.__name__, "for save path see below", lossfunction=lossfunction)
-    wandb_preds = []
-    wandb_true = []
+    ground_truth = []
+    predictions = []
 
     for i, comp_class in enumerate(CLASSES):
         run = wandb.init(project="leave_one_out", name= f"leave_{comp_class}_out",
@@ -60,7 +60,11 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_e
         y_base = np.array(y_base)
 
         y_base = y_base[:, [j for j in range(len(CLASSES)) if j != i]]
-        X_comp, _ = manager.get_raw_with_classes([comp_class], test_samples, seed=42)
+        X_comp, y_comp = manager.get_raw_with_classes([comp_class], 1, seed=42)
+        X_comp, y_comp = manager.augment_data(X_comp, y_comp, augment_factor=10) # X_comp (4, 5, 240, 320, 3) Y_comp (4, 5)
+        X_comp = np.array(X_comp)
+        y_comp = np.array(y_comp)
+
 
         input_shape = X_base.shape[1:]
         num_classes = y_base.shape[1]
@@ -105,10 +109,8 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_e
             X_train = X_base_iter
             y_train = y_base_iter
 
-            X_train_split, X_test, y_train_split, y_test = train_test_split(X_train, y_train, train_size=0.8)
-
             model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
-            history = model.fit(X_train_split, y_train_split, epochs=epochs_per_iter, batch_size=1, validation_split=0.1, callbacks=[stop_callback])
+            history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=0.1, callbacks=[stop_callback])
 
             for epoch in range(epochs_per_iter):
                 run.log({
@@ -126,10 +128,11 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_e
         except Exception as e:
             print("Could not write model:", e)
 
-        loss, acc = model.evaluate(X_test, y_test, batch_size=4)
-        print("test_loss", loss)
-        print("test_acc", acc)
-        run.log({"test_loss": loss, "test_accuracy": acc})
+        # loss, acc = model.evaluate(X_comp, y_comp, batch_size=4)
+        # print("test_loss", loss)
+        # print("test_acc", acc)
+        # run.log({"test_loss": loss, "test_accuracy": acc}) # test accuracy must be zero since the model is not trained on the class
+
 
         dist = model.predict(X_comp)
         choice = np.argmax(dist, axis = 1)
@@ -137,12 +140,29 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_e
         prediction[np.arange(choice.size), choice] = 1
 
         row = np.insert(prediction.sum(axis = 0), i, 0)
-
+        
         confusion[i, :] = row
         run.finish()
-
+        ground_truth.extend(np.argmax(y_comp, axis=1))
+    
+        predictions.extend(np.argmax(np.insert(dist, i, 0, axis=1), axis=1))
 
     print(confusion)
+    # log confusion matrix to wandb
+    
+    predictions = np.array(predictions)
+    ground_truth = np.array(ground_truth)
+
+    run = wandb.init(project="leave_one_out", name = "confusion_matrix",
+                                            config={"dataset_id": DATASET_ID, 
+                                                    "model": model_creator.__name__, 
+                                                    "lossfunction": lossfunction,
+                                                    "epochs": init_epochs + iterations * epochs_per_iter,
+                                                    })
+    run.log({"conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=ground_truth, preds=predictions,
+                        class_names=CLASSES)})
+
 
 
 if __name__ == "__main__":

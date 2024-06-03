@@ -1,0 +1,51 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+Epoch 1/2
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 970ms/step - accuracy: 0.2894 - loss: 1.3881 - val_accuracy: 0.0000e+00 - val_loss: 1.4634
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m2s[22m 337ms/step - accuracy: 0.2604 - loss: 1.3802 - val_accuracy: 0.0000e+00 - val_loss: 1.8843
+Iteration:  0  of  2
+Entropy values:  [3.565556  3.5616436 3.4042828 3.250244 ]
+Selected class:  hardness2
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 140ms/step - accuracy: 0.7060 - loss: 0.4884 - val_accuracy: 1.0000 - val_loss: 0.0033
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 73ms/step - accuracy: 1.0000 - loss: 3.1672e-04 - val_accuracy: 1.0000 - val_loss: 3.7306e-04
+Iteration:  1  of  2
+Entropy values:  [0.00221574 0.01634737 0.00256242 0.00078646]
+Selected class:  hardness3
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 165ms/step - accuracy: 0.3680 - loss: 2.8151 - val_accuracy: 1.0000 - val_loss: 0.0397
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 71ms/step - accuracy: 1.0000 - loss: 0.0103 - val_accuracy: 1.0000 - val_loss: 0.0056
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Traceback (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 156, in <module>
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, iterations=2, num_dropouts=1, epochs_per_iter=2, strat="entropy")
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 127, in run_leave_one_out
+    loss, acc = model.evaluate(X_comp, y_comp, batch_size=4)
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\utils\traceback_utils.py", line 122, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\tensorflow\python\eager\execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Graph execution error:
+Detected at node compile_loss/categorical_crossentropy/softmax_cross_entropy_with_logits defined at (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 156, in <module>
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 127, in run_leave_one_out
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\utils\traceback_utils.py", line 117, in error_handler
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 425, in evaluate
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 161, in one_step_on_iterator
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 150, in one_step_on_data
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\trainer.py", line 81, in test_step
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\trainers\trainer.py", line 316, in compute_loss
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\trainers\compile_utils.py", line 609, in __call__
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\trainers\compile_utils.py", line 645, in call
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\losses\loss.py", line 43, in __call__
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\losses\losses.py", line 22, in call
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\losses\losses.py", line 1576, in categorical_crossentropy
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\ops\nn.py", line 1482, in categorical_crossentropy
+  File "C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\backend\tensorflow\nn.py", line 564, in categorical_crossentropy
+logits and labels must be broadcastable: logits_size=[4,4] labels_size=[4,5]
+	 [[{{node compile_loss/categorical_crossentropy/softmax_cross_entropy_with_logits}}]] [Op:__inference_one_step_on_iterator_46096]

@@ -1,0 +1,25 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+c:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m17s[22m 3s/step - accuracy: 0.2315 - loss: 1.3869 - val_accuracy: 0.0000e+00 - val_loss: 1.3830
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 394ms/step - accuracy: 0.2789 - loss: 1.3852 - val_accuracy: 0.0000e+00 - val_loss: 1.6313
+Iteration:  0  of  2
+Entropy values:  [3.457123 3.455117 3.480154 3.469989]
+Selected class:  hardness4
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m13s[22m 271ms/step - accuracy: 1.0000 - loss: 0.7339 - val_accuracy: 1.0000 - val_loss: 0.0023
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 83ms/step - accuracy: 1.0000 - loss: 0.0015 - val_accuracy: 1.0000 - val_loss: 5.5512e-04
+Iteration:  1  of  2
+Entropy values:  [0.0437343  0.04233057 0.02145645 0.06871323]
+Selected class:  hardness5
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m12s[22m 314ms/step - accuracy: 0.1060 - loss: 3.0107 - val_accuracy: 1.0000 - val_loss: 0.3602
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 78ms/step - accuracy: 1.0000 - loss: 0.2160 - val_accuracy: 1.0000 - val_loss: 0.0308
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 1s/step
+Backend tkagg is interactive backend. Turning interactive mode on.

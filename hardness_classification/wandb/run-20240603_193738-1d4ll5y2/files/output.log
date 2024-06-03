@@ -1,0 +1,25 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m11s[22m 2s/step - accuracy: 0.3183 - loss: 1.3862 - val_accuracy: 0.0000e+00 - val_loss: 1.4948
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m2s[22m 287ms/step - accuracy: 0.2894 - loss: 1.3799 - val_accuracy: 0.0000e+00 - val_loss: 1.5876
+Iteration:  0  of  2
+Entropy values:  [3.4061866 3.5385277 3.5409036 3.3377705]
+Selected class:  hardness4
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m8s[22m 248ms/step - accuracy: 0.7060 - loss: 0.5793 - val_accuracy: 1.0000 - val_loss: 0.0011
+Epoch 2/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 82ms/step - accuracy: 1.0000 - loss: 1.5060e-04 - val_accuracy: 1.0000 - val_loss: 4.2966e-04
+Iteration:  1  of  2
+Entropy values:  [0.003617   0.01520396 0.00229735 0.00186584]
+Selected class:  hardness3
+Epoch 1/2
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m7s[22m 212ms/step - accuracy: 0.1716 - loss: 3.2678 - val_accuracy: 1.0000 - val_loss: 0.1665
+Epoch 2/2
+[1m1/9[22m [32m━━[37m━━━━━━━━━━━━━━━━━━[39m [1m0s[22m 85ms/step - accuracy: 1.0000 - loss: 0.1442
+
+[1m9/9[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 73ms/step - accuracy: 1.0000 - loss: 0.0792 - val_accuracy: 1.0000 - val_loss: 0.0141
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 1s/step

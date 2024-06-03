@@ -1,0 +1,329 @@
+2024-06-03 19:07:38,471 INFO    StreamThr :28288 [internal.py:wandb_internal():85] W&B internal server running at pid: 28288, started at: 2024-06-03 19:07:38.469979
+2024-06-03 19:07:38,472 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status
+2024-06-03 19:07:38,474 INFO    WriterThread:28288 [datastore.py:open_for_write():87] open: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\run-ngtmrtm6.wandb
+2024-06-03 19:07:38,476 DEBUG   SenderThread:28288 [sender.py:send():378] send: header
+2024-06-03 19:07:38,476 DEBUG   SenderThread:28288 [sender.py:send():378] send: run
+2024-06-03 19:07:38,889 INFO    SenderThread:28288 [dir_watcher.py:__init__():211] watching files in: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files
+2024-06-03 19:07:38,889 INFO    SenderThread:28288 [sender.py:_start_run_threads():1123] run started: ngtmrtm6 with start time 1717434457.502622
+2024-06-03 19:07:38,896 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: check_version
+2024-06-03 19:07:38,896 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: check_version
+2024-06-03 19:07:38,961 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: run_start
+2024-06-03 19:07:38,970 DEBUG   HandlerThread:28288 [system_info.py:__init__():26] System info init
+2024-06-03 19:07:38,970 DEBUG   HandlerThread:28288 [system_info.py:__init__():41] System info init done
+2024-06-03 19:07:38,970 INFO    HandlerThread:28288 [system_monitor.py:start():194] Starting system monitor
+2024-06-03 19:07:38,970 INFO    SystemMonitor:28288 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-03 19:07:38,971 INFO    HandlerThread:28288 [system_monitor.py:probe():214] Collecting system info
+2024-06-03 19:07:38,975 INFO    SystemMonitor:28288 [interfaces.py:start():188] Started cpu monitoring
+2024-06-03 19:07:38,976 INFO    SystemMonitor:28288 [interfaces.py:start():188] Started disk monitoring
+2024-06-03 19:07:38,976 INFO    SystemMonitor:28288 [interfaces.py:start():188] Started gpu monitoring
+2024-06-03 19:07:38,986 INFO    SystemMonitor:28288 [interfaces.py:start():188] Started memory monitoring
+2024-06-03 19:07:38,989 DEBUG   HandlerThread:28288 [system_info.py:probe():150] Probing system
+2024-06-03 19:07:38,997 INFO    SystemMonitor:28288 [interfaces.py:start():188] Started network monitoring
+2024-06-03 19:07:38,998 DEBUG   HandlerThread:28288 [system_info.py:_probe_git():135] Probing git
+2024-06-03 19:07:39,000 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:39,000 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:39,057 DEBUG   HandlerThread:28288 [system_info.py:_probe_git():143] Probing git done
+2024-06-03 19:07:39,057 DEBUG   HandlerThread:28288 [system_info.py:probe():198] Probing system done
+2024-06-03 19:07:39,057 DEBUG   HandlerThread:28288 [system_monitor.py:probe():223] {'os': 'Windows-10-10.0.22631-SP0', 'python': '3.10.11', 'heartbeatAt': '2024-06-03T17:07:38.989273', 'startedAt': '2024-06-03T17:07:37.493084', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'c:\\Work\\ip-hardness\\hardness_classification\\leave_one_out.py', 'codePathLocal': 'leave_one_out.py', 'codePath': 'hardness_classification\\leave_one_out.py', 'git': {'remote': 'https://Patchouli-Kenntnis:@git.ias.informatik.tu-darmstadt.de/tactile-sensing/ip-hardness.git', 'commit': '06eaf92d65329fae982dfb027946a200123d3cba'}, 'email': 'hibernating_patchouli@protonmail.com', 'root': 'C:/Work/ip-hardness', 'host': 'MSI', 'username': 'bnkrg', 'executable': 'C:\\Work\\ip-hardness\\.venv\\Scripts\\python.exe', 'cpu_count': 12, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3100.0, 'min': 0.0, 'max': 3100.0}, 'cpu_freq_per_core': [{'current': 3100.0, 'min': 0.0, 'max': 3100.0}], 'disk': {'/': {'total': 453.11327743530273, 'used': 432.2910270690918}}, 'gpu': 'NVIDIA GeForce RTX 3050 Laptop GPU', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3050 Laptop GPU', 'memory_total': 4294967296}], 'memory': {'total': 15.707954406738281}}
+2024-06-03 19:07:39,057 INFO    HandlerThread:28288 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-03 19:07:39,057 INFO    HandlerThread:28288 [system_monitor.py:probe():227] Publishing system info
+2024-06-03 19:07:39,059 INFO    HandlerThread:28288 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-03 19:07:39,059 DEBUG   SenderThread:28288 [sender.py:send():378] send: files
+2024-06-03 19:07:39,059 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-metadata.json with policy now
+2024-06-03 19:07:39,175 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-03 19:07:39,175 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: python_packages
+2024-06-03 19:07:39,176 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-03 19:07:39,176 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: stop_status
+2024-06-03 19:07:39,178 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:07:39,394 DEBUG   SenderThread:28288 [sender.py:send():378] send: telemetry
+2024-06-03 19:07:39,396 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:07:39,396 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:07:39,397 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:07:39,619 INFO    wandb-upload_0:28288 [upload_job.py:push():130] Uploaded file C:\Users\bnkrg\AppData\Local\Temp\tmplydz20gswandb\gqvtfcx3-wandb-metadata.json
+2024-06-03 19:07:39,900 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\requirements.txt
+2024-06-03 19:07:39,900 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-metadata.json
+2024-06-03 19:07:39,901 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:07:39,901 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:07:40,072 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:40,079 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:41,917 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:07:42,094 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:42,094 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:42,544 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:42,551 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:44,448 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:07:44,565 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:44,565 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:45,013 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:45,017 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:47,036 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:47,036 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:47,494 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:47,501 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:49,502 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:07:49,506 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:49,506 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:49,949 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:49,956 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:51,975 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:51,975 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:52,018 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:07:52,410 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:52,417 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:54,178 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-03 19:07:54,180 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: stop_status
+2024-06-03 19:07:54,434 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:54,434 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:54,870 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:54,877 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:55,349 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:07:56,897 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:56,897 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:57,385 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:57,393 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:59,414 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:59,414 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:07:59,877 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:07:59,885 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:00,105 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:00,743 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:01,889 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:01,889 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:01,891 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:01,891 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:01,892 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:01,892 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:01,892 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:01,893 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:01,896 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:01,897 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:02,142 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:02,142 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:02,341 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:02,348 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:04,164 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:04,359 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:04,359 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:04,819 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:04,828 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:06,535 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:06,842 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:06,842 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:07,276 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:07,284 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:08,205 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:09,188 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-03 19:08:09,188 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: stop_status
+2024-06-03 19:08:09,299 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:09,299 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:09,735 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:09,742 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:11,542 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:11,773 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:11,776 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:12,226 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:12,233 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:12,249 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\config.yaml
+2024-06-03 19:08:13,672 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:13,672 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:13,673 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:13,673 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:13,674 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:13,674 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:13,674 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:13,675 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:14,253 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:14,253 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:14,263 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:14,263 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:14,712 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:14,719 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:15,186 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:15,187 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:15,187 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:15,188 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:15,278 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:16,289 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:17,004 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:17,201 ERROR   gpu       :28288 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-03 19:08:17,211 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:17,212 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:18,311 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:19,231 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:19,231 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:19,665 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:19,672 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:21,692 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:21,692 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:22,143 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:22,151 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:22,355 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:22,853 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:24,164 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:24,164 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:24,191 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-03 19:08:24,192 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: stop_status
+2024-06-03 19:08:24,614 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:24,615 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:26,630 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:26,630 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:27,076 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:27,084 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:27,849 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:27,850 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:27,850 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:27,850 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:27,851 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:27,851 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:27,851 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:27,851 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:28,412 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:28,412 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:28,862 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:29,100 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:29,101 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 19:08:29,284 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 19:08:29,284 DEBUG   SenderThread:28288 [sender.py:send():378] send: history
+2024-06-03 19:08:29,285 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 19:08:29,286 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:29,424 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:29,550 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:29,557 ERROR   gpu       :28288 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 19:08:30,355 DEBUG   SenderThread:28288 [sender.py:send():378] send: telemetry
+2024-06-03 19:08:30,356 DEBUG   SenderThread:28288 [sender.py:send():378] send: exit
+2024-06-03 19:08:30,356 INFO    SenderThread:28288 [sender.py:send_exit():585] handling exit code: 0
+2024-06-03 19:08:30,356 INFO    SenderThread:28288 [sender.py:send_exit():587] handling runtime: 51
+2024-06-03 19:08:30,357 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:30,357 INFO    SenderThread:28288 [sender.py:send_exit():593] send defer
+2024-06-03 19:08:30,357 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,357 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 0
+2024-06-03 19:08:30,357 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,357 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 0
+2024-06-03 19:08:30,357 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 1
+2024-06-03 19:08:30,358 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,358 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 1
+2024-06-03 19:08:30,358 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,358 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 1
+2024-06-03 19:08:30,358 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 2
+2024-06-03 19:08:30,358 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,358 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 2
+2024-06-03 19:08:30,358 INFO    HandlerThread:28288 [system_monitor.py:finish():203] Stopping system monitor
+2024-06-03 19:08:30,358 DEBUG   SystemMonitor:28288 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-03 19:08:30,358 INFO    HandlerThread:28288 [interfaces.py:finish():200] Joined cpu monitor
+2024-06-03 19:08:30,366 DEBUG   SystemMonitor:28288 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-06-03 19:08:30,367 INFO    HandlerThread:28288 [interfaces.py:finish():200] Joined disk monitor
+2024-06-03 19:08:30,367 DEBUG   SystemMonitor:28288 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-06-03 19:08:30,428 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:30,428 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:30,839 ERROR   gpu       :28288 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-03 19:08:30,839 INFO    HandlerThread:28288 [interfaces.py:finish():200] Joined gpu monitor
+2024-06-03 19:08:30,839 INFO    HandlerThread:28288 [interfaces.py:finish():200] Joined memory monitor
+2024-06-03 19:08:30,839 INFO    HandlerThread:28288 [interfaces.py:finish():200] Joined network monitor
+2024-06-03 19:08:30,839 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,839 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 2
+2024-06-03 19:08:30,839 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 3
+2024-06-03 19:08:30,839 DEBUG   SenderThread:28288 [sender.py:send():378] send: stats
+2024-06-03 19:08:30,839 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,839 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 3
+2024-06-03 19:08:30,841 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,841 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 3
+2024-06-03 19:08:30,841 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 4
+2024-06-03 19:08:30,841 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,841 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 4
+2024-06-03 19:08:30,841 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,841 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 4
+2024-06-03 19:08:30,841 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 5
+2024-06-03 19:08:30,841 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,842 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 5
+2024-06-03 19:08:30,842 DEBUG   SenderThread:28288 [sender.py:send():378] send: summary
+2024-06-03 19:08:30,843 INFO    SenderThread:28288 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 19:08:30,843 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,843 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 5
+2024-06-03 19:08:30,843 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 6
+2024-06-03 19:08:30,843 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,843 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 6
+2024-06-03 19:08:30,844 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,844 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 6
+2024-06-03 19:08:30,847 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 19:08:30,996 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 7
+2024-06-03 19:08:30,996 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:30,996 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 7
+2024-06-03 19:08:30,996 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:30,996 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 7
+2024-06-03 19:08:31,364 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 19:08:31,442 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\config.yaml
+2024-06-03 19:08:31,443 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:32,098 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 8
+2024-06-03 19:08:32,099 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 19:08:32,099 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:32,099 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 8
+2024-06-03 19:08:32,099 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:32,099 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 8
+2024-06-03 19:08:32,099 INFO    SenderThread:28288 [job_builder.py:build():432] Attempting to build job artifact
+2024-06-03 19:08:32,102 INFO    SenderThread:28288 [job_builder.py:_get_source_type():565] is repo sourced job
+2024-06-03 19:08:32,104 INFO    SenderThread:28288 [job_builder.py:build():541] adding wandb-job metadata file
+2024-06-03 19:08:32,111 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 9
+2024-06-03 19:08:32,111 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:32,111 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 9
+2024-06-03 19:08:32,111 DEBUG   SenderThread:28288 [sender.py:send():378] send: artifact
+2024-06-03 19:08:32,378 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 19:08:32,456 INFO    Thread-58 :28288 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:32,828 INFO    SenderThread:28288 [sender.py:send_artifact():1467] sent artifact job-https___Patchouli-Kenntnis__git.ias.informatik.tu-darmstadt..ensing_ip-hardness.git_hardness_classification_leave_one_out.py - {'id': 'QXJ0aWZhY3Q6ODU4OTk3ODM1', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE3OTc4NDE5OQ==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6ODU4OTk3ODM1', 'versionIndex': 10}}}
+2024-06-03 19:08:32,828 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:32,828 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 9
+2024-06-03 19:08:32,828 INFO    SenderThread:28288 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-06-03 19:08:33,469 INFO    SenderThread:28288 [dir_watcher.py:finish():388] scan: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files
+2024-06-03 19:08:33,469 INFO    SenderThread:28288 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\config.yaml config.yaml
+2024-06-03 19:08:33,469 INFO    SenderThread:28288 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log output.log
+2024-06-03 19:08:33,471 INFO    SenderThread:28288 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\requirements.txt requirements.txt
+2024-06-03 19:08:33,473 INFO    SenderThread:28288 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-metadata.json wandb-metadata.json
+2024-06-03 19:08:33,473 INFO    SenderThread:28288 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json wandb-summary.json
+2024-06-03 19:08:33,473 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 10
+2024-06-03 19:08:33,473 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 19:08:33,475 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:33,475 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 10
+2024-06-03 19:08:33,478 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:33,478 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 10
+2024-06-03 19:08:33,479 INFO    SenderThread:28288 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-03 19:08:33,886 INFO    wandb-upload_0:28288 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\config.yaml
+2024-06-03 19:08:33,897 INFO    wandb-upload_1:28288 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\output.log
+2024-06-03 19:08:33,927 INFO    wandb-upload_2:28288 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\requirements.txt
+2024-06-03 19:08:33,953 INFO    wandb-upload_3:28288 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\files\wandb-summary.json
+2024-06-03 19:08:34,163 INFO    Thread-57 (_thread_body):28288 [sender.py:transition_state():613] send defer: 11
+2024-06-03 19:08:34,163 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:34,163 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 11
+2024-06-03 19:08:34,164 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:34,164 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 11
+2024-06-03 19:08:34,164 INFO    SenderThread:28288 [file_pusher.py:join():175] waiting for file pusher
+2024-06-03 19:08:34,165 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 12
+2024-06-03 19:08:34,165 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:34,165 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 12
+2024-06-03 19:08:34,165 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:34,166 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 12
+2024-06-03 19:08:34,166 INFO    SenderThread:28288 [file_stream.py:finish():601] file stream finish called
+2024-06-03 19:08:34,321 INFO    SenderThread:28288 [file_stream.py:finish():605] file stream finish is done
+2024-06-03 19:08:34,321 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 13
+2024-06-03 19:08:34,322 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:34,322 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 13
+2024-06-03 19:08:34,322 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:34,322 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 13
+2024-06-03 19:08:34,322 INFO    SenderThread:28288 [sender.py:transition_state():613] send defer: 14
+2024-06-03 19:08:34,322 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 19:08:34,322 INFO    HandlerThread:28288 [handler.py:handle_request_defer():184] handle defer: 14
+2024-06-03 19:08:34,322 DEBUG   SenderThread:28288 [sender.py:send():378] send: final
+2024-06-03 19:08:34,323 DEBUG   SenderThread:28288 [sender.py:send():378] send: footer
+2024-06-03 19:08:34,323 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: defer
+2024-06-03 19:08:34,323 INFO    SenderThread:28288 [sender.py:send_request_defer():609] handle sender defer: 14
+2024-06-03 19:08:34,323 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 19:08:34,324 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 19:08:34,324 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-03 19:08:34,325 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: server_info
+2024-06-03 19:08:34,325 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: get_summary
+2024-06-03 19:08:34,326 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: sampled_history
+2024-06-03 19:08:34,326 DEBUG   SenderThread:28288 [sender.py:send_request():405] send_request: server_info
+2024-06-03 19:08:34,457 DEBUG   HandlerThread:28288 [handler.py:handle_request():158] handle_request: shutdown
+2024-06-03 19:08:34,457 INFO    HandlerThread:28288 [handler.py:finish():882] shutting down handler
+2024-06-03 19:08:35,328 INFO    WriterThread:28288 [datastore.py:close():296] close: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_190737-ngtmrtm6\run-ngtmrtm6.wandb
+2024-06-03 19:08:35,468 INFO    SenderThread:28288 [sender.py:finish():1545] shutting down sender
+2024-06-03 19:08:35,468 INFO    SenderThread:28288 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-03 19:08:35,468 INFO    SenderThread:28288 [file_pusher.py:join():175] waiting for file pusher
