@@ -11,3 +11,4 @@ hardness_classification/data/
 *.zip
 tmp/
 data_collection/data/
+wandb/
