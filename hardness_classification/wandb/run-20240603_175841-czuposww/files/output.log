@@ -1,0 +1,8 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+Traceback (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 139, in <module>
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, iterations=2, num_dropouts=1, epochs_per_iter=2, strat="entropy")
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 58, in run_leave_one_out
+    y_base = y_base[:, [j for j in range(len(CLASSES)) if j != i]]
+TypeError: list indices must be integers or slices, not tuple

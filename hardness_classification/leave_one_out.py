@@ -31,7 +31,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
-def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_samples=10, init_epochs=10, iterations=10, num_dropouts=10, samples_per_iter=10, epochs_per_iter=5, strat="random"):
+def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random"):
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
     lossfunction = "categorical_crossentropy"
@@ -52,7 +52,13 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
         print("Base class: ", base_classes, "Leaving", comp_class, "out.")
         run.log({"base_classes": base_classes, "comp_class": comp_class})
 
-        X_base, y_base = manager.get_raw_with_classes(base_classes, init_samples, seed=42)
+
+        X_base, y_base = manager.get_raw_with_classes(base_classes, 1, seed=42)
+        X_base, y_base = manager.augment_data(X_base, y_base, augment_factor=10) # X_base (4, 5, 240, 320, 3) Y_base (4, 5)
+        # convert to np.array
+        X_base = np.array(X_base)
+        y_base = np.array(y_base)
+
         y_base = y_base[:, [j for j in range(len(CLASSES)) if j != i]]
         X_comp, _ = manager.get_raw_with_classes([comp_class], test_samples, seed=42)
 
@@ -84,10 +90,20 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
                 selected_class = base_classes[selected_index]
 
             print("Selected class: ", selected_class)
-            X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], samples_per_iter, seed=42)
+
+            X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], 1, seed=42) # get one sample of the selected class
+            X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=10) # augment the sample to get 10 samples
+            X_base_iter = np.array(X_base_iter)
+            y_base_iter = np.array(y_base_iter) # convert to np.array
             y_base_iter = y_base_iter[:, [j for j in range(len(CLASSES)) if j != i]]
-            X_train = np.concatenate([X_train, X_base_iter])
-            y_train = np.concatenate([y_train, y_base_iter])
+            
+            X_train = X_base_iter
+            y_train = y_base_iter
+            # X_train = np.concatenate([X_train, X_base_iter]) TODO: check if this is necessary
+            # y_train = np.concatenate([y_train, y_base_iter]) TODO: check if this is necessary
+
+            X_train = X_base_iter
+            y_train = y_base_iter
 
             X_train_split, X_test, y_train_split, y_test = train_test_split(X_train, y_train, train_size=0.8)
 
@@ -131,4 +147,4 @@ def run_leave_one_out(model_creator, manager, save_path, test_samples=10, init_s
 
 if __name__ == "__main__":
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, init_samples=1, iterations=2, num_dropouts=1, samples_per_iter=1, epochs_per_iter=2, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, iterations=2, num_dropouts=1, epochs_per_iter=2, strat="entropy")

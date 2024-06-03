@@ -1,0 +1,201 @@
+2024-06-03 17:58:41,608 INFO    StreamThr :28292 [internal.py:wandb_internal():85] W&B internal server running at pid: 28292, started at: 2024-06-03 17:58:41.608662
+2024-06-03 17:58:41,609 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: status
+2024-06-03 17:58:41,630 INFO    WriterThread:28292 [datastore.py:open_for_write():87] open: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\run-czuposww.wandb
+2024-06-03 17:58:41,630 DEBUG   SenderThread:28292 [sender.py:send():378] send: header
+2024-06-03 17:58:41,668 DEBUG   SenderThread:28292 [sender.py:send():378] send: run
+2024-06-03 17:58:42,479 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: check_version
+2024-06-03 17:58:42,480 INFO    SenderThread:28292 [dir_watcher.py:__init__():211] watching files in: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files
+2024-06-03 17:58:42,481 INFO    SenderThread:28292 [sender.py:_start_run_threads():1123] run started: czuposww with start time 1717430321.627349
+2024-06-03 17:58:42,481 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: check_version
+2024-06-03 17:58:43,455 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: run_start
+2024-06-03 17:58:44,648 DEBUG   HandlerThread:28292 [system_info.py:__init__():26] System info init
+2024-06-03 17:58:44,648 DEBUG   HandlerThread:28292 [system_info.py:__init__():41] System info init done
+2024-06-03 17:58:44,648 INFO    HandlerThread:28292 [system_monitor.py:start():194] Starting system monitor
+2024-06-03 17:58:44,648 INFO    SystemMonitor:28292 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-03 17:58:44,649 INFO    HandlerThread:28292 [system_monitor.py:probe():214] Collecting system info
+2024-06-03 17:58:44,653 INFO    SystemMonitor:28292 [interfaces.py:start():188] Started cpu monitoring
+2024-06-03 17:58:44,653 INFO    SystemMonitor:28292 [interfaces.py:start():188] Started disk monitoring
+2024-06-03 17:58:44,654 INFO    SystemMonitor:28292 [interfaces.py:start():188] Started gpu monitoring
+2024-06-03 17:58:44,662 INFO    SystemMonitor:28292 [interfaces.py:start():188] Started memory monitoring
+2024-06-03 17:58:44,671 INFO    SystemMonitor:28292 [interfaces.py:start():188] Started network monitoring
+2024-06-03 17:58:44,680 DEBUG   HandlerThread:28292 [system_info.py:probe():150] Probing system
+2024-06-03 17:58:44,681 DEBUG   HandlerThread:28292 [system_info.py:_probe_git():135] Probing git
+2024-06-03 17:58:44,688 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-03 17:58:44,740 DEBUG   HandlerThread:28292 [system_info.py:_probe_git():143] Probing git done
+2024-06-03 17:58:44,740 DEBUG   HandlerThread:28292 [system_info.py:probe():198] Probing system done
+2024-06-03 17:58:44,740 DEBUG   HandlerThread:28292 [system_monitor.py:probe():223] {'os': 'Windows-10-10.0.22631-SP0', 'python': '3.10.11', 'heartbeatAt': '2024-06-03T15:58:44.680207', 'startedAt': '2024-06-03T15:58:41.604065', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'c:\\Work\\ip-hardness\\hardness_classification\\leave_one_out.py', 'codePathLocal': 'leave_one_out.py', 'codePath': 'hardness_classification\\leave_one_out.py', 'git': {'remote': 'https://Patchouli-Kenntnis:@git.ias.informatik.tu-darmstadt.de/tactile-sensing/ip-hardness.git', 'commit': '773c2bf76163fe2a8f99bdeaee851fe9ceba4fc9'}, 'email': 'hibernating_patchouli@protonmail.com', 'root': 'C:/Work/ip-hardness', 'host': 'MSI', 'username': 'bnkrg', 'executable': 'C:\\Work\\ip-hardness\\.venv\\Scripts\\python.exe', 'cpu_count': 12, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3100.0, 'min': 0.0, 'max': 3100.0}, 'cpu_freq_per_core': [{'current': 3100.0, 'min': 0.0, 'max': 3100.0}], 'disk': {'/': {'total': 453.11327743530273, 'used': 431.5699005126953}}, 'gpu': 'NVIDIA GeForce RTX 3050 Laptop GPU', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3050 Laptop GPU', 'memory_total': 4294967296}], 'memory': {'total': 15.707954406738281}}
+2024-06-03 17:58:44,740 INFO    HandlerThread:28292 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-03 17:58:44,740 INFO    HandlerThread:28292 [system_monitor.py:probe():227] Publishing system info
+2024-06-03 17:58:44,740 INFO    HandlerThread:28292 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-03 17:58:44,864 DEBUG   SenderThread:28292 [sender.py:send():378] send: files
+2024-06-03 17:58:44,864 INFO    SenderThread:28292 [sender.py:_save_file():1389] saving file wandb-metadata.json with policy now
+2024-06-03 17:58:45,078 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-03 17:58:45,079 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: python_packages
+2024-06-03 17:58:45,079 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-03 17:58:45,080 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: stop_status
+2024-06-03 17:58:45,128 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-03 17:58:45,513 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\requirements.txt
+2024-06-03 17:58:45,513 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-metadata.json
+2024-06-03 17:58:46,232 DEBUG   SenderThread:28292 [sender.py:send():378] send: telemetry
+2024-06-03 17:58:46,272 DEBUG   SenderThread:28292 [sender.py:send():378] send: history
+2024-06-03 17:58:46,272 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: summary_record
+2024-06-03 17:58:46,280 INFO    SenderThread:28292 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 17:58:46,516 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\output.log
+2024-06-03 17:58:46,516 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_created():271] file/dir created: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-summary.json
+2024-06-03 17:58:46,703 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 17:58:46,703 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 17:58:46,818 INFO    wandb-upload_0:28292 [upload_job.py:push():130] Uploaded file C:\Users\bnkrg\AppData\Local\Temp\tmp_wmf5mriwandb\m9z5w76c-wandb-metadata.json
+2024-06-03 17:58:47,158 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 17:58:47,165 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 17:58:47,283 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 17:58:48,520 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\output.log
+2024-06-03 17:58:49,171 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 17:58:49,171 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-03 17:58:49,626 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 17:58:49,634 ERROR   gpu       :28292 [interfaces.py:monitor():142] Failed to sample metric: No data
+2024-06-03 17:58:50,483 DEBUG   SenderThread:28292 [sender.py:send():378] send: exit
+2024-06-03 17:58:50,484 INFO    SenderThread:28292 [sender.py:send_exit():585] handling exit code: 1
+2024-06-03 17:58:50,484 INFO    SenderThread:28292 [sender.py:send_exit():587] handling runtime: 7
+2024-06-03 17:58:50,485 INFO    SenderThread:28292 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 17:58:50,485 INFO    SenderThread:28292 [sender.py:send_exit():593] send defer
+2024-06-03 17:58:50,485 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,485 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 0
+2024-06-03 17:58:50,485 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,485 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 0
+2024-06-03 17:58:50,485 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 1
+2024-06-03 17:58:50,485 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,486 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 1
+2024-06-03 17:58:50,486 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,486 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 1
+2024-06-03 17:58:50,486 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 2
+2024-06-03 17:58:50,486 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,486 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 2
+2024-06-03 17:58:50,486 INFO    HandlerThread:28292 [system_monitor.py:finish():203] Stopping system monitor
+2024-06-03 17:58:50,486 INFO    HandlerThread:28292 [interfaces.py:finish():200] Joined cpu monitor
+2024-06-03 17:58:50,497 INFO    HandlerThread:28292 [interfaces.py:finish():200] Joined disk monitor
+2024-06-03 17:58:50,497 DEBUG   SystemMonitor:28292 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-03 17:58:50,498 DEBUG   SystemMonitor:28292 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-06-03 17:58:50,498 DEBUG   SystemMonitor:28292 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-06-03 17:58:50,540 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-summary.json
+2024-06-03 17:58:50,985 INFO    HandlerThread:28292 [interfaces.py:finish():200] Joined gpu monitor
+2024-06-03 17:58:50,985 INFO    HandlerThread:28292 [interfaces.py:finish():200] Joined memory monitor
+2024-06-03 17:58:50,985 INFO    HandlerThread:28292 [interfaces.py:finish():200] Joined network monitor
+2024-06-03 17:58:50,985 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,985 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 2
+2024-06-03 17:58:50,985 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 3
+2024-06-03 17:58:50,985 DEBUG   SenderThread:28292 [sender.py:send():378] send: stats
+2024-06-03 17:58:50,986 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,986 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 3
+2024-06-03 17:58:50,986 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,986 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 3
+2024-06-03 17:58:50,986 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 4
+2024-06-03 17:58:50,986 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,986 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 4
+2024-06-03 17:58:50,986 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,986 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 4
+2024-06-03 17:58:50,986 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 5
+2024-06-03 17:58:50,986 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,986 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 5
+2024-06-03 17:58:50,986 DEBUG   SenderThread:28292 [sender.py:send():378] send: summary
+2024-06-03 17:58:50,987 INFO    SenderThread:28292 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-03 17:58:50,987 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,987 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 5
+2024-06-03 17:58:50,987 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 6
+2024-06-03 17:58:50,987 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:50,987 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 6
+2024-06-03 17:58:50,988 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:50,988 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 6
+2024-06-03 17:58:50,990 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: status_report
+2024-06-03 17:58:51,488 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:51,551 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-summary.json
+2024-06-03 17:58:51,638 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 7
+2024-06-03 17:58:51,638 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:51,638 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:51,638 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 7
+2024-06-03 17:58:51,639 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:51,639 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 7
+2024-06-03 17:58:52,500 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:52,516 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 8
+2024-06-03 17:58:52,516 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:52,516 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:52,516 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 8
+2024-06-03 17:58:52,516 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:52,516 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 8
+2024-06-03 17:58:52,516 INFO    SenderThread:28292 [job_builder.py:build():432] Attempting to build job artifact
+2024-06-03 17:58:52,519 INFO    SenderThread:28292 [job_builder.py:_get_source_type():565] is repo sourced job
+2024-06-03 17:58:52,562 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\output.log
+2024-06-03 17:58:52,563 INFO    Thread-16 :28292 [dir_watcher.py:_on_file_modified():288] file/dir modified: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\config.yaml
+2024-06-03 17:58:52,650 INFO    SenderThread:28292 [job_builder.py:build():541] adding wandb-job metadata file
+2024-06-03 17:58:52,685 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 9
+2024-06-03 17:58:52,685 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:52,686 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 9
+2024-06-03 17:58:52,686 DEBUG   SenderThread:28292 [sender.py:send():378] send: artifact
+2024-06-03 17:58:53,526 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:53,960 INFO    wandb-upload_0:28292 [upload_job.py:push():85] Skipped uploading C:\Users\bnkrg\AppData\Local\wandb\wandb\artifacts\staging\tmpw9rcx922
+2024-06-03 17:58:54,196 INFO    wandb-upload_1:28292 [upload_job.py:push():88] Uploaded file C:\Users\bnkrg\AppData\Local\Temp\tmpdma1hz60\wandb-job.json
+2024-06-03 17:58:55,297 INFO    SenderThread:28292 [sender.py:send_artifact():1467] sent artifact job-https___Patchouli-Kenntnis__git.ias.informatik.tu-darmstadt..ensing_ip-hardness.git_hardness_classification_leave_one_out.py - {'id': 'QXJ0aWZhY3Q6ODU4OTc3OTk1', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE3OTc4NDE5OQ==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6ODU3MzExOTk3', 'versionIndex': 6}}}
+2024-06-03 17:58:55,297 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:55,297 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 9
+2024-06-03 17:58:55,297 INFO    SenderThread:28292 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-06-03 17:58:55,598 INFO    SenderThread:28292 [dir_watcher.py:finish():388] scan: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files
+2024-06-03 17:58:55,598 INFO    SenderThread:28292 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\config.yaml config.yaml
+2024-06-03 17:58:55,598 INFO    SenderThread:28292 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\output.log output.log
+2024-06-03 17:58:55,600 INFO    SenderThread:28292 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\requirements.txt requirements.txt
+2024-06-03 17:58:55,601 INFO    SenderThread:28292 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-metadata.json wandb-metadata.json
+2024-06-03 17:58:55,601 INFO    SenderThread:28292 [dir_watcher.py:finish():402] scan save: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-summary.json wandb-summary.json
+2024-06-03 17:58:55,602 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 10
+2024-06-03 17:58:55,603 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:55,603 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:55,603 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 10
+2024-06-03 17:58:55,604 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:55,605 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 10
+2024-06-03 17:58:55,605 INFO    SenderThread:28292 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-03 17:58:56,062 INFO    wandb-upload_1:28292 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\output.log
+2024-06-03 17:58:56,106 INFO    wandb-upload_0:28292 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\config.yaml
+2024-06-03 17:58:56,275 INFO    wandb-upload_3:28292 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\wandb-summary.json
+2024-06-03 17:58:56,276 INFO    wandb-upload_2:28292 [upload_job.py:push():130] Uploaded file C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\files\requirements.txt
+2024-06-03 17:58:56,480 INFO    Thread-15 (_thread_body):28292 [sender.py:transition_state():613] send defer: 11
+2024-06-03 17:58:56,480 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:56,481 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 11
+2024-06-03 17:58:56,481 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:56,481 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 11
+2024-06-03 17:58:56,481 INFO    SenderThread:28292 [file_pusher.py:join():175] waiting for file pusher
+2024-06-03 17:58:56,482 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 12
+2024-06-03 17:58:56,482 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:56,482 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 12
+2024-06-03 17:58:56,482 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:56,482 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 12
+2024-06-03 17:58:56,482 INFO    SenderThread:28292 [file_stream.py:finish():601] file stream finish called
+2024-06-03 17:58:56,558 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:56,641 INFO    SenderThread:28292 [file_stream.py:finish():605] file stream finish is done
+2024-06-03 17:58:56,641 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 13
+2024-06-03 17:58:56,641 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:56,642 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:56,642 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 13
+2024-06-03 17:58:56,642 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:56,642 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 13
+2024-06-03 17:58:56,642 INFO    SenderThread:28292 [sender.py:transition_state():613] send defer: 14
+2024-06-03 17:58:56,642 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: defer
+2024-06-03 17:58:56,642 INFO    HandlerThread:28292 [handler.py:handle_request_defer():184] handle defer: 14
+2024-06-03 17:58:56,643 DEBUG   SenderThread:28292 [sender.py:send():378] send: final
+2024-06-03 17:58:56,643 DEBUG   SenderThread:28292 [sender.py:send():378] send: footer
+2024-06-03 17:58:56,643 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: defer
+2024-06-03 17:58:56,643 INFO    SenderThread:28292 [sender.py:send_request_defer():609] handle sender defer: 14
+2024-06-03 17:58:56,643 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:56,643 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:56,643 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-03 17:58:56,644 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: server_info
+2024-06-03 17:58:56,644 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: get_summary
+2024-06-03 17:58:56,644 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: sampled_history
+2024-06-03 17:58:56,644 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-03 17:58:56,644 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: poll_exit
+2024-06-03 17:58:56,644 DEBUG   SenderThread:28292 [sender.py:send_request():405] send_request: server_info
+2024-06-03 17:58:56,775 INFO    MainThread:28292 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-06-03 17:58:56,775 INFO    MainThread:28292 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-06-03 17:58:56,776 INFO    MainThread:28292 [wandb_run.py:_footer_sync_info():3953] logging synced files
+2024-06-03 17:58:56,777 DEBUG   HandlerThread:28292 [handler.py:handle_request():158] handle_request: shutdown
+2024-06-03 17:58:56,777 INFO    HandlerThread:28292 [handler.py:finish():882] shutting down handler
+2024-06-03 17:58:57,645 INFO    WriterThread:28292 [datastore.py:close():296] close: C:\Work\ip-hardness\hardness_classification\wandb\run-20240603_175841-czuposww\run-czuposww.wandb
+2024-06-03 17:58:57,786 INFO    SenderThread:28292 [sender.py:finish():1545] shutting down sender
+2024-06-03 17:58:57,786 INFO    SenderThread:28292 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-03 17:58:57,786 INFO    SenderThread:28292 [file_pusher.py:join():175] waiting for file pusher

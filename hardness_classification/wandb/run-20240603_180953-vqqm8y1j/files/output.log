@@ -1,0 +1,36 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Epoch 1/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m11s[22m 2s/step - accuracy: 0.1921 - loss: 1.3855 - val_accuracy: 0.0000e+00 - val_loss: 1.6510
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m3s[22m 332ms/step - accuracy: 0.2894 - loss: 1.3734 - val_accuracy: 0.0000e+00 - val_loss: 1.4883
+Iteration:  0  of  2
+Entropy values:  [3.6289532 3.4285278 3.507809  3.1460466]
+Selected class:  hardness2
+Epoch 1/2
+
+[1m36/36[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m10s[22m 111ms/step - accuracy: 0.2978 - loss: 1.4792 - val_accuracy: 0.5000 - val_loss: 1.2706
+Epoch 2/2
+
+
+[1m36/36[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m5s[22m 139ms/step - accuracy: 0.3726 - loss: 1.3312 - val_accuracy: 0.5000 - val_loss: 1.3032
+Iteration:  1  of  2
+Entropy values:  [3.6631823 3.3812718 3.5319898 2.9831643]
+Selected class:  hardness2
+Epoch 1/2
+
+
+
+[1m43/43[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m14s[22m 163ms/step - accuracy: 0.4142 - loss: 1.4370 - val_accuracy: 0.4000 - val_loss: 1.3309
+Epoch 2/2
+
+
+
+[1m43/43[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m6s[22m 129ms/step - accuracy: 0.5081 - loss: 1.2987 - val_accuracy: 0.4000 - val_loss: 1.3432
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+[1m3/3[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 76ms/step - accuracy: 0.5312 - loss: 1.2733
+test_loss 1.2946008443832397
+test_acc 0.5
+[1m1/1[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m1s[22m 1s/step

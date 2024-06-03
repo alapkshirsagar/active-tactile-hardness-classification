@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.22631-SP0",
+    "python": "3.10.11",
+    "heartbeatAt": "2024-06-03T16:04:59.408804",
+    "startedAt": "2024-06-03T16:04:57.653228",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:\\Work\\ip-hardness\\hardness_classification\\leave_one_out.py",
+    "codePathLocal": "leave_one_out.py",
+    "codePath": "hardness_classification\\leave_one_out.py",
+    "git": {
+        "remote": "https://Patchouli-Kenntnis:@git.ias.informatik.tu-darmstadt.de/tactile-sensing/ip-hardness.git",
+        "commit": "773c2bf76163fe2a8f99bdeaee851fe9ceba4fc9"
+    },
+    "email": "hibernating_patchouli@protonmail.com",
+    "root": "C:/Work/ip-hardness",
+    "host": "MSI",
+    "username": "bnkrg",
+    "executable": "C:\\Work\\ip-hardness\\.venv\\Scripts\\python.exe",
+    "cpu_count": 12,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3100.0,
+        "min": 0.0,
+        "max": 3100.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3100.0,
+            "min": 0.0,
+            "max": 3100.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 453.11327743530273,
+            "used": 431.574161529541
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.707954406738281
+    }
+}

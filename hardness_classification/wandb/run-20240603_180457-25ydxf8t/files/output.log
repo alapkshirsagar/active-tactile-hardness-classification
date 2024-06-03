@@ -1,0 +1,17 @@
+
+Base class:  ['hardness2', 'hardness3', 'hardness4', 'hardness5'] Leaving hardness1 out.
+Epoch 1/2
+C:\Work\ip-hardness\.venv\lib\site-packages\keras\src\layers\rnn\rnn.py:204: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m10s[22m 1s/step - accuracy: 0.2315 - loss: 1.3953 - val_accuracy: 0.0000e+00 - val_loss: 1.2629
+Epoch 2/2
+[1m2/2[22m [32m━━━━━━━━━━━━━━━━━━━━[39m [1m2s[22m 296ms/step - accuracy: 0.2789 - loss: 1.4143 - val_accuracy: 0.0000e+00 - val_loss: 1.5947
+Iteration:  0  of  2
+Entropy values:  [3.6477354 3.308156  3.0947936 3.569932 ]
+Selected class:  hardness2
+Traceback (most recent call last):
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 143, in <module>
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, iterations=2, num_dropouts=1, epochs_per_iter=2, strat="entropy")
+  File "c:\Work\ip-hardness\hardness_classification\leave_one_out.py", line 97, in run_leave_one_out
+    y_base_iter = y_base_iter[:, [j for j in range(len(CLASSES)) if j != i]]
+TypeError: list indices must be integers or slices, not tuple
