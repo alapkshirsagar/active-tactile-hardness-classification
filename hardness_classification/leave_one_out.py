@@ -11,6 +11,7 @@ import uuid
 import pandas as pd
 from utils import *
 import wandb
+import sklearn as sk
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
@@ -39,7 +40,6 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
 
     confusion = np.zeros((len(CLASSES), len(CLASSES)))
 
-    lossfunction = "categorical_crossentropy"
     lossfunction = "categorical_crossentropy"
     logger = Logger(join(LOG_PATH, "leave_on_out.txt"), time(), DATASET_ID, "full_dataset", model_creator.__name__, "for save path see below", lossfunction=lossfunction)
     ground_truth = []
@@ -80,8 +80,9 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
-        history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=0.1, callbacks=[stop_callback])
-        for epoch in range(init_epochs):
+        history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=0.1, batch_size=1, callbacks=[stop_callback])
+        executed_epochs = len(history.history["accuracy"])
+        for epoch in range(executed_epochs):
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                        "val_accuracy": history.history["val_accuracy"][epoch], 
                        "train_loss": history.history["loss"][epoch], 
@@ -106,16 +107,17 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
             y_base_iter = np.array(y_base_iter) # convert to np.array
             y_base_iter = y_base_iter[:, [j for j in range(len(CLASSES)) if j != i]]
             
-            X_train = X_base_iter
-            y_train = y_base_iter
-            # X_train = np.concatenate([X_train, X_base_iter]) TODO: check if this is necessary
-            # y_train = np.concatenate([y_train, y_base_iter]) TODO: check if this is necessary
-
+            # append the new samples to the training set
+            X_train = np.append(X_train, X_base_iter, axis=0)
+            y_train = np.append(y_train, y_base_iter, axis=0)
 
             model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+            stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
+
             history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=0.1, callbacks=[stop_callback])
 
-            for epoch in range(epochs_per_iter):
+            executed_epochs = len(history.history["accuracy"])
+            for epoch in range(executed_epochs):
                 run.log({
                     "train_accuracy": history.history["accuracy"][epoch], 
                     "val_accuracy": history.history["val_accuracy"][epoch], 
@@ -128,14 +130,29 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
             run.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
 
             # log test accuracy per iteration
-            y_preds = model.predict(X_comp)
+            y_preds = model.predict(X_comp, batch_size=1)
             y_preds = np.insert(y_preds, i, 0, axis=1) # insert the class that was left out
             preds = np.argmax(y_preds, axis=1) # predicted label
             gts = np.argmax(y_comp, axis=1) # ground truth
             acc = compute_acc(preds, gts, hardness_levels)
-            print("Iteration ", i + 1, " Test accuracy: ", acc)
+            print("Iteration ", iter + 1, " Test accuracy: ", acc)
             run.log({"test_accuracy": acc})
 
+        # evaluate the model
+
+        x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
+        y_test_model = y_test_model[:, [j for j in range(len(CLASSES)) if j != i]]
+
+        y_pred_model = model.predict(x_test_model, batch_size=1)
+
+        acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
+        print("leave " + comp_class + " out model test accuracy: ", acc)
+        run.log({"final_test_accuracy": acc})
+        model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
+        print("Confusion matrix: \n", model_confusion_matrix)
+        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
+                        class_names=base_classes)})
 
         model_save_path = f"{save_path}{uuid.uuid4()}.h5"
         try:
@@ -146,7 +163,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
 
 
 
-        dist = model.predict(X_comp)
+        dist = model.predict(X_comp, batch_size=1)
         choice = np.argmax(dist, axis = 1)
         prediction = np.zeros((choice.size, len(base_classes)))
         prediction[np.arange(choice.size), choice] = 1
@@ -180,20 +197,23 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
     acc = compute_acc(predictions, ground_truth, hardness_levels)
     print("overall_test_acc", acc)
     run.log({"overall_test_accuracy": acc})
+    run.log({"Strategy": strat})
     run.finish()
 
 ## Function to return the closest class to a given class
 def closest(ground_truth, hardness_lv):
-    closest = None
-    min_diff = float("inf")
-    for i in range(len(hardness_lv)):
-        if(i == ground_truth): continue
+    
+    # Calculate the absolute differences
+    differences = np.abs(hardness_lv - hardness_lv[ground_truth])
+    
+    # Set the difference for the ground_truth index to infinity to exclude it
+    differences[ground_truth] = np.inf
+    
+    # Find the index of the minimum difference
+    closest_class = np.argmin(differences)
+    
+    return closest_class
 
-        diff = abs(hardness_lv[ground_truth] - hardness_lv[i])
-        if diff < min_diff:
-            min_diff = diff
-            closest = i
-    return closest
 
 ## Function to compute accuracy
 def compute_acc(prediction, ground_truth, hardness_lv):
@@ -204,11 +224,16 @@ def compute_acc(prediction, ground_truth, hardness_lv):
     return match/len(ground_truth)
 
 
-hardness_levels = [0.44, 0.68, 0.79, 1.02, 1.13]
+hardness_levels = np.array([0.44, 0.68, 0.79, 1.02, 1.13]) 
 
 
 if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance")
+
+
+
+    # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="random", augment_factor=10)
+
