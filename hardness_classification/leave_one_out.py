@@ -58,14 +58,14 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
         run.log({"base_classes": base_classes, "comp_class": comp_class})
 
 
-        X_base, y_base = manager.get_raw_with_classes(base_classes, 1, seed=42)
+        X_base, y_base = manager.get_raw_with_classes(base_classes, 1)
         X_base, y_base = manager.augment_data(X_base, y_base, augment_factor=augment_factor) # X_base (4, 5, 240, 320, 3) Y_base (4, 5)
         # convert to np.array
         X_base = np.array(X_base)
         y_base = np.array(y_base)
 
         y_base = y_base[:, [j for j in range(len(CLASSES)) if j != i]]
-        X_comp, y_comp = manager.get_raw_with_classes([comp_class], 1, seed=42)
+        X_comp, y_comp = manager.get_raw_with_classes([comp_class], 1)
         X_comp, y_comp = manager.augment_data(X_comp, y_comp, augment_factor=augment_factor) # X_comp (4, 5, 240, 320, 3) Y_comp (4, 5)
         X_comp = np.array(X_comp)
         y_comp = np.array(y_comp)
@@ -100,7 +100,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
 
             print("Selected class: ", selected_class)
 
-            X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], 1, seed=42) # get one sample of the selected class
+            X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], 1) # get one sample of the selected class
             X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=augment_factor) # augment the sample to get 10 samples
             X_base_iter = np.array(X_base_iter)
             y_base_iter = np.array(y_base_iter) # convert to np.array
@@ -211,4 +211,4 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=2, iterations=2, num_dropouts=1, epochs_per_iter=2, strat="entropy")
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="entropy")
