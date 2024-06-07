@@ -65,7 +65,7 @@ def compute_confusion_matrix(dataframe):
     return confusion_matrix, true_confusion_matrix
 
 
-def compute_accuracy(dataframe):
+def compute_acc(dataframe):
     accuracy = []
     for triplet in comparison_triplets:
         comparison1_object = triplet[0]
@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
     dataframe = pd.DataFrame(dataframe)
     [confusion_matrix, true_confusion_matrix] = compute_confusion_matrix(dataframe)
-    accuracy = compute_accuracy(dataframe)
+    accuracy = compute_acc(dataframe)
     print("Confusion matrix: \n", confusion_matrix)
     print("True Confusion Matrix: \n", true_confusion_matrix)
     print("Average Accuracy: \n", accuracy*100)
