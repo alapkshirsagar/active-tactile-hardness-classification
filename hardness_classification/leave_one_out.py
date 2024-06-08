@@ -243,7 +243,7 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=25)
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=50)
 
 
 
