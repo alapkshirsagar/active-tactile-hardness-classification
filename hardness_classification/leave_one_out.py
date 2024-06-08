@@ -30,7 +30,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
-def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random", augment_factor=10):
+def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random", augment_factor=10, max_samples=50):
 
     # Ensure memory growth is enabled
     gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -46,6 +46,8 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
     predictions = []
 
     for i, comp_class in enumerate(CLASSES):
+        if gpus:
+            tf.keras.backend.clear_session()
         run = wandb.init(project="leave_one_out", name= f"leave_{comp_class}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model_creator.__name__, 
@@ -107,9 +109,19 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
             y_base_iter = np.array(y_base_iter) # convert to np.array
             y_base_iter = y_base_iter[:, [j for j in range(len(CLASSES)) if j != i]]
             
-            # append the new samples to the training set
-            X_train = np.append(X_train, X_base_iter, axis=0)
-            y_train = np.append(y_train, y_base_iter, axis=0)
+            # append the new samples to the sampling reservoir
+            X_base = np.append(X_base, X_base_iter, axis=0)
+            y_base = np.append(y_base, y_base_iter, axis=0)
+
+            # Subsampling: if the number of samples exceeds max_samples, randomly select max_samples samples
+            if X_base.shape[0] > max_samples:
+                indices = np.random.choice(X_train.shape[0], max_samples, replace=False)
+                X_train = X_base[indices]
+                y_train = y_base[indices]
+            else:
+                X_train, y_train = X_base, y_base
+
+            print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
 
             model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
             stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
@@ -231,7 +243,7 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance")
+    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=25)
 
 
 
