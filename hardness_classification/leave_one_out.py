@@ -53,13 +53,17 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
-def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_size=1, sample_per_iter=1, val_per_iter=10, comp_size=1) -> None:
-    # Ensure memory growth is enabled
+# Function to try to purge the GPU memory
+# if the model is not using the GPU memory, do nothing
+def try_purge_GPU():
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
-        tf.keras.backend.clear_session()
+            tf.config.experimental.set_memory_growth(gpu, True) # set memory growth to avoid memory errors
+        tf.keras.backend.clear_session() # clear the session to free up memory
+
+def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_size=1, sample_per_iter=1, val_per_iter=10, comp_size=1) -> None:
+    try_purge_GPU() 
 
     lossfunction = "categorical_crossentropy"
 
@@ -108,6 +112,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
                     "val_loss": history.history["val_loss"][epoch]})
 
     for iter in range(iterations):
+        try_purge_GPU()
         print("Iteration: ", iter, " of ", iterations)
     
         if strat == "random":
@@ -173,7 +178,9 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     y_pred_model = model.predict(x_test_model, batch_size=1)
 
     acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-    print("leave " + comp_classes + " out model test accuracy: ", acc)
+    print("Base classes: "+ ",".join(str(x) for x in base_classes))
+    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
+    print("model test accuracy: ", acc)
     run.log({"final_test_accuracy": acc})
     model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
     print("Confusion matrix: \n", model_confusion_matrix)
