@@ -18,17 +18,162 @@ CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-def calculate_entropy_with_dropout(model, X_val, num_dropouts=10):
+def purge_y_columns(y, indices):
+    return y[:, [j for j in range(len(y[0])) if j in indices]]
+
+def calculate_entropy_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
     preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
     entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     sum_entropy = np.sum(entropies, axis=0)
     return sum_entropy
 
-def calculate_variance_with_dropout(model, X_val, num_dropouts=10):
+def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
     preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
     variances = np.var(preds, axis=0)
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
+
+def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_size=1, sample_per_iter=1, comp_size=1) -> None:
+    # Ensure memory growth is enabled
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        tf.keras.backend.clear_session()
+
+    lossfunction = "categorical_crossentropy"
+
+    run = wandb.init(project="leave_one_out", name= f"leave_{comp_classes}_out",
+                                            config={"dataset_id": DATASET_ID, 
+                                                    "model": model_creator.__name__, 
+                                                    "lossfunction": lossfunction,
+                                                    "epochs": init_epochs + iterations * epochs_per_iter,
+                                                    })
+
+    print("Base class: ", base_classes, "Comp class: ", comp_classes)
+    run.log({"base_classes": base_classes, "comp_class": comp_classes})
+
+
+    X_base, y_base = manager.get_raw_with_classes(base_classes, init_sample_size)
+    X_base, y_base = manager.augment_data(X_base, y_base, augment_factor=augment_factor) # X_base (4, 5, 240, 320, 3) Y_base (4, 5)
+    # convert to np.array
+    X_base = np.array(X_base)
+    y_base = np.array(y_base)
+
+    # remove the class that are not in the base classes in y_base
+    base_classes_indices = [CLASSES.index(c) for c in base_classes]
+    y_base = purge_y_columns(y_base, base_classes_indices)
+    X_comp, y_comp = manager.get_raw_with_classes(comp_classes, comp_size)
+    X_comp, y_comp = manager.augment_data(X_comp, y_comp, augment_factor=augment_factor) # X_comp (4, 5, 240, 320, 3) Y_comp (4, 5)
+    X_comp = np.array(X_comp)
+    y_comp = np.array(y_comp)
+
+
+    input_shape = X_base.shape[1:]
+    num_classes = y_base.shape[1]
+
+    model = model_creator(input_shape, num_classes)
+    X_train, y_train = X_base, y_base
+
+    stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
+    model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+
+    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=0.1, batch_size=1, callbacks=[stop_callback])
+    executed_epochs = len(history.history["accuracy"])
+    for epoch in range(executed_epochs):
+        run.log({"train_accuracy": history.history["accuracy"][epoch], 
+                    "val_accuracy": history.history["val_accuracy"][epoch], 
+                    "train_loss": history.history["loss"][epoch], 
+                    "val_loss": history.history["val_loss"][epoch]})
+
+    for iter in range(iterations):
+        print("Iteration: ", iter, " of ", iterations)
+    
+        if strat == "random":
+            selected_class = random.choice(base_classes)
+        elif strat in ["entropy", "variance"]:
+            uncertainty = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts) if strat == "variance" else calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+            print(f"{strat.capitalize()} values: ", uncertainty)
+            selected_index = np.argmax(uncertainty)
+            selected_class = base_classes[selected_index]
+
+        print("Selected class: ", selected_class)
+
+        X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], 1) # get one sample of the selected class
+        X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=augment_factor) # augment the sample to get 10 samples
+        X_base_iter = np.array(X_base_iter)
+        y_base_iter = np.array(y_base_iter) # convert to np.array
+        y_base_iter = purge_y_columns(y_base_iter, base_classes_indices)
+        
+        # append the new samples to the sampling reservoir
+        X_base = np.append(X_base, X_base_iter, axis=0)
+        y_base = np.append(y_base, y_base_iter, axis=0)
+
+        # Subsampling: if the number of samples exceeds max_samples, randomly select max_samples samples
+        if X_base.shape[0] > max_samples:
+            indices = np.random.choice(X_train.shape[0], max_samples, replace=False)
+            X_train = X_base[indices]
+            y_train = y_base[indices]
+        else:
+            X_train, y_train = X_base, y_base
+
+        print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
+
+        model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+        stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
+
+        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=0.1, callbacks=[stop_callback])
+
+        executed_epochs = len(history.history["accuracy"])
+        for epoch in range(executed_epochs):
+            run.log({
+                "train_accuracy": history.history["accuracy"][epoch], 
+                "val_accuracy": history.history["val_accuracy"][epoch], 
+                "train_loss": history.history["loss"][epoch], 
+                "val_loss": history.history["val_loss"][epoch]}) # log training and validation accuracy and loss for each epoch
+
+        avg_entropy =np.mean(calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)) 
+        avg_var = np.mean(calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts))
+        
+        run.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
+
+        # log test accuracy per iteration
+        y_preds = model.predict(X_comp, batch_size=1)
+        y_preds = np.insert(y_preds, i, 0, axis=1) # insert the class that was left out
+        preds = np.argmax(y_preds, axis=1) # predicted label
+        gts = np.argmax(y_comp, axis=1) # ground truth
+        acc = compute_acc(preds, gts, hardness_levels)
+        print("Iteration ", iter + 1, " Test accuracy: ", acc)
+        run.log({"test_accuracy": acc})
+
+    # evaluate the model
+
+    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
+    y_test_model = purge_y_columns(y_test_model, base_classes_indices)
+
+    y_pred_model = model.predict(x_test_model, batch_size=1)
+
+    acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
+    print("leave " + comp_classes + " out model test accuracy: ", acc)
+    run.log({"final_test_accuracy": acc})
+    model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
+    print("Confusion matrix: \n", model_confusion_matrix)
+    run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                    y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
+                    class_names=base_classes)})
+
+    model_save_path = f"{save_path}{uuid.uuid4()}.h5"
+    try:
+        model.save(model_save_path)
+    except Exception as e:
+        print("Could not write model:", e)
+
+    dist = model.predict(X_comp, batch_size=1)
+    choice = np.argmax(dist, axis = 1)
+    prediction = np.zeros((choice.size, len(base_classes)))
+    prediction[np.arange(choice.size), choice] = 1
+    run.finish()
+
 
 def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random", augment_factor=10, max_samples=50):
 
@@ -243,9 +388,8 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=50)
-
-
+    # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=50)
 
     # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="random", augment_factor=10)
 
+    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=1, epochs_per_iter=10, strat="variance", augment_factor=10, max_samples=75, init_sample_size=1, sample_per_iter=1, comp_size=1)

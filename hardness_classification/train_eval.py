@@ -42,7 +42,7 @@ def run_on_full_dataset(model_creator, manager, save_path):
 
     model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
     history = model.fit(
-        X_train, y_train, epochs = 100, batch_size = 4,
+        X_train, y_train, epochs = 100, batch_size = 1,
         validation_split = 0.1,
         callbacks = [stop_callback]
     )
@@ -95,7 +95,7 @@ def run_leave_one_out(model_creator, manager, save_path):
 
         model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
         history = model.fit(
-            X_train, y_train, epochs = 100, batch_size = 4,
+            X_train, y_train, epochs = 100, batch_size = 1,
             validation_split = 0.1,
             callbacks = [stop_callback]
         )
@@ -185,7 +185,7 @@ def run_train_2_classify_three(model_creator, manager, n_experiments, epochs, tr
             # stop_callback = EarlyStopping(monitor = "val_accuracy", patience = epochs, mode = "max", restore_best_weights = True)
                 model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
                 history = model.fit(
-                    X_base, y_base, epochs = epochs, batch_size = 4,
+                    X_base, y_base, epochs = epochs, batch_size = 1,
                     validation_split = validation_samples_per_class/(train_samples_per_class+validation_samples_per_class),
                     # callbacks = [stop_callback]
                 )
@@ -277,7 +277,7 @@ def run_with_less_data(model_creator, manager, save_path, samples_per_class = 10
     model.compile(loss = lossfunction, optimizer = "rmsprop", metrics = ["accuracy"])
 
     history = model.fit(
-        X_train, y_train, epochs = 100, batch_size = 4,
+        X_train, y_train, epochs = 100, batch_size = 1,
         validation_split = 0.1,
         callbacks = [stop_callback]
     )
@@ -313,4 +313,4 @@ if __name__ == "__main__":
     test_samples_per_class = 10
     augment_factor = 10 # Number of augmented samples per sample, set to 0 for no augmentation
 
-    [results, accuracies, confusion_matrices] = run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/")
+    run_leave_one_out(get_ConvLSTM, manager, "model_dumps/leave_one_out/")
