@@ -32,6 +32,8 @@ def expand_y_columns(y, y_classes,  full_classes) -> np.ndarray:
     return array
 
 def subsample(max_samples, X_base, y_base): 
+    # convert max_samples to int
+    max_samples = int(max_samples)
     if X_base.shape[0] > max_samples:
         indices = np.random.choice(X_base.shape[0], max_samples, replace=False)
         X_train = X_base[indices]
@@ -62,9 +64,10 @@ def try_purge_GPU():
             tf.config.experimental.set_memory_growth(gpu, True) # set memory growth to avoid memory errors
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_size=1, sample_per_iter=1, val_per_iter=10, comp_size=1) -> None:
-    try_purge_GPU() 
-
+def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True) -> None:
+    if GPU:
+        try_purge_GPU()
+    else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
     run = wandb.init(project="leave_one_out", name= f"leave_{comp_classes}_out",
@@ -78,7 +81,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     run.log({"base_classes": base_classes, "comp_class": comp_classes})
 
 
-    X_base, y_base = manager.get_raw_with_classes(base_classes, init_sample_size + val_per_iter)
+    X_base, y_base = manager.get_raw_with_classes(base_classes, init_sample_per_class + val_per_class)
     X_base, y_base = manager.augment_data(X_base, y_base, augment_factor=augment_factor) # X_base (4, 5, 240, 320, 3) Y_base (4, 5)
     # convert to np.array
     X_base = np.array(X_base)
@@ -97,13 +100,13 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     num_classes = y_base.shape[1]
 
     model = model_creator(input_shape, num_classes)
-    X_train, y_train = subsample(max_samples, X_base, y_base)
+    X_train, y_train = subsample(max_samples * (val_per_class + init_sample_per_class) / init_sample_per_class, X_base, y_base)
 
 
     stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
     model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
-    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_iter/(val_per_iter + init_sample_size), batch_size=1, callbacks=[])
+    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[])
     executed_epochs = len(history.history["accuracy"])
     for epoch in range(executed_epochs):
         run.log({"train_accuracy": history.history["accuracy"][epoch], 
@@ -112,7 +115,8 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
                     "val_loss": history.history["val_loss"][epoch]})
 
     for iter in range(iterations):
-        try_purge_GPU()
+        if GPU:
+            try_purge_GPU()
         print("Iteration: ", iter, " of ", iterations)
     
         if strat == "random":
@@ -125,7 +129,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
         print("Selected class: ", selected_class)
 
-        X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], sample_per_iter + val_per_iter) # get one sample of the selected class
+        X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], sample_per_iter_per_class + val_per_class) # get one sample of the selected class
         X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=augment_factor) # augment the sample to get 10 samples
         X_base_iter = np.array(X_base_iter)
         y_base_iter = np.array(y_base_iter) # convert to np.array
@@ -136,14 +140,14 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         y_base = np.append(y_base, y_base_iter, axis=0)
 
         # Subsampling: if the number of samples exceeds max_samples, randomly select max_samples samples
-        X_train, y_train = subsample(max_samples, X_base, y_base)
+        X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / init_sample_per_class, X_base, y_base)
 
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
 
-        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_iter/(val_per_iter + sample_per_iter), callbacks=[])
+        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[])
 
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
@@ -420,4 +424,4 @@ if __name__ == "__main__":
 
     # adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=1, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=100, init_sample_size=10, sample_per_iter=1, val_per_iter=10, comp_size=1)
 
-    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=10, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=1, max_samples=100, init_sample_size=10, sample_per_iter=1, val_per_iter=10, comp_size=1)
+    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=5, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=10, max_samples=50, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=2, comp_size=1, GPU = False)
