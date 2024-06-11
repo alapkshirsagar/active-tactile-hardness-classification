@@ -151,12 +151,17 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
-            run.log({
+            if(val_per_class > 0):
+                run.log({
                 "train_accuracy": history.history["accuracy"][epoch], 
                 "val_accuracy": history.history["val_accuracy"][epoch], 
                 "train_loss": history.history["loss"][epoch], 
                 "val_loss": history.history["val_loss"][epoch]}) # log training and validation accuracy and loss for each epoch
-
+            else:
+                run.log({
+                "train_accuracy": history.history["accuracy"][epoch], 
+                "train_loss": history.history["loss"][epoch]
+                })
         avg_entropy =np.mean(calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)) 
         avg_var = np.mean(calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts))
         
@@ -305,6 +310,7 @@ def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterati
 
             executed_epochs = len(history.history["accuracy"])
             for epoch in range(executed_epochs):
+
                 run.log({
                     "train_accuracy": history.history["accuracy"][epoch], 
                     "val_accuracy": history.history["val_accuracy"][epoch], 
@@ -418,10 +424,7 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
-    # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", max_samples=50)
 
-    # run_leave_one_out(get_ConvLSTM, manager, MODEL_DUMP_PATH, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="random", augment_factor=10)
+    # adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=100, init_sample_size=10, sample_per_iter=1, val_per_iter=10, comp_size=1)
 
-    # adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=1, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=100, init_sample_size=10, sample_per_iter=1, val_per_iter=10, comp_size=1)
-
-    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=5, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=10, max_samples=50, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=2, comp_size=1, GPU = False)
+    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=5, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=10, max_samples=50, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=2, comp_size=1, GPU = True)
