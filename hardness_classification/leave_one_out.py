@@ -427,8 +427,8 @@ hardness_levels = np.array([0.44, 0.68, 0.79, 1.02, 1.13])
 if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
-    manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
+    manager = DatasetManager(DATASET_ID, ["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], CLASSES)
 
-    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=50, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=1)
+    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=50, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=False)
 
     # adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=5, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=10, max_samples=50, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=2, comp_size=1, GPU = True)

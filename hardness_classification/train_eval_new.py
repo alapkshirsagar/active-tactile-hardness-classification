@@ -274,5 +274,5 @@ def train_4_test_1(model_creator, manager, save_path, iterations=20,validation_s
 
 
 if __name__ == "__main__":
-    manager = DatasetManager(DATASET_ID, ["C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"], CLASSES)
+    manager = DatasetManager(DATASET_ID, ["../../data_no_noise_vel_02to07_force_1to5/data"], CLASSES)
     train_4_test_1(get_ConvLSTM, manager, "model_dumps/newstrat", n_experiments=1, iterations=40, validation_size=10, num_dropouts=5, strat="random")
