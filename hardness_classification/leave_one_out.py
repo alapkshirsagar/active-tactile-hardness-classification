@@ -55,6 +55,14 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
+def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
+    dist = model.predict(X_comp, batch_size=1)
+    choice = np.argmax(dist, axis = 1)
+    prediction = np.zeros((choice.size, len(base_classes)))
+    prediction[np.arange(choice.size), choice] = 1
+    ground_truth = np.full(choice.shape, comp_index) # ground truth is the comp_index as integers
+    return prediction, compute_acc(choice, ground_truth, hardness_levels)
+
 # Function to try to purge the GPU memory
 # if the model is not using the GPU memory, do nothing
 def try_purge_GPU():
@@ -117,6 +125,11 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         else:
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
+            
+    _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+    print("Accuracy b4 adaptive sampling: ", acc)
+    wandb.log({"acc_comp_b4_AS": acc})
+    wandb.log({"acc_comp": acc})
 
     for iter in range(iterations):
         if GPU:
@@ -170,18 +183,9 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         avg_var = np.mean(calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts))
         
         run.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
-
-        # log test accuracy per iteration
-        y_preds = model.predict(X_comp, batch_size=1)
-
-        # insert the comp_classes that were left out
-        y_preds = expand_y_columns(y_preds, base_classes, CLASSES)
-        
-        preds = np.argmax(y_preds, axis=1) # predicted label
-        gts = np.argmax(y_comp, axis=1) # ground truth
-        acc = compute_acc(preds, gts, hardness_levels)
-        print("Iteration ", iter + 1, " Test accuracy: ", acc)
-        run.log({"test_accuracy": acc})
+        _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+        print("Iteration Accuracy on Comp Class: ", acc)
+        run.log({"acc_comp": acc})
 
     # evaluate the model
 
@@ -193,8 +197,8 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
     print("Base classes: "+ ",".join(str(x) for x in base_classes))
     print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    print("model test accuracy: ", acc)
-    run.log({"final_test_accuracy": acc})
+    print("model test accuracy on test classes: ", acc)
+    run.log({"final_test_accuracy_on_test_cls": acc})
     model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
     print("Confusion matrix: \n", model_confusion_matrix)
     run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
@@ -207,11 +211,11 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     except Exception as e:
         print("Could not write model:", e)
 
-    dist = model.predict(X_comp, batch_size=1)
-    choice = np.argmax(dist, axis = 1)
-    prediction = np.zeros((choice.size, len(base_classes)))
-    prediction[np.arange(choice.size), choice] = 1
+    
+
+
     run.finish()
+    return model, model_confusion_matrix
 
 
 def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random", augment_factor=10, max_samples=50):
@@ -416,7 +420,7 @@ def closest(ground_truth, hardness_lv):
 def compute_acc(prediction, ground_truth, hardness_lv):
     match = 0
     for(pred, gt) in zip(prediction, ground_truth):
-        if(closest(pred, hardness_lv) == closest(gt, hardness_lv)):
+        if(pred == closest(gt, hardness_lv)):
             match += 1
     return match/len(ground_truth)
 
@@ -427,8 +431,15 @@ hardness_levels = np.array([0.44, 0.68, 0.79, 1.02, 1.13])
 if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
+    # Relative Path
     manager = DatasetManager(DATASET_ID, ["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], CLASSES)
+    # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
 
-    adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance", augment_factor=1, max_samples=50, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=False)
+    # Preset for Debug
+    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
-    # adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=5, num_dropouts=10, epochs_per_iter=1, strat="variance", augment_factor=10, max_samples=50, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=2, comp_size=1, GPU = True)
+
+    # Preset for Experiment
+    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+
+
