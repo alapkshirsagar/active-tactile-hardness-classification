@@ -44,13 +44,13 @@ def subsample(max_samples, X_base, y_base):
 
 
 def calculate_entropy_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
+    preds = np.array([model(X_val, training=True, batch_size = 1) for _ in range(num_dropouts)])
     entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     sum_entropy = np.sum(entropies, axis=0)
     return sum_entropy
 
 def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([model(X_val, training=True) for _ in range(num_dropouts)])
+    preds = np.array([model(X_val, training=True, batch_size = 1) for _ in range(num_dropouts)])
     variances = np.var(preds, axis=0)
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
