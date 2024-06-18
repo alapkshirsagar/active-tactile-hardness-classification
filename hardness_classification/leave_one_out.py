@@ -42,15 +42,31 @@ def subsample(max_samples, X_base, y_base):
         X_train, y_train = X_base, y_base
     return X_train, y_train
 
+# wrapper function to predict with dropout enabled and batch size 1
+# model(x, training=True) does not support setting the batch size
+def predict_with_dropout_and_batch_size_1(model, x):
+    # List to store predictions
+    all_predictions = []
+    
+    # Iterate through the input data one sample at a time
+    for sample in x:
+        # Perform a forward pass with dropout enabled
+        prediction = model(tf.expand_dims(sample, axis=0), training=True)
+        all_predictions.append(prediction)
+
+    # Combine all predictions into one array
+    all_predictions = tf.concat(all_predictions, axis=0)
+    
+    return all_predictions
 
 def calculate_entropy_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([model(X_val, training=True, batch_size = 1) for _ in range(num_dropouts)])
+    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
     entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     sum_entropy = np.sum(entropies, axis=0)
     return sum_entropy
 
 def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([model(X_val, training=True, batch_size = 1) for _ in range(num_dropouts)])
+    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
     variances = np.var(preds, axis=0)
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
@@ -436,7 +452,7 @@ if __name__ == "__main__":
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
 
     # Preset for Debug
-    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=2, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=2, num_dropouts=10, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
     # Preset for Experiment
