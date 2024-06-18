@@ -147,6 +147,9 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     wandb.log({"acc_comp_b4_AS": acc})
     wandb.log({"acc_comp": acc})
 
+    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
+    y_test_model = purge_y_columns(y_test_model, base_classes_indices)
+
     for iter in range(iterations):
         if GPU:
             try_purge_GPU()
@@ -203,23 +206,19 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         print("Iteration Accuracy on Comp Class: ", acc)
         run.log({"acc_comp": acc})
 
-    # evaluate the model
+         # evaluate the model
+        y_pred_model = model.predict(x_test_model, batch_size=1)
 
-    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
-    y_test_model = purge_y_columns(y_test_model, base_classes_indices)
-
-    y_pred_model = model.predict(x_test_model, batch_size=1)
-
-    acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-    print("Base classes: "+ ",".join(str(x) for x in base_classes))
-    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    print("model test accuracy on test classes: ", acc)
-    run.log({"final_test_accuracy_on_test_cls": acc})
-    model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
-    print("Confusion matrix: \n", model_confusion_matrix)
-    run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
-                    y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
-                    class_names=base_classes)})
+        acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
+        print("Base classes: "+ ",".join(str(x) for x in base_classes))
+        print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
+        print("model test accuracy on test classes: ", acc)
+        run.log({"test_accuracy_on_test_cls": acc})
+        model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
+        print("Confusion matrix: \n", model_confusion_matrix)
+        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
+                        class_names=base_classes)})
 
     model_save_path = f"{save_path}{uuid.uuid4()}.h5"
     try:
@@ -456,6 +455,9 @@ if __name__ == "__main__":
 
 
     # Preset for Experiment
-    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=25, strat="variance",augment_factor=10, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    #model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=25, strat="variance",augment_factor=10, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+
+
+    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
