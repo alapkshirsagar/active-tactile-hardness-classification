@@ -6,6 +6,7 @@ import json
 import matplotlib.pyplot as plt
 import random
 from scipy.ndimage import rotate
+import imgaug.augmenters as iaa
 
 SEQ_LENGTH = 5
 VISUALIZE_FRAME_SELECTION = False
@@ -172,21 +173,41 @@ class DatasetManager():
     def augment_data(self, X, y, augment_factor):
         # X is assumed to be a list of 4D numpy arrays (num_images, height, width, channels)
         # y is assumed to be a list of 1D numpy arrays (num_images, num_classes)
+        
         # Initialize output lists
         X_aug = []
         y_aug = []
+        
+        # Define augmentation sequence
+        seq = iaa.Sequential([
+            iaa.Fliplr(0.5),  # horizontal flip
+            iaa.Flipud(0.5),  # vertical flip
+            iaa.Multiply((0.8, 1.2)),  # brightness
+            iaa.GaussianBlur(sigma=(0, 1.0)),  # blur
+            iaa.Affine(
+                translate_percent={"x": (-0.1, 0.1), "y": (-0.1, 0.1)},  # translation
+                scale=(0.8, 1.2)  # scaling
+            ),
+            iaa.AdditiveGaussianNoise(scale=(0, 0.05*255)),  # noise
+            iaa.CropAndPad(percent=(-0.1, 0.1)),  # cropping and padding
+            iaa.LinearContrast((0.75, 1.5)),  # contrast
+            iaa.MultiplyHueAndSaturation((0.5, 1.5)),  # color jitter
+            iaa.PerspectiveTransform(scale=(0.01, 0.1))  # perspective transform
+        ], random_order=True)
 
         # Iterate over each sample in the list
         for s in range(len(X)):
-            # Add 10 rotations of each image in the sample
-            for angle in range(0, 360, int(360/augment_factor)): # This will give 10 equally spaced angles between 0 and 360
-                rotated_sample = np.zeros((X[s].shape[0], X[s].shape[1], X[s].shape[2], X[s].shape[3]))
+            for _ in range(augment_factor):
+                augmented_sample = np.zeros((X[s].shape[0], X[s].shape[1], X[s].shape[2], X[s].shape[3]), dtype=np.uint8)
                 for i in range(X[s].shape[0]):
-                    rotated_img = rotate(X[s][i], angle, reshape=False) # Rotate the image without changing its shape
-                    rotated_sample[i] = rotated_img
-                X_aug.append(rotated_sample)
+                    # Convert image to uint8
+                    image_uint8 = (X[s][i] * 255).astype(np.uint8)
+                    augmented_img = seq(image=image_uint8)
+                    augmented_sample[i] = augmented_img
+                X_aug.append(augmented_sample)
                 y_aug.append(y[s])
-        return X_aug, y_aug
+        
+        return np.array(X_aug), np.array(y_aug)
 
 if __name__ == "__main__":
     manager = DatasetManager("no_noise__visual_selection__filtered", ["data/data_no_noise/"], ["hardness" + str(i+1) for i in range(5)])

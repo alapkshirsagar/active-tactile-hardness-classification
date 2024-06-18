@@ -436,10 +436,10 @@ if __name__ == "__main__":
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
 
     # Preset for Debug
-    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=2, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
     # Preset for Experiment
-    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=25, strat="variance",augment_factor=10, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
