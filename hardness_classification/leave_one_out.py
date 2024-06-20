@@ -89,6 +89,9 @@ def try_purge_GPU():
         tf.keras.backend.clear_session() # clear the session to free up memory
 
 def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True) -> None:
+
+    print("# Initial Training")
+    print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs")
     if GPU:
         try_purge_GPU()
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
@@ -150,20 +153,29 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
     y_test_model = purge_y_columns(y_test_model, base_classes_indices)
 
+    print("# Adaptive Sampling")
+    print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
     for iter in range(iterations):
         if GPU:
             try_purge_GPU()
-        print("Iteration: ", iter, " of ", iterations)
-    
+        print("## Iteration: ", iter + 1, " of ", iterations)
+
+        # Adaptive sampling part
+
+        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+        run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)
         elif strat in ["entropy", "variance"]:
-            uncertainty = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts) if strat == "variance" else calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+            uncertainty = var if strat == "variance" else entr
             print(f"{strat.capitalize()} values: ", uncertainty)
             selected_index = np.argmax(uncertainty)
             selected_class = base_classes[selected_index]
 
         print("Selected class: ", selected_class)
+
+        # Reservoir sampling part
 
         X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], sample_per_iter_per_class + val_per_class) # get one sample of the selected class
         X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=augment_factor) # augment the sample to get 10 samples
@@ -171,17 +183,15 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         y_base_iter = np.array(y_base_iter) # convert to np.array
         y_base_iter = purge_y_columns(y_base_iter, base_classes_indices)
         
-        # append the new samples to the sampling reservoir
-        X_base = np.append(X_base, X_base_iter, axis=0)
+        X_base = np.append(X_base, X_base_iter, axis=0) # append the new samples to the sampling reservoir
         y_base = np.append(y_base, y_base_iter, axis=0)
-
-        # Subsampling: if the number of samples exceeds max_samples, randomly select max_samples samples
         X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / init_sample_per_class, X_base, y_base)
-
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
+        
+        # Training iteration part
 
         history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[])
 
@@ -198,35 +208,32 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
                 "train_accuracy": history.history["accuracy"][epoch], 
                 "train_loss": history.history["loss"][epoch]
                 })
-        avg_entropy =np.mean(calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)) 
-        avg_var = np.mean(calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts))
-        
-        run.log({"avg_entropy": avg_entropy, "avg_variance": avg_var}) # log average entropy and variance
-        _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
-        print("Iteration Accuracy on Comp Class: ", acc)
-        run.log({"acc_comp": acc})
 
-         # evaluate the model
+        
+        # Iteration Evaluation part
+        
+        print ("### Eval After iteration ", iter + 1)
+        print("Base classes: "+ ",".join(str(x) for x in base_classes))
+        print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
         y_pred_model = model.predict(x_test_model, batch_size=1)
 
         acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-        print("Base classes: "+ ",".join(str(x) for x in base_classes))
-        print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-        print("model test accuracy on test classes: ", acc)
+        print("model test accuracy on base classes: ", acc)
+        print("Avg. absolute difference in hardness levels: ", hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels))
         run.log({"test_accuracy_on_test_cls": acc})
+
+        _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+        print("Iteration Accuracy on Comp Class: ", acc)
+        run.log({"acc_comp": acc})
+        
+
+        
+
         model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
         print("Confusion matrix: \n", model_confusion_matrix)
         run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
                         y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
-                        class_names=base_classes)})
-
-    model_save_path = f"{save_path}{uuid.uuid4()}.h5"
-    try:
-        model.save(model_save_path)
-    except Exception as e:
-        print("Could not write model:", e)
-
-    
+                        class_names=base_classes)})  
 
 
     run.finish()
@@ -442,6 +449,12 @@ def compute_acc(prediction, ground_truth, hardness_lv):
 
 hardness_levels = np.array([0.44, 0.68, 0.79, 1.02, 1.13]) 
 
+## Function to compute the avg. absolute difference in hardness levels
+def hardness_abs_diff(prediction, ground_truth, hardness_lv): 
+    diff = 0
+    for(pred, gt) in zip(prediction, ground_truth):
+        diff += np.abs(hardness_lv[pred] - hardness_lv[gt])
+    return diff/len(ground_truth)
 
 if __name__ == "__main__":
     for i in range(5):
@@ -451,13 +464,16 @@ if __name__ == "__main__":
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
 
     # Preset for Debug
-    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=2, num_dropouts=10, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=3, num_dropouts=10, epochs_per_iter=4, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
     # Preset for Experiment
     #model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=25, strat="variance",augment_factor=10, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
-    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    #model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+
+    # save model
+    model.save("./AdaptiveModels/test.h5")
 
 
