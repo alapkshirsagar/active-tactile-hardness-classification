@@ -150,10 +150,30 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     wandb.log({"acc_comp_b4_AS": acc})
     wandb.log({"acc_comp": acc})
 
-    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, 10)
+    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, comp_size)
     y_test_model = purge_y_columns(y_test_model, base_classes_indices)
 
-    print("# Adaptive Sampling")
+    # Evaluation after initial training
+    print ("### Eval After Initial Training")
+    print("Base classes: "+ ",".join(str(x) for x in base_classes))
+    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
+    y_pred_model = model.predict(x_test_model, batch_size=1)
+
+    acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
+    print("model test accuracy on base classes: ", acc)
+    print("Avg. absolute difference in hardness levels: ", hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels))
+    run.log({"test_accuracy_on_test_cls": acc})
+
+    _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+    print("Iteration Accuracy on Comp Class: ", acc)
+    run.log({"acc_comp": acc})
+    model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
+    print("Confusion matrix: \n", model_confusion_matrix)
+    run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
+                        class_names=base_classes)})  
+
+    print("## Adaptive Sampling")
     print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
     for iter in range(iterations):
         if GPU:
@@ -457,6 +477,13 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
     return diff/len(ground_truth)
 
 if __name__ == "__main__":
+
+    def train_model_A1(base_cls, test_cls):
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+
+    def train_model_debug(base_cls, test_cls):
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     # Relative Path
@@ -464,16 +491,16 @@ if __name__ == "__main__":
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
 
     # Preset for Debug
-    model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=3, num_dropouts=10, epochs_per_iter=4, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=3, num_dropouts=10, epochs_per_iter=4, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
 
     # Preset for Experiment
-    #model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=25, strat="variance",augment_factor=10, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    for i in range(5):
+        print(f"# leave {CLASSES[i]} out",)
+        model, _ = train_model_A1(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]])
+        model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
-
-    #model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
     # save model
-    model.save("./AdaptiveModels/test.h5")
 
 
