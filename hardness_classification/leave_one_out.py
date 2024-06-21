@@ -205,7 +205,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         
         X_base = np.append(X_base, X_base_iter, axis=0) # append the new samples to the sampling reservoir
         y_base = np.append(y_base, y_base_iter, axis=0)
-        X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / init_sample_per_class, X_base, y_base)
+        X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / sample_per_iter_per_class, X_base, y_base)
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
@@ -258,9 +258,6 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
     run.finish()
     return model, model_confusion_matrix
-
-
-def run_leave_one_out(model_creator, manager, save_path, init_epochs=10, iterations=10, num_dropouts=10,  epochs_per_iter=5, strat="random", augment_factor=10, max_samples=50):
 
     # Ensure memory growth is enabled
     gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -479,7 +476,7 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
 if __name__ == "__main__":
 
     def train_model_A1(base_cls, test_cls):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
     def train_model_debug(base_cls, test_cls):
             return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
