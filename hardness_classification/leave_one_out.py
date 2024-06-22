@@ -12,6 +12,7 @@ import pandas as pd
 from utils import *
 import wandb
 import sklearn as sk
+import argparse
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
@@ -72,7 +73,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray
     return mean_variance
 
 def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
-    dist = model.predict(X_comp, batch_size=1)
+    dist = model.predict(X_comp, batch_size=1, verbose=0)
     choice = np.argmax(dist, axis = 1)
     prediction = np.zeros((choice.size, len(base_classes)))
     prediction[np.arange(choice.size), choice] = 1
@@ -133,7 +134,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
     model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
-    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[])
+    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[], verbose=0)
     executed_epochs = len(history.history["accuracy"])
     for epoch in range(executed_epochs):
         if(val_per_class > 0):
@@ -157,7 +158,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     print ("### Eval After Initial Training")
     print("Base classes: "+ ",".join(str(x) for x in base_classes))
     print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    y_pred_model = model.predict(x_test_model, batch_size=1)
+    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=0)
 
     acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
     print("model test accuracy on base classes: ", acc)
@@ -213,7 +214,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         
         # Training iteration part
 
-        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[])
+        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[], verbose=0)
 
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
@@ -235,7 +236,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         print ("### Eval After iteration ", iter + 1)
         print("Base classes: "+ ",".join(str(x) for x in base_classes))
         print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-        y_pred_model = model.predict(x_test_model, batch_size=1)
+        y_pred_model = model.predict(x_test_model, batch_size=1, verbose=0)
 
         # Accuracy on base classes
         acc_base = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
@@ -302,8 +303,8 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
 
 if __name__ == "__main__":
 
-    def train_model_A1(base_cls, test_cls):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    def train_model_A(base_cls, test_cls, strat="variance"):
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
 
     def train_model_debug(base_cls, test_cls):
             return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
@@ -319,10 +320,18 @@ if __name__ == "__main__":
 
 
     # Preset for Experiment
-    for i in range(5):
-        print(f"# leave {CLASSES[i]} out",)
-        model, _ = train_model_A1(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]])
-        model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
+
+
+    parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
+    parser.add_argument('--i', type=int, default=0, help='idx of the class to leave out')
+    parser.add_argument('--strat', type=str, default="random", choices=['random', 'entropy', 'variance'], help='Sampling strategy')
+
+    args = parser.parse_args()
+    i = args.i
+    strat = args.strat
+    print(f"# leave {CLASSES[i]} out, strategy: {strat}")
+    model, _ = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat)
+    model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
 
     # save model
