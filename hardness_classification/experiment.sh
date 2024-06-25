@@ -1,21 +1,14 @@
 #!/bin/bash
 
-for i in {0..4}
+strategies=("random" "entropy" "variance" "YOTO")
+
+for strat in "${strategies[@]}"
 do
-  python3 ./leave_one_out.py --i "$i" --strat random
+  for i in {0..4}
+  do
+    python3 ./leave_one_out.py --i "$i" --strat "$strat" &
+  done
 done
 
-for i in {0..4}
-do
-  python3 ./leave_one_out.py --i "$i" --strat entropy
-done
-
-for i in {0..4}
-do
-  python3 ./leave_one_out.py --i "$i" --strat variance
-done
-
-for i in {0..4}
-do
-  python3 ./leave_one_out.py --i "$i" --strat YOTO
-done
+# Wait for all background processes to finish
+wait
