@@ -9,12 +9,11 @@ from itertools import combinations, permutations
 #Deform level 4: 1.02
 #Deform level 5 (most soft): 1.13
 # Sample hardness values for 5 objects
-hardness_values = {"hardness1":0.44, 
-                   "hardness2":0.68, 
-                   "hardness3":0.79, 
-                   "hardness4":1.02, 
-                   "hardness5":1.13}  # Replace with actual hardness values
-
+hardness_values = {"hardness1":1.13,
+                    "hardness2":1.02,
+                    "hardness3":0.79,
+                    "hardness4":0.68,
+                    "hardness5":0.44}  # Replace with actual hardness values
 
 # Generate all combinations of the 5 objects taken 2 at a time for comparison
 comparison_pairs = list(combinations(hardness_values, 2))
