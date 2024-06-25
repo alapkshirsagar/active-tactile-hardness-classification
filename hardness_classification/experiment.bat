@@ -1,21 +1,15 @@
-#!/bin/bash
+for /L %%i in (0,1,4) do (
+  python3 ./leave_one_out.py --i %%i --strat random
+)
 
-for i in {0..4}
-do
-  python ./leave_one_out.py --i "$i" --strat random
-done
+for /L %%i in (0,1,4) do (
+  python3 ./leave_one_out.py --i %%i --strat entropy
+)
 
-for i in {0..4}
-do
-  python ./leave_one_out.py --i "$i" --strat entropy
-done
+for /L %%i in (0,1,4) do (
+  python ./leave_one_out.py --i %%i --strat variance
+)
 
-for i in {0..4}
-do
-  python ./leave_one_out.py --i "$i" --strat variance
-done
-
-for i in {0..4}
-do
-  python ./leave_one_out.py --i "$i" --strat YOTO
-done
+for /L %%i in (0,1,4) do (
+  python ./leave_one_out.py --i %%i --strat YOTO
+)
