@@ -89,7 +89,7 @@ def try_purge_GPU():
             tf.config.experimental.set_memory_growth(gpu, True) # set memory growth to avoid memory errors
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True) -> None:
+def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
 
     print("# Initial Training")
     print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs")
@@ -98,7 +98,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
-    run = wandb.init(project="leave_one_out", name= f"leave_{comp_classes}_out",
+    run = wandb.init(project="leave_one_out", name= f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model_creator.__name__, 
                                                     "lossfunction": lossfunction,
@@ -134,7 +134,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
     model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
-    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[], verbose=0)
+    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[], verbose=verbose)
     executed_epochs = len(history.history["accuracy"])
     for epoch in range(executed_epochs):
         if(val_per_class > 0):
@@ -145,35 +145,49 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         else:
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
-            
-    _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
-    print("Accuracy b4 adaptive sampling: ", acc)
-    wandb.log({"acc_comp_b4_AS": acc})
-    wandb.log({"acc_comp": acc})
 
     x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, comp_size)
     y_test_model = purge_y_columns(y_test_model, base_classes_indices)
 
     # Evaluation after initial training
+
     print ("### Eval After Initial Training")
     print("Base classes: "+ ",".join(str(x) for x in base_classes))
     print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=0)
+    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
 
-    acc = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-    print("model test accuracy on base classes: ", acc)
-    print("Avg. absolute difference in hardness levels: ", hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels))
-    run.log({"test_accuracy_on_test_cls": acc})
+    print("Base classes: "+ ",".join(str(x) for x in base_classes))
+    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
+    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
 
-    _, acc = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
-    print("Iteration Accuracy on Comp Class: ", acc)
-    run.log({"acc_comp": acc})
-    model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
-    print("Confusion matrix: \n", model_confusion_matrix)
-    run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+    # Accuracy on base classes
+    acc_base = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
+    print("model test accuracy on base classes: ", acc_base)
+    run.log({"acc_base": acc_base})
+
+    # Avg. absolute  in hardness levels on base classes
+    abs_diff_base =  hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels)
+    print("Avg. absolute difference on base classes: ", abs_diff_base)
+    run.log({"abs_diff_base": abs_diff_base})
+
+    # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
+    pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+    print("Iteration accuracy on comp class: ", acc_comp)
+    run.log({"acc_comp": acc_comp})
+
+    # Avg. absolute difference in hardness levels on comp class
+    abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), np.argmax(y_comp, axis=1), hardness_levels)
+    print("Avg. absolute difference in hardness levels on comp class: ", abs_diff_comp)
+    run.log({"abs_diff_comp": abs_diff_comp})
+    if(strat == "YOTO"):
+        print("Strategy is YOTO, no further iterations")
+        model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
+        print("Confusion matrix: \n", model_confusion_matrix)
+        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
                         y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
-                        class_names=base_classes)})  
-
+                        class_names=base_classes)}) 
+        run.finish()
+        return model, model_confusion_matrix
     print("## Adaptive Sampling")
     print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
     for iter in range(iterations):
@@ -208,13 +222,14 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         y_base = np.append(y_base, y_base_iter, axis=0)
         X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / sample_per_iter_per_class, X_base, y_base)
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
+        run.log({"reservoir_size": X_base.shape[0], "training_size": X_train.shape[0]})
 
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
         
         # Training iteration part
 
-        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[], verbose=0)
+        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[], verbose=verbose)
 
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
@@ -236,7 +251,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         print ("### Eval After iteration ", iter + 1)
         print("Base classes: "+ ",".join(str(x) for x in base_classes))
         print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-        y_pred_model = model.predict(x_test_model, batch_size=1, verbose=0)
+        y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
 
         # Accuracy on base classes
         acc_base = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
@@ -246,11 +261,12 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         # Avg. absolute  in hardness levels on base classes
         abs_diff_base =  hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels)
         print("Avg. absolute difference on base classes: ", abs_diff_base)
+        run.log({"abs_diff_base": abs_diff_base})
 
         # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
         pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
         print("Iteration accuracy on comp class: ", acc_comp)
-        run.log({"test_accuracy_on_test_cls": acc_comp})
+        run.log({"acc_comp": acc_comp})
 
         # Avg. absolute difference in hardness levels on comp class
         abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), np.argmax(y_comp, axis=1), hardness_levels)
@@ -302,9 +318,8 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
     return diff/len(ground_truth)
 
 if __name__ == "__main__":
-
-    def train_model_A(base_cls, test_cls, strat="variance"):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
+    def train_model_A(base_cls, test_cls, strat="variance", verbose=0):
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(base_cls, test_cls):
             return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
@@ -314,23 +329,20 @@ if __name__ == "__main__":
     # Relative Path
     manager = DatasetManager(DATASET_ID, ["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], CLASSES)
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
-
-    # Preset for Debug
-    # model, model_confusion_matrix = adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, ["hardness2", "hardness3", "hardness4", "hardness5"], ["hardness1"], init_epochs=1, iterations=3, num_dropouts=10, epochs_per_iter=4, strat="variance",augment_factor=1, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True)
-
-
-    # Preset for Experiment
-
+    # Since the dataset has been processed and cached in the working directory, we can load it directly
+    # Already removed the dataset to elsewhere, if the cache is not found, it will raise an error and need to be moved back
 
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--i', type=int, default=0, help='idx of the class to leave out')
-    parser.add_argument('--strat', type=str, default="random", choices=['random', 'entropy', 'variance'], help='Sampling strategy')
+    parser.add_argument('--strat', type=str, default="variance", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
+    parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
 
     args = parser.parse_args()
     i = args.i
     strat = args.strat
+    verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model, _ = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat)
+    model, _ = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
     model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
 
