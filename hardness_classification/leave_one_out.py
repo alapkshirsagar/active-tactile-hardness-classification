@@ -114,10 +114,12 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     # convert to np.array
     X_base = np.array(X_base)
     y_base = np.array(y_base)
-
+    # convert Y-base to one hot encoding
+    y_base = manager.encoder.transform(y_base)
     # remove the class that are not in the base classes in y_base
     base_classes_indices = [CLASSES.index(c) for c in base_classes]
     y_base = purge_y_columns(y_base, base_classes_indices)
+
     X_comp, y_comp = manager.get_raw_with_classes(comp_classes, comp_size)
     X_comp, y_comp = manager.augment_data(X_comp, y_comp, augment_factor=augment_factor) # X_comp (4, 5, 240, 320, 3) Y_comp (4, 5)
     X_comp = np.array(X_comp)
@@ -147,6 +149,8 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
                     "train_loss": history.history["loss"][epoch]})
 
     x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, comp_size)
+    # convert y_test to one hot encoding
+    y_test_model = manager.encoder.transform(y_test_model)
     y_test_model = purge_y_columns(y_test_model, base_classes_indices)
 
     # Evaluation after initial training
@@ -308,7 +312,7 @@ def compute_acc(prediction, ground_truth, hardness_lv):
     return match/len(ground_truth)
 
 
-hardness_levels = np.array([0.44, 0.68, 0.79, 1.02, 1.13]) 
+hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) 
 
 ## Function to compute the avg. absolute difference in hardness levels
 def hardness_abs_diff(prediction, ground_truth, hardness_lv): 
@@ -319,7 +323,7 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
 
 if __name__ == "__main__":
     def train_model_A(base_cls, test_cls, strat="variance", verbose=0):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=100, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(base_cls, test_cls):
             return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat="variance",augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
@@ -327,7 +331,7 @@ if __name__ == "__main__":
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     # Relative Path
-    manager = DatasetManager(DATASET_ID, ["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], CLASSES)
+    manager = DatasetManager(["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
     # Since the dataset has been processed and cached in the working directory, we can load it directly
     # Already removed the dataset to elsewhere, if the cache is not found, it will raise an error and need to be moved back

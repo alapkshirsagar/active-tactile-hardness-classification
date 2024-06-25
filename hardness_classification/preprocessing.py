@@ -8,16 +8,17 @@ import random
 from scipy.ndimage import rotate
 import imgaug.augmenters as iaa
 
-SEQ_LENGTH = 5
 VISUALIZE_FRAME_SELECTION = False
 SELECT_ON_VISUAL_CUES = True
 EXCLUDE_CORRUPTED_DATA = True
 
 class DatasetManager():
-    def __init__(self, id, paths, classes):
-        self.id = id
+    def __init__(self, paths, classes, seq_length = None):
+        self.id = "Own"
+        self.classes = classes
+        self.seq_length = seq_length
         self.paths = paths
-        self.storage = "processed_data/"
+        self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
         self.encoder = LabelBinarizer()
         self.encoder.fit(classes)
 
@@ -39,7 +40,15 @@ class DatasetManager():
         max_force_timestamp = forces[np.argmin(forces[:, 1]), 0]
         max_force_index = np.argmin(np.absolute(times - max_force_timestamp))
         time_span = max_deformation_index - first_deformation_index
-
+        if k == None:
+            if time_span < 3:
+                print("Not enough deformation detected for " + str(id) + ". Skipping this data point.")
+                return None
+            else:
+                k = time_span
+        if time_span < k:
+            print("Not enough deformation detected for " + str(id) + ". Skipping this data point.")
+            return None
         if SELECT_ON_VISUAL_CUES:
             indizes = [int(np.round(first_deformation_index + i *time_span/(k-1))) for i in range(k)]
         else:
@@ -88,24 +97,29 @@ class DatasetManager():
             forces = np.load(join(forces_path, meta["id"] + ".npy"))
 
             if (not EXCLUDE_CORRUPTED_DATA) or self.__check_validity(forces):
-                Y.append(meta["object"])
                 frames = np.load(join(frames_path, meta["id"] + "_frames.npy"))
                 times = np.load(join(frames_path, meta["id"] + "_times.npy"))
-                X.append(self.__select_frames(frames, SEQ_LENGTH, times, forces, meta["id"]))
+                selected_frames = self.__select_frames(frames, self.seq_length, times, forces, meta["id"])
+                if selected_frames is not None:
+                    # Check if selected_frames have the correct shape
+                    assert selected_frames.shape[1] == 240
+                    assert selected_frames.shape[2] == 320
+                    assert selected_frames.shape[3] == 3
+                    X.append(selected_frames)
+                    Y.append(meta["object"])   
             else:
                 print("Data point " + str(meta["id"]) + " looks corrupted and is excluded.")
 
         X = np.array(X)
-        y = self.encoder.transform(Y) # One hot encoding is in alphabetical order of string labels
-
+        y = np.array(Y)
 
         return X,y 
 
 
     def get_raw(self):
-        if exists(join(self.storage, self.id, "X_raw.npy")):
-            X = np.load(join(self.storage, self.id, "X_raw.npy"))
-            y = np.load(join(self.storage, self.id, "y_raw.npy"))
+        if exists(join(self.storage, self.id, "X_"+str(self.seq_length)+"_raw.npy")):
+            X = np.load(join(self.storage, self.id, "X_"+str(self.seq_length)+"_raw.npy"), allow_pickle=True)
+            y = np.load(join(self.storage, self.id, "y_"+str(self.seq_length)+"_raw.npy"), allow_pickle=True)
 
             return X,y
 
@@ -120,8 +134,8 @@ class DatasetManager():
         y = []
         for index in range(len(Xs)):
             for i in range(Xs[index].shape[0]):
-                X.append(Xs[index][i, :, :, :])
-                y.append(ys[index][i, :])
+                X.append(Xs[index][i])
+                y.append(ys[index][i])
 
         X = np.array(X)
         y = np.array(y)
@@ -129,10 +143,10 @@ class DatasetManager():
         if not exists(join(self.storage, self.id)):
             os.mkdir(join(self.storage, self.id))
         
-        with open(join(self.storage, self.id, "X_raw.npy"), "wb") as f:
+        with open(join(self.storage, self.id, "X_"+str(self.seq_length)+"_raw.npy"), "wb") as f:
             np.save(f,X)
 
-        with open(join(self.storage, self.id, "y_raw.npy"), "wb") as f:
+        with open(join(self.storage, self.id, "y_"+str(self.seq_length)+"_raw.npy"), "wb") as f:
             np.save(f,y)
 
         return X,y
@@ -140,7 +154,7 @@ class DatasetManager():
 
     def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None, augment_factor=0):
         X,y = self.get_raw()
-        labels = self.encoder.transform(classes)
+        labels = classes
         # Create a list of indices and shuffle it if necessary
         indices = list(range(y.shape[0]))
         if shuffle:
@@ -155,9 +169,9 @@ class DatasetManager():
 
         for i in indices:
             # Get the current label
-            current_label = y[i, :]
+            current_label = y[i]
             # Check if current label is in the list of selected labels and the class count is less than the specified number
-            if (labels == current_label).all(axis=1).any(axis=0):
+            if current_label in labels:
                 if class_counts[tuple(current_label)] < num_samples_per_class:
                     X_out.append(X[i])
                     y_out.append(y[i])
