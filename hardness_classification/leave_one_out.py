@@ -20,29 +20,14 @@ CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-def base_comp_split(X, y, base_classes, comp_classes, base_max = sys.maxsize, comp_max = sys.maxsize):
+def base_comp_split(X, y, base_classes, comp_classes):
     mask_base = np.isin(y, base_classes)
     mask_comp = np.isin(y, comp_classes)
     # Apply masks to split the data
     X_base = X[mask_base]
     y_base = y[mask_base]
-
-    if X_base.shape[0] > base_max:
-        X_base = X[:base_max]
-        y_base = y_base[:base_max]
-
     X_comp = X[mask_comp]
     y_comp = y[mask_comp]
-
-    if X_comp.shape[0] > comp_max:
-        X_comp = X[:comp_max]
-        y_comp = y_comp[:comp_max]
-
-    X_base = np.array(X_base)
-    y_base = np.array(y_base)
-    X_comp = np.array(X_comp)
-    y_comp = np.array(y_comp)
-
     return X_base, y_base, X_comp, y_comp
 
 def subsample(max_samples, X_base, y_base): 
@@ -164,7 +149,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
 
     # filter base classes
-    X_base, y_base, _, _ = base_comp_split(X, y, base_classes, [], base_max = (val_per_class + init_sample_per_class))
+    X_base, y_base, _, _ = base_comp_split(X, y, base_classes, [])
     y_base = manager.encoder.transform(y_base)
 
     
@@ -325,11 +310,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-<<<<<<< HEAD
-    model = train_model_debug(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
-=======
     model, _ = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
->>>>>>> 4a9289c837c1cce4eeaef3088478628c2661b1a0
     model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
 
