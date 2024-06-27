@@ -6,7 +6,7 @@ for strat in "${strategies[@]}"
 do
   for i in {0..4}
   do
-    python3 ./leave_one_out.py --i "$i" --strat "$strat" &
+    python3 ./leave_one_out.py --i "$i" --strat "$strat" 
   done
 done
 

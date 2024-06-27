@@ -13,24 +13,37 @@ from utils import *
 import wandb
 import sklearn as sk
 import argparse
+import sys
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
-## Function to remove columns from a 2D array
-# @param y: 2D array to remove columns from
-# @param indices: List of indices to remove, in this case the comp_classes
-def purge_y_columns(y, removedIndices):
-    return y[:, [j for j in range(len(y[0])) if j in removedIndices]]
+def base_comp_split(X, y, base_classes, comp_classes, base_max = sys.maxsize, comp_max = sys.maxsize):
+    mask_base = np.isin(y, base_classes)
+    mask_comp = np.isin(y, comp_classes)
+    # Apply masks to split the data
+    X_base = X[mask_base]
+    y_base = y[mask_base]
 
-## Function to fill columns of y in a 2D array with zeros
-def expand_y_columns(y, y_classes,  full_classes) -> np.ndarray: 
-    array = np.zeros((len(y), len(full_classes)))
-    y_indices = [full_classes.index(c) for c in y_classes]
-    array[:, y_indices] = y
-    return array
+    if X_base.shape[0] > base_max:
+        X_base = X[:base_max]
+        y_base = y_base[:base_max]
+
+    X_comp = X[mask_comp]
+    y_comp = y[mask_comp]
+
+    if X_comp.shape[0] > comp_max:
+        X_comp = X[:comp_max]
+        y_comp = y_comp[:comp_max]
+
+    X_base = np.array(X_base)
+    y_base = np.array(y_base)
+    X_comp = np.array(X_comp)
+    y_comp = np.array(y_comp)
+
+    return X_base, y_base, X_comp, y_comp
 
 def subsample(max_samples, X_base, y_base): 
     # convert max_samples to int
@@ -91,6 +104,46 @@ def try_purge_GPU():
 
 def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
 
+    def eval_model():
+                # Iteration Evaluation part
+        
+        print("Base classes: "+ ",".join(str(x) for x in base_classes))
+        print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
+        y_pred_model = model.predict(x_test_base, batch_size=1, verbose=verbose)
+        y_pred_argmax = np.argmax(y_pred_model, axis=1) # prediction on base classes
+        y_test_argmax = np.argmax(y_test_base, axis=1) # ground truth on base classes
+        y_comp_argmax = np.argmax(y_comp, axis=1) # ground truth on comp class
+
+        # Accuracy on base classes
+        acc_base = np.sum(y_pred_argmax == y_test_argmax) / len(y_test_base) # test accuracy
+        print("model test accuracy on base classes: ", acc_base)
+        run.log({"acc_base": acc_base})
+
+        # Avg. absolute  in hardness levels on base classes
+        abs_diff_base =  hardness_abs_diff(y_pred_argmax, y_test_argmax, hardness_levels)
+        print("Avg. absolute difference on base classes: ", abs_diff_base)
+        run.log({"abs_diff_base": abs_diff_base})
+
+        # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
+        pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+        print("Iteration accuracy on comp class: ", acc_comp)
+        run.log({"acc_comp": acc_comp})
+
+        # Avg. absolute difference in hardness levels on comp class
+        abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), y_comp_argmax, hardness_levels)
+        print("Avg. absolute difference in hardness levels on comp class: ", abs_diff_comp)
+        run.log({"abs_diff_comp": abs_diff_comp})
+
+        pred_comp_argmax = np.argmax(pred_comp, axis=1) # prediction on comp class
+        pred_all = np.append(y_pred_argmax, pred_comp_argmax) # combine predictions on base and comp classes
+        gt_all = np.append(y_test_argmax, y_comp_argmax) # combine ground truth on base and comp classes
+
+        model_confusion_matrix = sk.metrics.confusion_matrix(gt_all, pred_all)
+        print("Confusion matrix: \n", model_confusion_matrix)
+        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=gt_all, preds=pred_all,
+                        class_names=CLASSES)})  
+
     print("# Initial Training")
     print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs")
     if GPU:
@@ -108,23 +161,13 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     print("Base class: ", base_classes, "Comp class: ", comp_classes)
     run.log({"base_classes": base_classes, "comp_class": comp_classes})
 
+    X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
 
-    X_base, y_base = manager.get_raw_with_classes(base_classes, init_sample_per_class + val_per_class)
-    X_base, y_base = manager.augment_data(X_base, y_base, augment_factor=augment_factor) # X_base (4, 5, 240, 320, 3) Y_base (4, 5)
-    # convert to np.array
-    X_base = np.array(X_base)
-    y_base = np.array(y_base)
-    # convert Y-base to one hot encoding
+    # filter base classes
+    X_base, y_base, _, _ = base_comp_split(X, y, base_classes, [], base_max = (val_per_class + init_sample_per_class))
     y_base = manager.encoder.transform(y_base)
-    # remove the class that are not in the base classes in y_base
-    base_classes_indices = [CLASSES.index(c) for c in base_classes]
-    y_base = purge_y_columns(y_base, base_classes_indices)
 
-    X_comp, y_comp = manager.get_raw_with_classes(comp_classes, comp_size)
-    X_comp, y_comp = manager.augment_data(X_comp, y_comp, augment_factor=augment_factor) # X_comp (4, 5, 240, 320, 3) Y_comp (4, 5)
-    X_comp = np.array(X_comp)
-    y_comp = np.array(y_comp)
-
+    
 
     input_shape = X_base.shape[1:]
     num_classes = y_base.shape[1]
@@ -132,8 +175,6 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     model = model_creator(input_shape, num_classes)
     X_train, y_train = subsample(max_samples * (val_per_class + init_sample_per_class) / init_sample_per_class, X_base, y_base)
 
-
-    stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
     model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
 
     history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[], verbose=verbose)
@@ -147,51 +188,22 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         else:
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
+            
+    X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor)
 
-    x_test_model, y_test_model = manager.get_raw_with_classes(base_classes, comp_size)
+    x_test_base, y_test_base, X_comp, y_comp = base_comp_split(X_, y_, base_classes, comp_classes)
+
     # convert y_test to one hot encoding
-    y_test_model = manager.encoder.transform(y_test_model)
-    y_test_model = purge_y_columns(y_test_model, base_classes_indices)
+    y_test_base = manager.encoder.transform(y_test_base)
+    y_comp = manager.encoder.transform(y_comp)
+    print("### Eval After Initial Training")
+    eval_model()
 
-    # Evaluation after initial training
-
-    print ("### Eval After Initial Training")
-    print("Base classes: "+ ",".join(str(x) for x in base_classes))
-    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
-
-    print("Base classes: "+ ",".join(str(x) for x in base_classes))
-    print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-    y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
-
-    # Accuracy on base classes
-    acc_base = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-    print("model test accuracy on base classes: ", acc_base)
-    run.log({"acc_base": acc_base})
-
-    # Avg. absolute  in hardness levels on base classes
-    abs_diff_base =  hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels)
-    print("Avg. absolute difference on base classes: ", abs_diff_base)
-    run.log({"abs_diff_base": abs_diff_base})
-
-    # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
-    pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
-    print("Iteration accuracy on comp class: ", acc_comp)
-    run.log({"acc_comp": acc_comp})
-
-    # Avg. absolute difference in hardness levels on comp class
-    abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), np.argmax(y_comp, axis=1), hardness_levels)
-    print("Avg. absolute difference in hardness levels on comp class: ", abs_diff_comp)
-    run.log({"abs_diff_comp": abs_diff_comp})
     if(strat == "YOTO"):
         print("Strategy is YOTO, no further iterations")
-        model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
-        print("Confusion matrix: \n", model_confusion_matrix)
-        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
-                        y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
-                        class_names=base_classes)}) 
+
         run.finish()
-        return model, model_confusion_matrix
+        return model
     print("## Adaptive Sampling")
     print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
     for iter in range(iterations):
@@ -216,22 +228,20 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
         # Reservoir sampling part
 
-        X_base_iter, y_base_iter = manager.get_raw_with_classes([selected_class], sample_per_iter_per_class + val_per_class) # get one sample of the selected class
-        X_base_iter, y_base_iter = manager.augment_data(X_base_iter, y_base_iter, augment_factor=augment_factor) # augment the sample to get 10 samples
-        X_base_iter = np.array(X_base_iter)
-        y_base_iter = np.array(y_base_iter) # convert to np.array
-        y_base_iter = purge_y_columns(y_base_iter, base_classes_indices)
-        
+        X_base_iter, y_base_iter = manager.get_raw_with_classes(CLASSES, sample_per_iter_per_class + val_per_class, augment_factor=augment_factor) # get one sample of the selected class
+        X_base_iter, y_base_iter, _, _ = base_comp_split(X_base_iter, y_base_iter, [selected_class], [])
+        y_base_iter = manager.encoder.transform(y_base_iter)
+
         X_base = np.append(X_base, X_base_iter, axis=0) # append the new samples to the sampling reservoir
         y_base = np.append(y_base, y_base_iter, axis=0)
         X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / sample_per_iter_per_class, X_base, y_base)
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
         run.log({"reservoir_size": X_base.shape[0], "training_size": X_train.shape[0]})
 
+        # Training iteration part
+
         model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
-        
-        # Training iteration part
 
         history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[], verbose=verbose)
 
@@ -248,45 +258,14 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
                 "train_accuracy": history.history["accuracy"][epoch], 
                 "train_loss": history.history["loss"][epoch]
                 })
-
-        
-        # Iteration Evaluation part
-        
         print ("### Eval After iteration ", iter + 1)
-        print("Base classes: "+ ",".join(str(x) for x in base_classes))
-        print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
-        y_pred_model = model.predict(x_test_model, batch_size=1, verbose=verbose)
+        eval_model()
+        
 
-        # Accuracy on base classes
-        acc_base = np.sum(np.argmax(y_pred_model, axis=1) == np.argmax(y_test_model, axis=1)) / len(y_test_model) # test accuracy
-        print("model test accuracy on base classes: ", acc_base)
-        run.log({"acc_base": acc_base})
-
-        # Avg. absolute  in hardness levels on base classes
-        abs_diff_base =  hardness_abs_diff(np.argmax(y_pred_model, axis=1), np.argmax(y_test_model, axis=1), hardness_levels)
-        print("Avg. absolute difference on base classes: ", abs_diff_base)
-        run.log({"abs_diff_base": abs_diff_base})
-
-        # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
-        pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
-        print("Iteration accuracy on comp class: ", acc_comp)
-        run.log({"acc_comp": acc_comp})
-
-        # Avg. absolute difference in hardness levels on comp class
-        abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), np.argmax(y_comp, axis=1), hardness_levels)
-        print("Avg. absolute difference in hardness levels on comp class: ", abs_diff_comp)
-        run.log({"abs_diff_comp": abs_diff_comp})
-
-
-        model_confusion_matrix = sk.metrics.confusion_matrix(np.argmax(y_test_model, axis=1), np.argmax(y_pred_model, axis=1))
-        print("Confusion matrix: \n", model_confusion_matrix)
-        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
-                        y_true=np.argmax(y_test_model, axis=1), preds=np.argmax(y_pred_model, axis=1),
-                        class_names=base_classes)})  
 
 
     run.finish()
-    return model, model_confusion_matrix
+    return model
 
 ## Function to return the closest class to a given class
 def closest(ground_truth, hardness_lv):
@@ -346,7 +325,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model, _ = train_model_debug(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model = train_model_debug(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
     model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
 

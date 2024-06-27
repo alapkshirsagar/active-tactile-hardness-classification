@@ -18,7 +18,8 @@ class DatasetManager():
         self.classes = classes
         self.seq_length = seq_length
         self.paths = paths
-        self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
+        self.storage = "./processed_data/"
+        # self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
         self.encoder = LabelBinarizer()
         self.encoder.fit(classes)
 
@@ -205,7 +206,7 @@ class DatasetManager():
 
 if __name__ == "__main__":
     manager = DatasetManager("no_noise__visual_selection__filtered", ["data/data_no_noise/"], ["hardness" + str(i+1) for i in range(5)])
-    X,y = manager.get_raw_with_classes(["hardness1", "hardness2", "hardness3", "hardness4", "hardness5"])
+    X,y = manager.get_raw_with_classes(["hardness1", "hardness2", "hardness3", "hardness4", "hardness5"], 100)
     # print(y[0:20])
     print("Shape of X: " + str(X.shape))
     print("Shape of y: " + str(y.shape))
