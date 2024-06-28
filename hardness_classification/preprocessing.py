@@ -6,7 +6,6 @@ import json
 import matplotlib.pyplot as plt
 import random
 from scipy.ndimage import rotate
-import imgaug.augmenters as iaa
 
 VISUALIZE_FRAME_SELECTION = False
 SELECT_ON_VISUAL_CUES = True

@@ -14,6 +14,7 @@ import wandb
 import sklearn as sk
 import argparse
 import sys
+import time
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
@@ -73,7 +74,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray
 def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
     dist = model.predict(X_comp, batch_size=1, verbose=0)
     choice = np.argmax(dist, axis = 1)
-    prediction = np.zeros((choice.size, len(base_classes)))
+    prediction = np.zeros((choice.size, len(CLASSES)))
     prediction[np.arange(choice.size), choice] = 1
     ground_truth = np.full(choice.shape, comp_index) # ground truth is the comp_index as integers
     return prediction, compute_acc(choice, ground_truth, hardness_levels)
@@ -286,6 +287,9 @@ def hardness_abs_diff(prediction, ground_truth, hardness_lv):
     return diff/len(ground_truth)
 
 if __name__ == "__main__":
+    # Start the timer
+    start_time = time.time()
+
     def train_model_A(base_cls, test_cls, strat="variance", verbose=1):
             return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
@@ -310,10 +314,9 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model, _ = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
     model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
-
-    # save model
+    print("**Time taken:**", time.time() - start_time)
 
 
