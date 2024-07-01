@@ -207,7 +207,9 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         elif strat in ["entropy", "variance"]:
             uncertainty = var if strat == "variance" else entr
             print(f"{strat.capitalize()} values: ", uncertainty)
-            selected_index = np.argmax(uncertainty)
+            # select the index with maximal uncertainty in base classes
+            selected_index = [i for i, cls in enumerate(CLASSES) if cls in base_classes][np.argmax([uncertainty[i] for i, cls in enumerate(CLASSES) if cls in base_classes])]
+        
             selected_class = base_classes[selected_index]
 
         print("Selected class: ", selected_class)
