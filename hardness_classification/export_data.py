@@ -1,5 +1,6 @@
 import pandas as pd 
 import wandb
+import json
 api = wandb.Api()
 
 # Project is specified by <entity/project-name>
@@ -27,3 +28,24 @@ runs_df = pd.DataFrame({
     })
 
 runs_df.to_csv("leave_one_out.csv")
+
+def preprocess_json(json_str):
+    # Replace single quotes with double quotes
+    json_str = json_str.replace("'", "\"")
+    return json.loads(json_str)
+
+# Read the exported CSV file
+df = pd.read_csv('leave_one_out.csv')
+
+# Expand the 'summary' and 'config' columns from JSON strings to separate columns
+summary_expanded = df['summary'].apply(preprocess_json).apply(pd.Series)
+config_expanded = df['config'].apply(preprocess_json).apply(pd.Series)
+
+# Combine the expanded columns with the original dataframe
+df_expanded = pd.concat([df.drop(columns=['summary', 'config']), summary_expanded, config_expanded], axis=1)
+
+# Export the processed dataframe to a new CSV file
+df_expanded.to_csv('leave_one_out_processed.csv', index=False)
+
+print("Data processed and exported to leave_one_out_processed.csv")
+

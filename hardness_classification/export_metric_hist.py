@@ -1,0 +1,63 @@
+import wandb
+import pandas as pd
+import csv
+# Authenticate your WandB account
+wandb.login()
+
+# Initialize API
+api = wandb.Api()
+
+# Project is specified by <entity/project-name>
+runs = api.runs("patchouli_lab/leave_one_out")
+
+def get_wandb_field_history(username, project_name, run_id, field_name):
+    """
+    Retrieves the history of a specific field (metric or parameter) from a Wandb run using the Wandb API.
+    
+    Parameters:
+    - username (str): Your Wandb username.
+    - project_name (str): Name of the project containing the run.
+    - run_id (str): ID of the specific run.
+    - field_name (str): Name of the field (metric or parameter) to retrieve.
+    
+    Returns:
+    - list: A list of tuples (step, value) representing the history of the field.
+    """
+    # Initialize the Wandb API
+    api = wandb.Api()
+    
+    # Fetch the run
+    run = api.run(f"{username}/{project_name}/{run_id}")
+    
+    # Access the history of the specified field
+    history = run.history(keys=[field_name])
+    history_list = [run.name] + ([(row[field_name]) for _, row in history.iterrows()])
+    
+    return history_list
+
+
+
+
+# Example usage:
+if __name__ == "__main__":            
+    username = "patchouli_lab"
+    project_name = "leave_one_out"
+
+    runs = api.runs(f"{username}/{project_name}")
+    # Replace with your Wandb username, project name, run ID, and field name
+    for field_name in {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}:
+        csv_filename = f"{field_name}_history.csv"
+        
+        with open(csv_filename, 'w', newline='\n') as csvfile:
+            csvwriter = csv.writer(csvfile)      
+
+            for i in range(0, len(runs)):
+
+                run_id = runs[i].id
+                field_name = "acc_base"  # Replace with the field name you want to retrieve
+                
+                # Retrieve the history of the specified field
+                history_list = get_wandb_field_history(username, project_name, run_id, field_name)
+                csvwriter.writerow(history_list)
+
+    print(f"History of '{field_name}' written to '{csv_filename}'.")
