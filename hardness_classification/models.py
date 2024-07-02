@@ -606,7 +606,10 @@ class DINOv2NN():
       self.backbone = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
       self.patch_size = 14
       self.backbone.eval()
-      self.model = torch.nn.Linear(self.backbone.num_features*input_shape[0], num_classes)
+      linear = torch.nn.Linear(self.backbone.num_features*input_shape[0], num_classes)
+      # Add dropout layer
+      dropout = torch.nn.Dropout(0.2)
+      self.model = torch.nn.Sequential(dropout, linear)
       return self.model
     
     def pad_to_multiple_of_patch_size(self, X, patch_size):
