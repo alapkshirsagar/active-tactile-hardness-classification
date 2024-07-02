@@ -46,16 +46,13 @@ if __name__ == "__main__":
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
     for field_name in {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}:
-        csv_filename = f"{field_name}_history.csv"
+        csv_filename = f"metrics/{field_name}_history.csv"
         
         with open(csv_filename, 'w', newline='\n') as csvfile:
             csvwriter = csv.writer(csvfile)      
 
             for i in range(0, len(runs)):
-
-                run_id = runs[i].id
-                field_name = "acc_base"  # Replace with the field name you want to retrieve
-                
+                run_id = runs[i].id                
                 # Retrieve the history of the specified field
                 history_list = get_wandb_field_history(username, project_name, run_id, field_name)
                 csvwriter.writerow(history_list)
