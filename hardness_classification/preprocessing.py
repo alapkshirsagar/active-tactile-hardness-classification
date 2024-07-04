@@ -17,7 +17,7 @@ class DatasetManager():
         self.classes = classes
         self.seq_length = seq_length
         self.paths = paths
-        self.storage = "./processed_data/"
+        self.storage = "/home/junyi/ip-hardness/hardness_classification/processed_data/"
         # self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
         self.encoder = LabelBinarizer()
         self.encoder.fit(classes)
