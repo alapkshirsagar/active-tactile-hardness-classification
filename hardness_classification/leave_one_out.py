@@ -51,7 +51,7 @@ def predict_with_dropout_and_batch_size_1(model, x):
     # Iterate through the input data one sample at a time
     for sample in x:
         # Perform a forward pass with dropout enabled
-        prediction = model(tf.expand_dims(sample, axis=0), training=True)
+        prediction = model.predict_raw(tf.expand_dims(sample, axis=0), training=True)
         all_predictions.append(prediction)
 
     # Combine all predictions into one array
@@ -88,7 +88,7 @@ def try_purge_GPU():
             tf.config.experimental.set_memory_growth(gpu, True) # set memory growth to avoid memory errors
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
+def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
 
     def eval_model():
                 # Iteration Evaluation part
@@ -96,7 +96,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
         print("Base classes: "+ ",".join(str(x) for x in base_classes))
         print( "Comp classes: "+ ",".join(str(x) for x in comp_classes))
         y_pred_model = model.predict(x_test_base, batch_size=1, verbose=verbose)
-        y_pred_argmax = np.argmax(y_pred_model, axis=1) # prediction on base classes
+        y_pred_argmax = np.argmax(y_pred_model, axis=1) # predicted classes on base classes
         y_test_argmax = np.argmax(y_test_base, axis=1) # ground truth on base classes
         y_comp_argmax = np.argmax(y_comp, axis=1) # ground truth on comp class
 
@@ -139,7 +139,7 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
     run = wandb.init(project="leave_one_out", name= f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
-                                                    "model": model_creator.__name__, 
+                                                    "model": model.model_name, 
                                                     "lossfunction": lossfunction,
                                                     "epochs": init_epochs + iterations * epochs_per_iter,
                                                     })
@@ -158,12 +158,12 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
     input_shape = X_base.shape[1:]
     num_classes = y_base.shape[1]
 
-    model = model_creator(input_shape, num_classes)
+    model.get_model(input_shape, num_classes)
     X_train, y_train = subsample(max_samples * (val_per_class + init_sample_per_class) / init_sample_per_class, X_base, y_base)
 
-    model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+    model.compile_model(optimizer="rmsprop", loss=lossfunction, metrics=["accuracy"])
 
-    history = model.fit(X_train, y_train, epochs=init_epochs, validation_split=val_per_class/(val_per_class + init_sample_per_class), batch_size=1, callbacks=[], verbose=verbose)
+    history = model.train_model(X_train, y_train, batch_size=1, epochs=init_epochs, validation_samples_per_class=val_per_class, train_samples_per_class=init_sample_per_class)
     executed_epochs = len(history.history["accuracy"])
     for epoch in range(executed_epochs):
         if(val_per_class > 0):
@@ -228,10 +228,10 @@ def adaptive_sampling(CLASSES, model_creator, manager, save_path, base_classes, 
 
         # Training iteration part
 
-        model.compile(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+        model.compile_model(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
 
-        history = model.fit(X_train, y_train, epochs=epochs_per_iter, batch_size=1, validation_split=val_per_class/(val_per_class + sample_per_iter_per_class), callbacks=[], verbose=verbose)
+        history = model.train_model(X_train, y_train, batch_size=1, epochs=epochs_per_iter, validation_samples_per_class=val_per_class, train_samples_per_class=sample_per_iter_per_class)
 
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
@@ -293,10 +293,10 @@ if __name__ == "__main__":
     start_time = time.time()
 
     def train_model_A(base_cls, test_cls, strat="variance", verbose=1):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES, ConvLSTM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(base_cls, test_cls, strat="variance", verbose=1):
-            return adaptive_sampling(CLASSES, get_ConvLSTM, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+            return adaptive_sampling(CLASSES, ConvLSTM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
 
     for i in range(5):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
@@ -316,8 +316,8 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_A(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
-    model.save("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
+    model = train_model_debug(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model.save_model("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)
 

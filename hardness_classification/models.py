@@ -75,21 +75,17 @@ class ConvLSTM():
       return model
   
   def compile_model(self, optimizer, loss, metrics):
-    self.model.compile(optimizer = optimizer, loss = loss, metrics = ["accuracy"])
+    self.model.compile(optimizer = optimizer, loss = loss, metrics = metrics)
     return None
   
   def train_model(self, X_train, y_train, batch_size, epochs, validation_samples_per_class, train_samples_per_class):
     history = self.model.fit(X_train, y_train, epochs = epochs, batch_size = batch_size, validation_split = validation_samples_per_class/(train_samples_per_class+validation_samples_per_class))
-    if validation_samples_per_class > 0:
-        val_accuracy = history.history['val_accuracy'][-1]
-    else:
-        val_accuracy = np.nan
-    train_accuracy = history.history['accuracy'][-1]
-    return [train_accuracy, val_accuracy]
+    return history
   
-  def predict(self, X):
-    dist = self.model.predict(X)
-    return np.argmax(dist, axis=1)
+  def predict(self, X, **kwargs):
+    return self.model.predict(X, **kwargs)
+  def predict_raw(self, X, **kwargs):
+    return self.model(X, **kwargs)
   
   def save_model(self, path):
     self.model.save(path)
