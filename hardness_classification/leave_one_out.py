@@ -12,7 +12,7 @@ if __name__ == "__main__":
     def train_model_ConvLSTM(base_cls, test_cls, strat="variance", verbose=1):
             return adaptive_sampling(CLASSES, ConvLSTM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
     def train_model_SVM(base_cls, test_cls, strat="variance", verbose=1):
-        return adaptive_sampling(CLASSES, ConvLSTM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+        return adaptive_sampling(CLASSES, OpticalFlowSVM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=10, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(base_cls, test_cls, strat="variance", verbose=1):
             return adaptive_sampling(CLASSES, ConvLSTM(), manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
@@ -35,8 +35,8 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_debug(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
-    model.save_model("./AdaptiveModels/A1/leave_" + CLASSES[i] + "_out.h5")
+    model = train_model_SVM(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model.save_model("./AdaptiveModels/SVM/leave_" + CLASSES[i] + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)
 

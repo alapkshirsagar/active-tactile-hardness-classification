@@ -12,3 +12,4 @@ hardness_classification/data/
 tmp/
 data_collection/data/
 wandb/
+myenv/
