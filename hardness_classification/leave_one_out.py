@@ -35,7 +35,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_SVM(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model = train_model_ConvLSTM(base_cls=[CLASSES[j] for j in range(5) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
     model.save_model("./AdaptiveModels/SVM/leave_" + CLASSES[i] + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)

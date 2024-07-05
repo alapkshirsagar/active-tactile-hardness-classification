@@ -147,7 +147,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
     print("Base class: ", base_classes, "Comp class: ", comp_classes)
     run.log({"base_classes": base_classes, "comp_class": comp_classes})
 
-    X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
+    X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor, shuffle=True)
 
     # filter base classes
     X_base, y_base, _, _ = base_comp_split(X, y, base_classes, [])
@@ -175,7 +175,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
             
-    X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor)
+    X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor, shuffle=True)
 
     x_test_base, y_test_base, X_comp, y_comp = base_comp_split(X_, y_, base_classes, comp_classes)
 
@@ -216,7 +216,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
 
         # Reservoir sampling part
 
-        X_base_iter, y_base_iter = manager.get_raw_with_classes(CLASSES, sample_per_iter_per_class + val_per_class, augment_factor=augment_factor) # get one sample of the selected class
+        X_base_iter, y_base_iter = manager.get_raw_with_classes(CLASSES, sample_per_iter_per_class + val_per_class, augment_factor=augment_factor,shuffle=True) # get one sample of the selected class
         X_base_iter, y_base_iter, _, _ = base_comp_split(X_base_iter, y_base_iter, [selected_class], [])
         y_base_iter = manager.encoder.transform(y_base_iter)
 
