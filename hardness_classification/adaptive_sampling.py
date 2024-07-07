@@ -84,8 +84,6 @@ def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
 def try_purge_GPU():
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True) # set memory growth to avoid memory errors
         tf.keras.backend.clear_session() # clear the session to free up memory
 
 def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
@@ -137,7 +135,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
-    run = wandb.init(project="leave_one_out", name= f"{strat}_leave_{comp_classes}_out",
+    run = wandb.init(project="OpticalFlowNN", name=f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model.model_name, 
                                                     "lossfunction": lossfunction,
@@ -148,17 +146,12 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
     run.log({"base_classes": base_classes, "comp_class": comp_classes})
 
     X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
-
     # filter base classes
     X_base, y_base, _, _ = base_comp_split(X, y, base_classes, [])
     y_base = manager.encoder.transform(y_base)
 
     
 
-    input_shape = X_base.shape[1:]
-    num_classes = y_base.shape[1]
-
-    model.get_model(input_shape, num_classes)
     X_train, y_train = subsample(max_samples * (val_per_class + init_sample_per_class) / init_sample_per_class, X_base, y_base)
 
     model.compile_model(optimizer="rmsprop", loss=lossfunction, metrics=["accuracy"])
