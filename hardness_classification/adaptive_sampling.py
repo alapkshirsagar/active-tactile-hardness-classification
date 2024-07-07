@@ -199,13 +199,16 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
             selected_class = random.choice(base_classes)
         elif strat in ["entropy", "variance"]:
             uncertainty = var if strat == "variance" else entr
-            print(f"{strat.capitalize()} values: ", uncertainty)
-            # select the index with maximal uncertainty in base classes
-            selected_index = [i for i, cls in enumerate(CLASSES) if cls in base_classes][np.argmax([uncertainty[i] for i, cls in enumerate(CLASSES) if cls in base_classes])]
-        
-            selected_class = base_classes[selected_index]
-
-        print("Selected class: ", selected_class)
+            print(f"{strat} values: ", uncertainty)
+            selected_index = 0
+            max_uncertainty = -1.0
+            for i in range(0, len(uncertainty)):
+                if uncertainty[i] > max_uncertainty and CLASSES[i] in base_classes:
+                    max_uncertainty = uncertainty[i]
+                    selected_index = i
+            print("Selected index: ", selected_index)
+            
+            selected_class = CLASSES[selected_index]
 
         # Reservoir sampling part
 
