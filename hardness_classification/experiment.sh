@@ -2,7 +2,7 @@
 python3.10 --version
 
 # Number of times to repeat the whole set of experiments
-n=6
+n=10
 
 strategies=("random" "entropy" "variance" "YOTO")
 

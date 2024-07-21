@@ -260,11 +260,13 @@ class DatasetManager():
                 y_aug.append(y[s])
         return X_aug, y_aug
 
-class DatasetManagerYuan():
+class DatasetManagerYuan(DatasetManager):
     def __init__(self, path, objects = [], classes = [8, 11, 17, 27, 32, 46, 48, 50, 62, 73, 81, 87, 95], seq_length = 5):
         self.id = "Yuan"
         self.path = path
-        self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
+        # self.storage = "/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/hardness_classification/processed_data/"
+        self.storage = "./processed_data/"
+
         self.encoder = LabelBinarizer()
         self.objects = objects
         self.encoder.fit(classes)
@@ -398,12 +400,12 @@ class DatasetManagerYuan():
         if not all(count >= num_samples_per_class for count in class_counts.values()):
             raise ValueError("Not enough samples for each class. Please reduce the number of samples per class.")
 
-        if augment_factor:
+        if augment_factor != 1:
             X_out, y_out = self.augment_data(X_out, y_out, augment_factor=augment_factor)
 
         return np.array(X_out), np.array(y_out)
 
-    def get_ordered_pairs(self, classes, num_train_samples_per_class, num_val_samples_per_class, shuffle=False, seed=None, augment_factor=0):
+    def get_ordered_pairs(self, classes, num_train_samples_per_class, num_val_samples_per_class, shuffle=False, seed=None, augment_factor=1):
         """
         Given a list of classes and the number of samples per class, this function returns a list of pairs of samples and their labels. The label is the index of the harder sample in the pair.
         inputs:
@@ -441,7 +443,7 @@ class DatasetManagerYuan():
                     y_val_pairs.append(1)
         return np.array(X_train_pairs), np.array(y_train_pairs), np.array(X_val_pairs), np.array(y_val_pairs)
     
-    def get_ordered_triplets(self, classes, num_train_samples_per_class, num_val_samples_per_class, shuffle=False, seed=None, augment_factor=0):
+    def get_ordered_triplets(self, classes, num_train_samples_per_class, num_val_samples_per_class, shuffle=False, seed=None, augment_factor=1):
         """
         Given a list of classes and the number of samples per class, this function returns a list of triplets of samples and their labels. Each triplet is ordered (comparison1, comparison2, standard). The label is the index of the comparison that is closer to the standard.
         inputs:
@@ -490,20 +492,20 @@ class DatasetManagerYuan():
 if __name__ == "__main__":
     # manager = DatasetManager("no_noise__visual_selection__filtered", ["data/data_no_noise/"], ["hardness" + str(i+1) for i in range(5)])
     # X,y = manager.get_raw_with_classes(["hardness1", "hardness2", "hardness3", "hardness4", "hardness5"])
-    classes = [8, 11, 17, 19, 27, 32, 36, 46, 48, 50, 54, 62, 65, 71, 73, 74, 81, 87, 95] # These are the classes in the Yuan dataset
+    # classes = [8, 11, 17, 19, 27, 32, 36, 46, 48, 50, 54, 62, 65, 71, 73, 74, 81, 87, 95] # These are the classes in the Yuan dataset
     # classes = [8, 27, 48, 87, 95] # Use these for FLAT object
     # classes = [8, 27, 46, 71, 87] # Use these for CHOCO object
     classes = [8, 11, 17, 27, 46, 48, 62, 73, 81, 87, 95] # Use these for FLAT object, 11 classes
 
-    manager = DatasetManagerYuan("/home/alap/Repositories/2022-07-HapticExploration/dataset-yuan/Data1/", objects = ["FLAT"], classes = classes, seq_length=4)
-    X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=20, shuffle=True, seed=42, augment_factor=0)
+    manager = DatasetManagerYuan("../../dataset-yuan/Data1/", objects = ["FLAT"], classes = classes, seq_length=4)
+    X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=1, shuffle=True, seed=42, augment_factor=1)
     # classes = ["hardness" + str(i+1) for i in range(5)]
     # manager = DatasetManager(["/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/data_collection/data/IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data/"], classes = ["hardness" + str(i+1) for i in range(5)], seq_length=None)
     # X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=40, shuffle=True, seed=42, augment_factor=0)
     # print(y[0:20])
     print("Shape of X: " + str(X.shape))
     print("Shape of y: " + str(y.shape))
-    # Print the number of samples for each class, classes use string labels
-    for label in classes:
-        print(str(label) + ": " + str(np.sum(y == label)))
+    # Print the number of samples for each class, classes use string labels Deleted since it's not applicable for the Yuan dataset
+    # for label in classes:
+    #    print(str(label) + ": " + str(np.sum(y == label))) 
 

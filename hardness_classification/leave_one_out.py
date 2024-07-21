@@ -30,7 +30,7 @@ if __name__ == "__main__":
             num_classes = y_dummy.shape[1]
             
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=10, sample_per_iter_per_class=2, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=10, sample_per_iter_per_class=2, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(base_cls, test_cls, strat="variance", verbose=1):
             model = ConvLSTM()
