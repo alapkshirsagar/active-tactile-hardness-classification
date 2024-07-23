@@ -4,7 +4,7 @@ from models import *
 import time
 import argparse
 from tensorflow.python.ops.numpy_ops import np_config
-DATASET = "hardness"
+DATASET = "yuan"
 
 if DATASET == "yuan":
     CLASSES = [8, 11, 17, 27, 46, 48, 62, 73, 81, 87, 95] # Use these for FLAT object, 11 classes
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # Start the timer
     start_time = time.time()
 
-    def train_model_ConvLSTM(manager, base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_ConvLSTM(manager, base_cls, test_cls, strat="variance", verbose=1, load_model_from=None):
             model = ConvLSTM()
             if load_model_from is None:
                 X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
@@ -27,7 +27,12 @@ if __name__ == "__main__":
                 model.get_model(input_shape, num_classes)
             else:
                 model.model = tf.keras.models.load_model(load_model_from)
-            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=50, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+                
+            iterations = 10 if DATASET == "yuan" else 15
+            init_epochs = 50 if DATASET == "yuan" else 100
+            epochs_per_iter = 25 if DATASET == "yuan" else 50
+            
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epochs, iterations=iterations, num_dropouts=10, epochs_per_iter=epochs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     
     def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1):
@@ -43,7 +48,7 @@ if __name__ == "__main__":
             num_classes = y_dummy.shape[1]
             
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES,hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
         
     def train_model_DinoNN(base_cls, test_cls, strat="variance", verbose=1):
         model = DINOv2NN()
