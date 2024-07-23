@@ -11,7 +11,7 @@ do
   echo "Run #$run"
   for strat in "${strategies[@]}"
   do
-    for i in {0..4}
+    for i in {0..cls}
     do
       /bin/python3 /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --i "$i" --strat "$strat" 
     done

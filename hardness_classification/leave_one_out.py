@@ -17,8 +17,18 @@ if __name__ == "__main__":
     # Start the timer
     start_time = time.time()
 
+    def train_model_ConvLSTM(base_cls, test_cls, strat="variance", verbose=1, load_model_from=None):
     def train_model_ConvLSTM(manager, base_cls, test_cls, strat="variance", verbose=1):
             model = ConvLSTM()
+            if load_model_from is None:
+                X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
+                y_dummy = manager.encoder.transform(y_dummy)
+                input_shape = X_dummy.shape[1:]
+                num_classes = y_dummy.shape[1]
+                model.get_model(input_shape, num_classes)
+            else:
+                model.model = tf.keras.models.load_model(load_model_from)
+            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=50, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
             X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
             y_dummy = manager.encoder.transform(y_dummy)
             input_shape = X_dummy.shape[1:]
@@ -31,9 +41,11 @@ if __name__ == "__main__":
             return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epchs, iterations=iter, num_dropouts=10, epochs_per_iter=epchs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=init_smpl, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
     
     def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1):
             np_config.enable_numpy_behavior() # Enable numpy behavior in tensorflow
 
             model = OpticalFlowNN()
+            X_dummy, y_dummy = manager.get_raw_with_classes(base_cls + test_cls, 1)
             X_dummy, y_dummy = manager.get_raw_with_classes(base_cls + test_cls, 1)
             y_dummy = manager.encoder.transform(y_dummy)
             X_dummy = [model.compute_optical_flow(video) for video in X_dummy]
@@ -42,6 +54,18 @@ if __name__ == "__main__":
             num_classes = y_dummy.shape[1]
             
             model.get_model(input_shape, num_classes)
+            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+        
+    def train_model_DinoNN(base_cls, test_cls, strat="variance", verbose=1):
+        model = DINOv2NN()
+        X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
+        y_dummy = manager.encoder.transform(y_dummy)
+        input_shape = X_dummy.shape[1:]
+        num_classes = y_dummy.shape[1]
+        model.get_model(input_shape, num_classes)
+        return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+    
+    def train_model_debug(base_cls, test_cls, strat="variance", verbose=1):
             return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=2, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
 
     def train_model_debug(manager,  base_cls, test_cls, strat="variance", verbose=1):
@@ -51,6 +75,10 @@ if __name__ == "__main__":
             input_shape = X_dummy.shape[1:]
             num_classes = y_dummy.shape[1]
             model.get_model(input_shape, num_classes)
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+        # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
+        # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Yuan Dataset
+    for i in range(len(CLASSES)):
             return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
         # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
         # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Yuan Dataset
@@ -65,9 +93,12 @@ if __name__ == "__main__":
     manager = DatasetManagerYuan("../../dataset-yuan/Data1/", objects = ["FLAT"], classes = CLASSES, seq_length=4) if DATASET == "yuan" else DatasetManager(["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
 
 
+    manager = DatasetManagerYuan("../../dataset-yuan/Data1/", objects = ["FLAT"], classes = CLASSES, seq_length=4) if DATASET == "yuan" else DatasetManager(["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
+
+
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--i', type=int, default=1, help='idx of the class to leave out')
-    parser.add_argument('--strat', type=str, default="variance", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
+    parser.add_argument('--strat', type=str, default="entropy", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
     parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
 
     args = parser.parse_args()
