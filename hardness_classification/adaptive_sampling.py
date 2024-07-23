@@ -14,8 +14,8 @@ import wandb
 import sklearn as sk
 
 DATASET_ID = "42"
-CLASSES = ["hardness" + str(i+1) for i in range(5)]
-MODEL_DUMP_PATH = "AdaptiveModels/ConvLSTM/"
+# CLASSES = ["hardness" + str(i+1) for i in range(5)]
+MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
 __all__ = ["adaptive_sampling", "base_comp_split", "subsample", "predict_with_dropout_and_batch_size_1", "calculate_entropy_with_dropout", "calculate_variance_with_dropout", "acc_on_comp", "try_purge_GPU", "closest", "compute_acc", "hardness_abs_diff", "DATASET_ID", "MODEL_DUMP_PATH", "LOG_PATH"]
