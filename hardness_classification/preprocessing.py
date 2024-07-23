@@ -368,7 +368,7 @@ class DatasetManagerYuan(DatasetManager):
         y = np.concatenate(y)
         return X,y
     
-    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None, augment_factor=0):
+    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None, augment_factor=1):
         X,y = self.get_raw()
         labels = classes
         # Create a list of indices and shuffle it if necessary
@@ -498,7 +498,7 @@ if __name__ == "__main__":
     classes = [8, 11, 17, 27, 46, 48, 62, 73, 81, 87, 95] # Use these for FLAT object, 11 classes
 
     manager = DatasetManagerYuan("../../dataset-yuan/Data1/", objects = ["FLAT"], classes = classes, seq_length=4)
-    X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=1, shuffle=True, seed=42, augment_factor=1)
+    X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=10, shuffle=True, seed=42, augment_factor=1)
     # classes = ["hardness" + str(i+1) for i in range(5)]
     # manager = DatasetManager(["/home/alap/Repositories/2022-07-HapticExploration/ip-hardness/data_collection/data/IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data/"], classes = ["hardness" + str(i+1) for i in range(5)], seq_length=None)
     # X,y = manager.get_raw_with_classes(classes=classes, num_samples_per_class=40, shuffle=True, seed=42, augment_factor=0)
