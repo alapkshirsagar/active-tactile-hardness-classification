@@ -22,11 +22,11 @@ if __name__ == "__main__":
                 model.model = tf.keras.models.load_model(load_model_from)
             return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=100, iterations=50, num_dropouts=10, epochs_per_iter=25, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
     
-    def train_model_OFNN(base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1):
             np_config.enable_numpy_behavior() # Enable numpy behavior in tensorflow
 
             model = OpticalFlowNN()
-            X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
+            X_dummy, y_dummy = manager.get_raw_with_classes(base_cls + test_cls, 1)
             y_dummy = manager.encoder.transform(y_dummy)
             X_dummy = [model.compute_optical_flow(video) for video in X_dummy]
             X_dummy = np.array(X_dummy)
@@ -52,15 +52,19 @@ if __name__ == "__main__":
             input_shape = X_dummy.shape[1:]
             num_classes = y_dummy.shape[1]
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
-
-    for i in range(5):
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+        # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
+        # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Yuan Dataset
+    for i in range(len(CLASSES)):
         print("Deform level ", i, "closest: ", closest(i, hardness_levels))
     # Relative Path
-    manager = DatasetManager(["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
+    # manager = DatasetManager(["../../IP-Object-Hardness/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
     # Windows labsolute path "C:\\MLData\\data_no_noise_vel_02to07_force_1to5\\data"
     # Since the dataset has been processed and cached in the working directory, we can load it directly
     # Already removed the dataset to elsewhere, if the cache is not found, it will raise an error and need to be moved back
+
+    manager = DatasetManagerYuan("../../dataset-yuan/Data1/", objects = ["FLAT"], classes = CLASSES, seq_length=4)
+
 
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--i', type=int, default=1, help='idx of the class to leave out')

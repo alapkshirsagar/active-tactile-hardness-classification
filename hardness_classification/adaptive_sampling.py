@@ -18,7 +18,7 @@ CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "AdaptiveModels/ConvLSTM/"
 LOG_PATH = "logs/"
 
-__all__ = ["adaptive_sampling", "base_comp_split", "subsample", "predict_with_dropout_and_batch_size_1", "calculate_entropy_with_dropout", "calculate_variance_with_dropout", "acc_on_comp", "try_purge_GPU", "hardness_levels", "closest", "compute_acc", "hardness_abs_diff", "DATASET_ID", "CLASSES", "MODEL_DUMP_PATH", "LOG_PATH"]
+__all__ = ["adaptive_sampling", "base_comp_split", "subsample", "predict_with_dropout_and_batch_size_1", "calculate_entropy_with_dropout", "calculate_variance_with_dropout", "acc_on_comp", "try_purge_GPU", "closest", "compute_acc", "hardness_abs_diff", "DATASET_ID", "MODEL_DUMP_PATH", "LOG_PATH"]
 
 
 def base_comp_split(X, y, base_classes, comp_classes):
@@ -74,7 +74,7 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray
 def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
     dist = model.predict(X_comp, batch_size=1, verbose=0)
     choice = np.argmax(dist, axis = 1)
-    prediction = np.zeros((choice.size, len(CLASSES)))
+    prediction = np.zeros((choice.size, len(hardness_levels)))
     prediction[np.arange(choice.size), choice] = 1
     ground_truth = np.full(choice.shape, comp_index) # ground truth is the comp_index as integers
     return prediction, compute_acc(choice, ground_truth, hardness_levels)
@@ -86,7 +86,7 @@ def try_purge_GPU():
     if gpus:
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0) -> None:
+def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0, ) -> None:
 
     def eval_model():
                 # Iteration Evaluation part
@@ -168,7 +168,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
             run.log({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
             
-    X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor)
+    X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor, shuffle=True)
 
     x_test_base, y_test_base, X_comp, y_comp = base_comp_split(X_, y_, base_classes, comp_classes)
 
@@ -212,7 +212,7 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
 
         # Reservoir sampling part
 
-        X_base_iter, y_base_iter = manager.get_raw_with_classes(CLASSES, sample_per_iter_per_class + val_per_class, augment_factor=augment_factor) # get one sample of the selected class
+        X_base_iter, y_base_iter = manager.get_raw_with_classes(CLASSES, sample_per_iter_per_class + val_per_class, augment_factor=augment_factor,shuffle=True) # get one sample of the selected class
         X_base_iter, y_base_iter, _, _ = base_comp_split(X_base_iter, y_base_iter, [selected_class], [])
         y_base_iter = manager.encoder.transform(y_base_iter)
 
@@ -276,7 +276,8 @@ def compute_acc(prediction, ground_truth, hardness_lv):
     return match/len(ground_truth)
 
 
-hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) 
+# hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
+# hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Yuan Dataset
 
 ## Function to compute the avg. absolute difference in hardness levels
 def hardness_abs_diff(prediction, ground_truth, hardness_lv): 
