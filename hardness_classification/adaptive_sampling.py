@@ -15,7 +15,7 @@ import sklearn as sk
 
 DATASET_ID = "42"
 CLASSES = ["hardness" + str(i+1) for i in range(5)]
-MODEL_DUMP_PATH = "model_dumps/"
+MODEL_DUMP_PATH = "AdaptiveModels/ConvLSTM/"
 LOG_PATH = "logs/"
 
 __all__ = ["adaptive_sampling", "base_comp_split", "subsample", "predict_with_dropout_and_batch_size_1", "calculate_entropy_with_dropout", "calculate_variance_with_dropout", "acc_on_comp", "try_purge_GPU", "hardness_levels", "closest", "compute_acc", "hardness_abs_diff", "DATASET_ID", "CLASSES", "MODEL_DUMP_PATH", "LOG_PATH"]
@@ -244,7 +244,8 @@ def adaptive_sampling(CLASSES, model, manager, save_path, base_classes, comp_cla
                 })
         print ("### Eval After iteration ", iter + 1)
         eval_model()
-        
+        model.save_model(MODEL_DUMP_PATH + model.model_name + "_leave_" + CLASSES[i] + "_out.h5")
+
 
 
 

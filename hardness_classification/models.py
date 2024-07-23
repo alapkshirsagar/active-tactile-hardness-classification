@@ -992,6 +992,15 @@ class DINOv2NN:
         X_embeddings = self.get_embeddings(X)
         y_pred = self.model(X_embeddings)
         return torch.argmax(y_pred, dim=1).detach().numpy()
+    
+    def predict_raw(self, X):
+        X = torch.tensor(X)
+        # Move the input to the GPU
+        X = X.to(self.device)
+        self.model.eval()
+        X_embeddings = self.get_embeddings(X)
+        y_pred = self.model(X_embeddings)
+        return y_pred.detach().numpy()
 
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)
