@@ -4,11 +4,11 @@ from models import *
 import time
 import argparse
 from tensorflow.python.ops.numpy_ops import np_config
-DATASET = "yuan"
+DATASET = "hardness" # "yuan" or "hardness
 
 if DATASET == "yuan":
-    CLASSES = [8, 11, 17, 27, 46, 48, 62, 73, 81, 87, 95] # Use these for FLAT object, 11 classes
-    hardness_levels = np.array([8.0, 11.0, 17.0, 27.0, 32.0, 46.0, 48.0, 50.0, 62.0, 73.0, 81.0, 87.0, 95.0]) # Yuan Dataset
+    CLASSES = [8, 17, 27, 46, 62, 73, 81, 95] # Use these for FLAT object, 11 classes
+    hardness_levels = np.array([float(x) for x in CLASSES]) # Yuan Dataset
 elif DATASET == "hardness":
     CLASSES = ["hardness" + str(i) for i in range(1, 6)] # Use these for hardness dataset, 5 classes
     hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_ConvLSTM(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES)) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose)
+    model = train_model_debug(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES)) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=DATASET+"_")
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[i]) + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)
