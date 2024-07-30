@@ -4,10 +4,10 @@ from models import *
 import time
 import argparse
 from tensorflow.python.ops.numpy_ops import np_config
-DATASET = "hardness" # "yuan" or "hardness
+DATASET = "yuan" # "yuan" or "hardness
 
 if DATASET == "yuan":
-    CLASSES = [8, 17, 27, 46, 62, 73, 81, 95] # Use these for FLAT object, 11 classes
+    CLASSES = [8, 27, 46, 73, 95] # Use these for FLAT object, 11 classes
     hardness_levels = np.array([float(x) for x in CLASSES]) # Yuan Dataset
 elif DATASET == "hardness":
     CLASSES = ["hardness" + str(i) for i in range(1, 6)] # Use these for hardness dataset, 5 classes
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # Start the timer
     start_time = time.time()
 
-    def train_model_ConvLSTM(manager, base_cls, test_cls, strat="variance", verbose=1, load_model_from=None):
+    def train_model_ConvLSTM(manager, base_cls, test_cls, strat="variance", verbose=1, load_model_from=None, run_prefix=""):
             model = ConvLSTM()
             if load_model_from is None:
                 X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
@@ -32,10 +32,10 @@ if __name__ == "__main__":
             init_epochs = 50 if DATASET == "yuan" else 100
             epochs_per_iter = 25 if DATASET == "yuan" else 50
             
-            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epochs, iterations=iterations, num_dropouts=10, epochs_per_iter=epochs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epochs, iterations=iterations, num_dropouts=10, epochs_per_iter=epochs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=4, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
 
     
-    def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
             np_config.enable_numpy_behavior() # Enable numpy behavior in tensorflow
 
             model = OpticalFlowNN()
@@ -48,28 +48,28 @@ if __name__ == "__main__":
             num_classes = y_dummy.shape[1]
             
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES,hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+            return adaptive_sampling(CLASSES,hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
         
-    def train_model_DinoNN(base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_DinoNN(base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
         model = DINOv2NN()
         X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
         y_dummy = manager.encoder.transform(y_dummy)
         input_shape = X_dummy.shape[1:]
         num_classes = y_dummy.shape[1]
         model.get_model(input_shape, num_classes)
-        return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+        return adaptive_sampling(CLASSES, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True, verbose=verbose, run_prefix=run_prefix)
     
-    def train_model_debug(base_cls, test_cls, strat="variance", verbose=1):
-            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=2, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose)
+    def train_model_debug(base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=50, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=2, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
 
-    def train_model_debug(manager,  base_cls, test_cls, strat="variance", verbose=1):
+    def train_model_debug(manager,  base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
             model = ConvLSTM()
             X_dummy, y_dummy = manager.get_raw_with_classes(CLASSES, 1)
             y_dummy = manager.encoder.transform(y_dummy)
             input_shape = X_dummy.shape[1:]
             num_classes = y_dummy.shape[1]
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True)
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=1, iterations=1, num_dropouts=1, epochs_per_iter=1, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU=True, verbose=verbose, run_prefix=run_prefix)
 
         # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
         # hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Yuan Dataset
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_debug(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES)) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=DATASET+"_")
+    model = train_model_ConvLSTM(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES)) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=DATASET+"_")
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[i]) + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)

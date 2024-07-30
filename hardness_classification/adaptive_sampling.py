@@ -244,8 +244,6 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                 })
         print ("### Eval After iteration ", iter + 1)
         eval_model()
-        model.save_model(MODEL_DUMP_PATH + model.model_name + "_leave_" + str(CLASSES[i]) + "_out.h5")
-
 
 
 
