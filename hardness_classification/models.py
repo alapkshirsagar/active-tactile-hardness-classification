@@ -35,6 +35,12 @@ from sklearn.metrics.pairwise import euclidean_distances
 import torch
 from torchvision import transforms
 
+
+class TorchHistory:
+    def __init__(self):
+        self.history = {}
+
+
 # =================================================== CONV LSTM ===========================================================
 
 
@@ -920,19 +926,32 @@ class DINOv2NN:
         validation_samples_per_class,
         train_samples_per_class,
     ):
+        train_accuracy = []
+        val_accuracy = []
+        train_loss=[]
+        val_loss=[]
         # Move the model to the GPU
         self.model = self.model.to(self.device)
         # Move the backbone to the GPU
         self.backbone = self.backbone.to(self.device)
+        
+        validation_split = 0
+
+        if validation_samples_per_class is None or validation_samples_per_class == 0:
+            validation_split = None
+        else:
+            validation_split = validation_samples_per_class / (
+                validation_samples_per_class + train_samples_per_class
+            )
 
         # Split the data into training and validation sets
         X_train, X_val, y_train, y_val = train_test_split(
             X_train,
             y_train,
-            train_size=train_samples_per_class
-            / (train_samples_per_class + validation_samples_per_class),
+            test_size=validation_split,
             stratify=y_train,
         )
+        print("Train samples: ", X_train.shape[0], "Validation samples: ", X_val.shape[0])
         # Convert the data to PyTorch tensors and move to GPU
         X_train = torch.tensor(X_train)
         X_train = X_train.to(self.device)
@@ -956,42 +975,56 @@ class DINOv2NN:
         # Train the model
         for epoch in range(epochs):
             self.model.train()
+            total_train = 0
+            correct_train = 0
+            total_loss = 0
             for X_batch, y_batch in train_loader:
                 self.optimizer.zero_grad()
                 y_pred = self.model(X_batch)
                 loss = self.loss(y_pred, y_batch)
+                total_loss += loss.item()
                 loss.backward()
                 self.optimizer.step()
+                _, predicted = torch.max(y_pred, 1)
+                total_train += X_batch.size(0)
+                correct_train += (predicted == y_batch).sum().item()
+                
+            train_accuracy.append(correct_train / total_train)
+            train_loss.append(total_loss / total_train)
+            print(f"Epoch {epoch+1}/{epochs}, Training Accuracy: {correct_train / total_train:.4f}, Training Loss: {total_loss / total_train:.4f}")
             # Evaluate the model on the validation set
             self.model.eval()
-            val_predictions = []
-            for X_batch, y_batch in val_loader:
-                X_batch = X_batch.to(self.device)
-                y_batch = y_batch.to(self.device)
-                y_pred = self.model(X_batch)
-                val_predictions.extend(torch.argmax(y_pred, dim=1).tolist())
-            val_accuracy = accuracy_score(
-                torch.argmax(y_val, dim=1).tolist(), val_predictions
-            )
-            print(f"Epoch {epoch+1}/{epochs}, Validation Accuracy: {val_accuracy:.4f}")
 
-        # Compute the training accuracy
-        train_predictions = []
-        y_pred = self.model(X_train_embeddings)
-        train_predictions.extend(torch.argmax(y_pred, dim=1).tolist())
-        train_accuracy = accuracy_score(
-            torch.argmax(y_train, dim=1).tolist(), train_predictions
-        )
-        return [train_accuracy, val_accuracy]
+            if validation_samples_per_class != 0:
+                total_val = 0
+                correct_val = 0
+                val_loss = 0
+                for X_batch, y_batch in val_loader:
+                    X_batch = X_batch.to(self.device)
+                    y_batch = y_batch.to(self.device)
+                    y_pred = self.model(X_batch)
+                    _, predicted = torch.max(y_pred, 1)
+                    total_val += X_batch.size(0)
+                    correct_val += (predicted == y_batch).sum().item()
+                    val_loss += self.loss(y_pred, y_batch).item()
+                
+                val_accuracy.append(correct_val / total_val)
+                val_loss.append(val_loss / total_val)
+                print(f"Epoch {epoch+1}/{epochs}, Validation Accuracy: {correct_val / total_val:.4f}, Validation Loss: {val_loss / total_val:.4f}")
+                
+            
+        hist = TorchHistory()
+        hist.history = {"accuracy": train_accuracy, "val_accuracy": val_accuracy, "loss": train_loss, "val_loss": val_loss}
+        return hist
 
-    def predict(self, X):
+    def predict(self, X, batch_size=1, verbose=0):
         X = torch.tensor(X)
         # Move the input to the GPU
         X = X.to(self.device)
         self.model.eval()
         X_embeddings = self.get_embeddings(X)
         y_pred = self.model(X_embeddings)
-        return torch.argmax(y_pred, dim=1).detach().numpy()
+        return y_pred.detach().numpy()
     
     def predict_raw(self, X):
         X = torch.tensor(X)
