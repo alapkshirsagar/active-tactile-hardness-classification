@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--i', type=int, default=1, help='idx of the class to leave out')
-    parser.add_argument('--strat', type=str, default="entropy", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
+    parser.add_argument('--strat', type=str, default="YOTO", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
     parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
 
     args = parser.parse_args()
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_DinoNN(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES)) if j != i], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=DATASET+"_")
+    model = train_model_ConvLSTM(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=DATASET+"_")
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[i]) + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)

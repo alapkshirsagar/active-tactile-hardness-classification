@@ -885,11 +885,11 @@ class DINOv2NN:
         dropout = nn.Dropout(0.2)
         relu1 = nn.ReLU()
         linear2 = nn.Linear(128, num_classes)
-        sigmoid = nn.Sigmoid()
+        softmax = nn.Softmax(dim=1)
 
 
         # Create the model
-        self.model = nn.Sequential(linear1, relu1, linear2, dropout, sigmoid)
+        self.model = nn.Sequential(linear1, dropout, relu1, linear2, softmax)
         return self.model
 
     def pad_to_multiple_of_patch_size(self, X, patch_size):
@@ -950,40 +950,48 @@ class DINOv2NN:
         validation_split = 0
 
         if validation_samples_per_class is None or validation_samples_per_class == 0:
-            validation_split = None
+            validation_split = 0
         else:
             validation_split = validation_samples_per_class / (
                 validation_samples_per_class + train_samples_per_class
             )
 
         # Split the data into training and validation sets
-        X_train, X_val, y_train, y_val = train_test_split(
+        if(validation_split == 0):
+            X_train, X_val, y_train, y_val = X_train, [], y_train, []
+        else:
+            X_train, X_val, y_train, y_val = train_test_split(
             X_train,
             y_train,
             test_size=validation_split,
             stratify=y_train,
         )
-        print("Train samples: ", X_train.shape[0], "Validation samples: ", X_val.shape[0])
+        if(validation_samples_per_class != 0):
+            print("Train samples: ", X_train.shape[0], "Validation samples: ", X_val.shape[0])
+        else :
+            print("Train samples: ", X_train.shape[0])
         # Convert the data to PyTorch tensors and move to GPU
         X_train = torch.tensor(X_train)
         X_train = X_train.to(self.device)
         X_train_embeddings = self.get_embeddings(X_train)
         y_train = torch.tensor(y_train, dtype=torch.float32)
         y_train = y_train.to(self.device)
-        X_val = torch.tensor(X_val)
-        X_val = X_val.to(self.device)
-        X_val_embeddings = self.get_embeddings(X_val)
-        y_val = torch.tensor(y_val, dtype=torch.float32)
-        y_val = y_val.to(self.device)
+        if validation_samples_per_class != 0:
+            X_val = torch.tensor(X_val)
+            X_val = X_val.to(self.device)
+            X_val_embeddings = self.get_embeddings(X_val)
+            y_val = torch.tensor(y_val, dtype=torch.float32)
+            y_val = y_val.to(self.device)
         # Create a DataLoader for the training and validation sets
         train_dataset = torch.utils.data.TensorDataset(X_train_embeddings, y_train)
         train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=batch_size, shuffle=True
         )
-        val_dataset = torch.utils.data.TensorDataset(X_val_embeddings, y_val)
-        val_loader = torch.utils.data.DataLoader(
-            val_dataset, batch_size=batch_size, shuffle=False
-        )
+        if validation_samples_per_class != 0:
+            val_dataset = torch.utils.data.TensorDataset(X_val_embeddings, y_val)
+            val_loader = torch.utils.data.DataLoader(
+                val_dataset, batch_size=batch_size, shuffle=False
+            )
         # Train the model
         for epoch in range(epochs):
             self.model.train()
