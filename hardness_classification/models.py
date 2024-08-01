@@ -880,15 +880,16 @@ class DINOv2NN:
         self.patch_size = 14
         self.backbone.eval()
         # Define the first linear layer
-        linear1 = nn.Linear(self.backbone.num_features * input_shape[0], 512)
-        relu1 = nn.ReLU()
-        linear2 = nn.Linear(512, num_classes)
-        relu2 = nn.ReLU()
+        linear1 = nn.Linear(self.backbone.num_features * input_shape[0], 128)
         # Add dropout layer
         dropout = nn.Dropout(0.2)
+        relu1 = nn.ReLU()
+        linear2 = nn.Linear(128, num_classes)
+        sigmoid = nn.Sigmoid()
+
 
         # Create the model
-        self.model = nn.Sequential(linear1, relu1, linear2, relu2, dropout)
+        self.model = nn.Sequential(linear1, relu1, linear2, dropout, sigmoid)
         return self.model
 
     def pad_to_multiple_of_patch_size(self, X, patch_size):
