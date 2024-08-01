@@ -57,7 +57,7 @@ if __name__ == "__main__":
         input_shape = X_dummy.shape[1:]
         num_classes = y_dummy.shape[1]
         model.get_model(input_shape, num_classes)
-        return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
+        return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix, optimize_against_OOM=False)
     
 
     def train_model_debug(manager,  base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):

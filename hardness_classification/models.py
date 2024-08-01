@@ -890,7 +890,13 @@ class DINOv2NN:
         _, height, width, _ = X.shape
         pad_height = (patch_size - height % patch_size) % patch_size
         pad_width = (patch_size - width % patch_size) % patch_size
-        return torch.nn.functional.pad(X, (0, 0, 0, pad_width, 0, pad_height))
+        # Convert TensorFlow tensor to NumPy array
+        np_array = X.numpy()
+
+        # Convert NumPy array to PyTorch tensor
+        torch_tensor = torch.tensor(np_array)
+
+        return torch.nn.functional.pad(torch_tensor, (0, 0, 0, pad_width, 0, pad_height))
 
     def get_embeddings(self, X):
         with torch.no_grad():
@@ -1026,15 +1032,13 @@ class DINOv2NN:
         y_pred = self.model(X_embeddings)
         return y_pred.detach().numpy()
     
-    def predict_raw(self, X):
-        X = torch.tensor(X)
-        # Move the input to the GPU
-        X = X.to(self.device)
-        self.model.eval()
-        X_embeddings = self.get_embeddings(X)
-        y_pred = self.model(X_embeddings)
-        return y_pred.detach().numpy()
+    def predict_raw(self, X, training=True):
 
+        if training:
+            self.model.train()
+        else:
+            self.model.eval()
+        return self.predict(X)
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)
         return None

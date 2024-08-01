@@ -59,14 +59,23 @@ def predict_with_dropout_and_batch_size_1(model, x):
     
     return all_predictions
 
-def calculate_entropy_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+def calculate_entropy_with_dropout(model, X_val, num_dropouts=10, optimize_against_OOM=True) -> np.ndarray:
+    preds = None
+    if(optimize_against_OOM):
+        preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+    else:
+        preds = np.array([model.predict_raw(X_val) for _ in range(num_dropouts)])
+
     entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     sum_entropy = np.sum(entropies, axis=0)
     return sum_entropy
 
-def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+def calculate_variance_with_dropout(model, X_val, num_dropouts=10, optimize_against_OOM=True) -> np.ndarray:
+    preds = None
+    if(optimize_against_OOM):
+        preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+    else:
+        preds = np.array([model.predict_raw(X_val) for _ in range(num_dropouts)])    
     variances = np.var(preds, axis=0)
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
@@ -86,7 +95,7 @@ def try_purge_GPU():
     if gpus:
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0, run_prefix="") -> None:
+def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0, run_prefix="", optimize_against_OOM=True) -> None:
 
     def eval_model():
                 # Iteration Evaluation part
@@ -192,8 +201,8 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
         # Adaptive sampling part
 
-        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
-        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
+        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
         run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)
