@@ -20,6 +20,7 @@ import cv2
 import os
 from os.path import join
 import json
+import torch.nn as nn
 
 import einops
 
@@ -878,12 +879,16 @@ class DINOv2NN:
         self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
         self.patch_size = 14
         self.backbone.eval()
-        linear = torch.nn.Linear(
-            self.backbone.num_features * input_shape[0], num_classes
-        )
+        # Define the first linear layer
+        linear1 = nn.Linear(self.backbone.num_features * input_shape[0], 512)
+        relu1 = nn.ReLU()
+        linear2 = nn.Linear(512, num_classes)
+        relu2 = nn.ReLU()
         # Add dropout layer
-        dropout = torch.nn.Dropout(0.2)
-        self.model = torch.nn.Sequential(dropout, linear)
+        dropout = nn.Dropout(0.2)
+
+        # Create the model
+        self.model = nn.Sequential(linear1, relu1, linear2, relu2, dropout)
         return self.model
 
     def pad_to_multiple_of_patch_size(self, X, patch_size):
