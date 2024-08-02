@@ -134,7 +134,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         pred_comp_argmax = np.argmax(pred_comp, axis=1) # prediction on comp class
         model_confusion_matrix = sk.metrics.confusion_matrix(y_test_argmax, y_pred_argmax)
         print("Confusion matrix on Base Classes: \n", model_confusion_matrix)
-        print("Prediction on Comp Class: \n", pred_comp)
+        print("Prediction on Comp Class: \n", pred_comp_argmax)
         run.log({"base_conf_mat" : wandb.plot.confusion_matrix(probs=None,
                         y_true=y_test_argmax, preds=y_pred_argmax,
                         class_names=CLASSES)})  
