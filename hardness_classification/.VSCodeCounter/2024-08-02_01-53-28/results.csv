@@ -1,0 +1,6 @@
+"filename", "language", "CSV", "comment", "blank", "total"
+"/home/junyi/ip-hardness/hardness_classification/metrics/abs_diff_base_history.csv", "CSV", 200, 0, 1, 201
+"/home/junyi/ip-hardness/hardness_classification/metrics/abs_diff_comp_history.csv", "CSV", 200, 0, 1, 201
+"/home/junyi/ip-hardness/hardness_classification/metrics/acc_base_history.csv", "CSV", 200, 0, 1, 201
+"/home/junyi/ip-hardness/hardness_classification/metrics/acc_comp_history.csv", "CSV", 200, 0, 1, 201
+"Total", "-", 800, 0, 4, 804
