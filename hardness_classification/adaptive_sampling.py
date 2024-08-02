@@ -189,12 +189,19 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     # convert y_test to one hot encoding
     y_test_base = manager.encoder.transform(y_test_base)
     y_comp = manager.encoder.transform(y_comp)
+    final_train_loss = history.history["loss"][-1]
     print("### Eval After Initial Training")
     eval_model()
+     
+    if(final_train_loss > .5):
+        print("Model diverged, stopping")
+        run.log({"converged": False})
+        run.finish()
+        return model
 
     if(strat == "YOTO"):
         print("Strategy is YOTO, no further iterations")
-
+        run.log({"converged": True})
         run.finish()
         return model
     print("## Adaptive Sampling")
@@ -260,7 +267,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         eval_model()
 
 
-
+    run.log({"converged": True})
     run.finish()
     return model
 
