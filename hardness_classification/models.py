@@ -24,7 +24,6 @@ import torch.nn as nn
 
 import einops
 
-
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -35,7 +34,7 @@ import joblib
 from sklearn.metrics.pairwise import euclidean_distances
 import torch
 from torchvision import transforms
-
+from sklearn.metrics import accuracy_score
 
 class TorchHistory:
     def __init__(self):
@@ -181,8 +180,8 @@ class OpticalFlowNN:
 
     def get_model(self, input_shape, num_classes):
         model = Sequential()
-        model.add(Dense(512, input_shape=input_shape, activation="relu"))
-        model.add(Dropout(0.5))
+        model.add(Dense(128, input_shape=input_shape, activation="relu"))
+        model.add(Dropout(0.2))
         model.add(Dense(num_classes, activation="softmax"))
         self.model = model
         return model
@@ -995,9 +994,10 @@ class DINOv2NN:
         # Train the model
         for epoch in range(epochs):
             self.model.train()
-            total_train = 0
-            correct_train = 0
             total_loss = 0
+            batch_count = 0  # To keep track of the number of batches
+            all_data = []
+            all_labels = []
             for X_batch, y_batch in train_loader:
                 self.optimizer.zero_grad()
                 y_pred = self.model(X_batch)
@@ -1005,16 +1005,33 @@ class DINOv2NN:
                 total_loss += loss.item()
                 loss.backward()
                 self.optimizer.step()
-                _, predicted = torch.max(y_pred, 1)
-                total_train += X_batch.size(0)
-                correct_train += (predicted == y_batch).sum().item()
-                
-            train_accuracy.append(correct_train / total_train)
-            train_loss.append(total_loss / total_train)
-            print(f"Epoch {epoch+1}/{epochs}, Training Accuracy: {correct_train / total_train:.4f}, Training Loss: {total_loss / total_train:.4f}")
+                all_data.append(X_batch)
+                all_labels.append(y_batch)
+
+                # print("Correct train: ", correct_train, "Total train: ", total_train)
+                batch_count += 1
+            all_data = torch.cat(all_data)
+            all_labels = torch.cat(all_labels)
+            
+            with torch.no_grad():
+                # Get model predictions
+                outputs = self.model(all_data)
+                _, predicted = torch.max(outputs, 1)
+                # convert from one-hot to class index
+                all_labels = torch.argmax(all_labels, dim=1)
+                # Calculate accuracy
+                correct = (predicted == all_labels).sum().item()
+                epoch_accuracy = correct / all_labels.size(0)
+
+            epoch_loss = total_loss / batch_count  # Dividing total loss by the number of batches
+
+            train_accuracy.append(epoch_accuracy)
+            train_loss.append(epoch_loss)
+            
+            print(f"Epoch {epoch+1}/{epochs}, Training Accuracy: {epoch_accuracy:.4f}, Training Loss: {epoch_loss:.4f}")
+            
             # Evaluate the model on the validation set
             self.model.eval()
-
             if validation_samples_per_class != 0:
                 total_val = 0
                 correct_val = 0
@@ -1025,7 +1042,7 @@ class DINOv2NN:
                     y_pred = self.model(X_batch)
                     _, predicted = torch.max(y_pred, 1)
                     total_val += X_batch.size(0)
-                    correct_val += (predicted == y_batch).sum().item()
+                    
                     val_loss += self.loss(y_pred, y_batch).item()
                 
                 val_accuracy.append(correct_val / total_val)
