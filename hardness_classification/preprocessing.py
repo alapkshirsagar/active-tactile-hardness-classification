@@ -368,15 +368,18 @@ class DatasetManagerYuan(DatasetManager):
         y = np.concatenate(y)
         return X,y
     
-    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=False, seed=None, augment_factor=1):
-        X,y = self.get_raw()
-        labels = classes
-        # Create a list of indices and shuffle it if necessary
-        indices = list(range(y.shape[0]))
-        if shuffle:
-            random.seed(seed)
-            random.shuffle(indices)
+    def get_raw_with_classes(self, classes, num_samples_per_class, shuffle=True, seed=None, augment_factor=1):
+        X, y = self.get_raw()
+        labels = set(classes)  # Convert to set for faster lookup
 
+        # Create a list of indices
+        indices = list(range(y.shape[0]))
+        
+        # Shuffle indices if required
+        if shuffle:
+            if seed is not None:
+                random.seed(seed)
+            random.shuffle(indices)
 
         X_out = []
         y_out = []
@@ -386,16 +389,18 @@ class DatasetManagerYuan(DatasetManager):
         for i in indices:
             # Get the current label
             current_label = y[i]
-            # Check if current label is in the list of selected labels and the class count is less than the specified number
-            if (labels == current_label).any(axis=0):
-                if class_counts[current_label] < num_samples_per_class:
-                    X_out.append(X[i])
-                    y_out.append(y[i])
-                    # Increment the count for the current class
-                    class_counts[current_label] += 1
-            # Break the loop if all classes have enough samples
-            if all(count >= num_samples_per_class for count in class_counts.values()):
-                break
+            
+            # Check if current label is in the list of selected labels and if it needs more samples
+            if current_label in labels and class_counts[current_label] < num_samples_per_class:
+                X_out.append(X[i])
+                y_out.append(current_label)
+                # Increment the count for the current class
+                class_counts[current_label] += 1
+                
+                # Break the loop if all classes have enough samples
+                if all(count >= num_samples_per_class for count in class_counts.values()):
+                    break
+
         # Check if number of samples per class is reached, if not raise an error
         if not all(count >= num_samples_per_class for count in class_counts.values()):
             raise ValueError("Not enough samples for each class. Please reduce the number of samples per class.")

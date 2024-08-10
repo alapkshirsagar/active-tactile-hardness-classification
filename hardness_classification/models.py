@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, Dropout, Flatten
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import to_categorical
+from tensorflow.python.framework.ops import EagerTensor
 
 from matplotlib.animation import FuncAnimation
 from sklearn.decomposition import PCA
@@ -35,6 +36,10 @@ from sklearn.metrics.pairwise import euclidean_distances
 import torch
 from torchvision import transforms
 from sklearn.metrics import accuracy_score
+
+
+
+VERSION_FLAG = "windows"
 
 class TorchHistory:
     def __init__(self):
@@ -228,6 +233,7 @@ class OpticalFlowNN:
         )
         return history
 
+
     def predict(self, X, **kwargs):
         X = [self.compute_optical_flow(video) for video in X]
         X = np.array(X)
@@ -356,10 +362,19 @@ class DINOv2NN:
         pad_height = (patch_size - height % patch_size) % patch_size
         pad_width = (patch_size - width % patch_size) % patch_size
         # Convert TensorFlow tensor to NumPy array
-        np_array = X.numpy()
-
+        # if X is a PyTorch tensor
+        np_array = None
+        
+        if isinstance(X, torch.Tensor) or isinstance(X, EagerTensor):
+            np_array = X.numpy()
+        elif isinstance(X, np.ndarray):
+            np_array = X
+        else:
+            raise ValueError("Input must be a NumPy array or PyTorch tensor")
         # Convert NumPy array to PyTorch tensor
-        torch_tensor = torch.tensor(np_array)
+        # torch_tensor = np_array
+        # if VERSION_FLAG  != "windows":
+        torch_tensor = torch.from_numpy(np_array)
 
         return torch.nn.functional.pad(torch_tensor, (0, 0, 0, pad_width, 0, pad_height))
 
@@ -533,9 +548,12 @@ class DINOv2NN:
         return hist
 
     def predict(self, X, batch_size=1, verbose=0):
-        X = torch.tensor(X)
-        # Move the input to the GPU
-        X = X.to(self.device)
+        if np.isscalar(X):  # Check if X is a scalar
+            X = [X]  # Convert it to a list
+        ### The following code is for the case on newer versions of TensorFlow
+        if VERSION_FLAG != "windows":
+            X = torch.Tensor(X) # convert X to tensor
+            X = X.to(self.device) # Move the input to the GPU
         self.model.eval()
         X_embeddings = self.get_embeddings(X)
         y_pred = self.model(X_embeddings)
