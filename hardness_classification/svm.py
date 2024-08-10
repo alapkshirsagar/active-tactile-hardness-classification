@@ -44,9 +44,8 @@ def leave_one_out(comp_cls_id, training_size):
     y_test_c = manager.encoder.transform(y_test_c)
     y_test_c = np.argmax(y_test_c, axis=1)
 
-    svm.train_model(X_base, y_base, validation_samples_per_class = 10, train_samples_per_class= training_size)
-    
-    print("training size: ", training_size)
+    svm.train_model(X_base, y_base, training_size, 10)
+
     y_pred = svm.predict(X_test)
     print(confusion_matrix(y_test, y_pred))
     y_pred_b = svm.predict(X_test_b)
@@ -72,5 +71,4 @@ if __name__ == "__main__":
         avg_base_acc /= 5
         avg_comp_acc /= 5
         run.log({"training_size": training_size, "avg_base_acc": avg_base_acc, "avg_comp_acc": avg_comp_acc})
-        print(f"**ITERATION SUMMARY: ** training size: {training_size}, avg_base_acc: {avg_base_acc}, avg_comp_acc: {avg_comp_acc}")
     run.finish()

@@ -14,7 +14,7 @@ import wandb
 import sklearn as sk
 
 DATASET_ID = "42"
-# CLASSES = ["hardness" + str(i+1) for i in range(5)]
+CLASSES = ["hardness" + str(i+1) for i in range(5)]
 MODEL_DUMP_PATH = "model_dumps/"
 LOG_PATH = "logs/"
 
@@ -244,8 +244,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                 })
         print ("### Eval After iteration ", iter + 1)
         eval_model()
-        model.save_model(MODEL_DUMP_PATH + model.model_name + "_leave_" + CLASSES[i] + "_out.h5")
-
+        
 
 
 
