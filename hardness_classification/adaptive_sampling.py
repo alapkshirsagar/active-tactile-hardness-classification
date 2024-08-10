@@ -59,25 +59,38 @@ def predict_with_dropout_and_batch_size_1(model, x):
     
     return all_predictions
 
-def calculate_entropy_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+def calculate_entropy_with_dropout(model, X_val, num_dropouts=10, optimize_against_OOM=True) -> np.ndarray:
+    preds = None
+    if(optimize_against_OOM):
+        preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+    else:
+        preds = np.array([model.predict_raw(X_val) for _ in range(num_dropouts)])
+
     entropies = -np.mean(preds * np.log(preds + 1e-10), axis=0)
     sum_entropy = np.sum(entropies, axis=0)
     return sum_entropy
 
-def calculate_variance_with_dropout(model, X_val, num_dropouts=10) -> np.ndarray:
-    preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+def calculate_variance_with_dropout(model, X_val, num_dropouts=10, optimize_against_OOM=True) -> np.ndarray:
+    preds = None
+    if(optimize_against_OOM):
+        preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+    else:
+        preds = np.array([model.predict_raw(X_val) for _ in range(num_dropouts)])    
     variances = np.var(preds, axis=0)
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
-def acc_on_comp(model, X_comp, base_classes, hardness_levels, comp_index):
+def acc_on_comp(model, X_comp, base_classes, comp_classes, hardness_levels, comp_index):
     dist = model.predict(X_comp, batch_size=1, verbose=0)
     choice = np.argmax(dist, axis = 1)
     prediction = np.zeros((choice.size, len(hardness_levels)))
     prediction[np.arange(choice.size), choice] = 1
     ground_truth = np.full(choice.shape, comp_index) # ground truth is the comp_index as integers
-    return prediction, compute_acc(choice, ground_truth, hardness_levels)
+    
+    # if the comp class is not one of the base classes, we need to find the closest class
+    # if the comp class is one of the base classes, we need to find the exact match
+    
+    return prediction, compute_acc(choice, ground_truth, hardness_levels, nearest_class = not comp_classes[0] in base_classes)
 
 # Function to try to purge the GPU memory
 # if the model is not using the GPU memory, do nothing
@@ -86,7 +99,7 @@ def try_purge_GPU():
     if gpus:
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=10, comp_size=1, GPU = True, verbose = 0, ) -> None:
+def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=10, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU = True, verbose = 0, run_prefix="", optimize_against_OOM=True) -> None:
 
     def eval_model():
                 # Iteration Evaluation part
@@ -109,7 +122,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         run.log({"abs_diff_base": abs_diff_base})
 
         # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
-        pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, hardness_levels, CLASSES.index(comp_classes[0]))
+        pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, comp_classes, hardness_levels, CLASSES.index(comp_classes[0]))
         print("Iteration accuracy on comp class: ", acc_comp)
         run.log({"acc_comp": acc_comp})
 
@@ -119,14 +132,15 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         run.log({"abs_diff_comp": abs_diff_comp})
 
         pred_comp_argmax = np.argmax(pred_comp, axis=1) # prediction on comp class
-        pred_all = np.append(y_pred_argmax, pred_comp_argmax) # combine predictions on base and comp classes
-        gt_all = np.append(y_test_argmax, y_comp_argmax) # combine ground truth on base and comp classes
-
-        model_confusion_matrix = sk.metrics.confusion_matrix(gt_all, pred_all)
-        print("Confusion matrix: \n", model_confusion_matrix)
-        run.log({"model_conf_mat" : wandb.plot.confusion_matrix(probs=None,
-                        y_true=gt_all, preds=pred_all,
+        model_confusion_matrix = sk.metrics.confusion_matrix(y_test_argmax, y_pred_argmax)
+        print("Confusion matrix on Base Classes: \n", model_confusion_matrix)
+        print("Prediction on Comp Class: \n", pred_comp_argmax)
+        run.log({"base_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=y_test_argmax, preds=y_pred_argmax,
                         class_names=CLASSES)})  
+        run.log({"comp_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=y_comp_argmax, preds=pred_comp_argmax,
+                        class_names=CLASSES)})
 
     print("# Initial Training")
     print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs")
@@ -135,7 +149,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
-    run = wandb.init(project="OpticalFlowNN", name=f"{strat}_leave_{comp_classes}_out",
+    run = wandb.init(project=run_prefix + model.model_name, name=f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model.model_name, 
                                                     "lossfunction": lossfunction,
@@ -175,12 +189,19 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     # convert y_test to one hot encoding
     y_test_base = manager.encoder.transform(y_test_base)
     y_comp = manager.encoder.transform(y_comp)
+    final_train_loss = history.history["loss"][-1]
     print("### Eval After Initial Training")
     eval_model()
+     
+    if(final_train_loss > .5):
+        print("Model diverged, stopping")
+        run.log({"converged": False})
+        run.finish()
+        return model
 
     if(strat == "YOTO"):
         print("Strategy is YOTO, no further iterations")
-
+        run.log({"converged": True})
         run.finish()
         return model
     print("## Adaptive Sampling")
@@ -192,8 +213,8 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
         # Adaptive sampling part
 
-        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts)
-        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts)
+        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
+        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
         run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)
@@ -244,10 +265,9 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                 })
         print ("### Eval After iteration ", iter + 1)
         eval_model()
-        
 
 
-
+    run.log({"converged": True})
     run.finish()
     return model
 
@@ -267,11 +287,13 @@ def closest(ground_truth, hardness_lv):
 
 
 ## Function to compute accuracy
-def compute_acc(prediction, ground_truth, hardness_lv):
+def compute_acc(prediction, ground_truth, hardness_lv, nearest_class = False):
     match = 0
     for(pred, gt) in zip(prediction, ground_truth):
-        if(pred == closest(gt, hardness_lv)):
-            match += 1
+        if(nearest_class): # if the comp class is not one of the base classes, we need to find the closest class
+            match += 1 if(pred == closest(gt, hardness_lv)) else 0
+        else: # if the comp class is one of the base classes, we need to find the exact match
+            match += 1 if(pred == gt) else 0
     return match/len(ground_truth)
 
 

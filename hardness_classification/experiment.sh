@@ -1,8 +1,6 @@
 #!/bin/bash
-python3.10 --version
-
 # Number of times to repeat the whole set of experiments
-n=6
+n=9
 
 strategies=("random" "entropy" "variance" "YOTO")
 
@@ -13,7 +11,7 @@ do
   do
     for i in {0..4}
     do
-      /bin/python3 /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --i "$i" --strat "$strat" 
+      /home/junyi/miniconda3/envs/ip_hardness/bin/python /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --i "$i" --strat "$strat" --prefix "Experiment_"
     done
   done
 done
