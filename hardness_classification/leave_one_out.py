@@ -28,11 +28,11 @@ if __name__ == "__main__":
             else:
                 model.model = tf.keras.models.load_model(load_model_from)
                 
-            iterations = 10 if DATASET == "yuan" else 15
+            iterations = 10
             init_epochs = 50 if DATASET == "yuan" else 100
             epochs_per_iter = 25 if DATASET == "yuan" else 50
             
-            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epochs, iterations=iterations, num_dropouts=10, epochs_per_iter=epochs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=10, sample_per_iter_per_class=1, val_per_class=0, comp_size=5, GPU=True, verbose=verbose, run_prefix=run_prefix)
+            return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=init_epochs, iterations=iterations, num_dropouts=10, epochs_per_iter=epochs_per_iter, strat=strat,augment_factor=1, max_samples=40, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=5, comp_size=5, GPU=True, verbose=verbose, run_prefix=run_prefix)
 
     
     def train_model_OFNN(manager, base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             num_classes = y_dummy.shape[1]
             
             model.get_model(input_shape, num_classes)
-            return adaptive_sampling(CLASSES,hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
+            return adaptive_sampling(CLASSES,hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=5, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix)
         
     def train_model_DinoNN(manager, base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
         model = DINOv2NN()
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         input_shape = X_dummy.shape[1:]
         num_classes = y_dummy.shape[1]
         model.get_model(input_shape, num_classes)
-        return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=0, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix, optimize_against_OOM=False)
+        return adaptive_sampling(CLASSES, hardness_levels, model, manager, MODEL_DUMP_PATH, base_cls, test_cls, init_epochs=25, iterations=10, num_dropouts=10, epochs_per_iter=7, strat=strat,augment_factor=1, max_samples=200, init_sample_per_class=5, sample_per_iter_per_class=1, val_per_class=5, comp_size=10, GPU=True, verbose=verbose, run_prefix=run_prefix, optimize_against_OOM=False)
     
 
     def train_model_debug(manager,  base_cls, test_cls, strat="variance", verbose=1, run_prefix=""):
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--i', type=int, default=1, help='idx of the class to leave out')
-    parser.add_argument('--strat', type=str, default="YOTO", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
+    parser.add_argument('--strat', type=str, default="entropy", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
     parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
     parser.add_argument('--prefix', type=str, default="Comp_Models", help='Prefix for the model name')
     args = parser.parse_args()
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     strat = args.strat
     verbose = args.verbose
     print(f"# leave {CLASSES[i]} out, strategy: {strat}")
-    model = train_model_DinoNN(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_")
+    model = train_model_ConvLSTM(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[i]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_")
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[i]) + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)

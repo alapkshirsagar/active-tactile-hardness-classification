@@ -11,7 +11,7 @@ do
   do
     for i in {0..4}
     do
-      /home/junyi/miniconda3/envs/ip_hardness/bin/python /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --i "$i" --strat "$strat" 
+      /home/junyi/miniconda3/envs/ip_hardness/bin/python /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --i "$i" --strat "$strat" --prefix "Experiment_"
     done
   done
 done

@@ -41,12 +41,12 @@ def get_wandb_field_history(username, project_name, run_id, field_name):
 # Example usage:
 if __name__ == "__main__":            
     username = "patchouli_lab"
-    project_name = "leave_one_out"
+    project_name = "Final_Comp_ConvLSTM"
 
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
-    for field_name in {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}:
-        csv_filename = f"metrics/{field_name}_history.csv"
+    for field_name in {"train_accuracy", "val_accuracy"}: # {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}
+        csv_filename = f"metrics/{project_name}_{field_name}_history.csv"
         
         with open(csv_filename, 'w', newline='\n') as csvfile:
             csvwriter = csv.writer(csvfile)      
