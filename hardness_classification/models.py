@@ -248,7 +248,130 @@ class OpticalFlowNN:
         self.model.save(path)
         return None
 
+class DINOKeras:
+    def __init__(self):
+        self.model_name = "DINOKeras"
+        self.model = None
+        self.device = "cpu"
 
+    def get_model(self, input_shape, num_classes):
+        self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
+        self.patch_size = 14
+        self.backbone.eval()
+        
+        model = Sequential()
+        model.add(
+            Dense(128, input_dim=self.backbone.num_features * input_shape[0], activation="relu"))
+        model.add(Dropout(0.2))
+        model.add(Dense(num_classes, activation="softmax"))
+        self.model = model
+        
+        self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
+        self.patch_size = 14
+        self.backbone.eval()
+        return model
+
+    def compile_model(self, optimizer, loss, metrics):
+        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        return None
+
+    def train_model(
+        self,
+        X_train,
+        y_train,
+
+        validation_samples_per_class,
+        train_samples_per_class,
+        batch_size = 32,
+        epochs = 20,
+    ):
+        self.backbone = self.backbone.to(self.device)
+        
+        # Split the data into training and validation sets
+
+        validation_split = 0
+        
+        if validation_samples_per_class is None or validation_samples_per_class == 0:
+            validation_split = None
+        else:
+            validation_split = validation_samples_per_class / (
+                validation_samples_per_class + train_samples_per_class
+            )
+        X_train = torch.tensor(X_train)
+        X_train = X_train.to(self.device)
+        X_train_embeddings = self.get_embeddings(X_train)
+        y_train = torch.tensor(y_train, dtype=torch.float32)
+        y_train = y_train.to(self.device)
+        X_train_embeddings = X_train_embeddings.cpu().numpy()
+        y_train = y_train.cpu().numpy()
+        
+        history = self.model.fit(
+            X_train_embeddings,
+            y_train,
+            epochs=epochs,
+            batch_size=batch_size,
+            validation_split=validation_split,
+        )
+        return history
+    
+    def predict(self, X, **kwargs):
+        X = torch.tensor(X)
+        X = X.to(self.device)
+        X_embeddings = self.get_embeddings(X)
+        # convert to numpy array
+        X_embeddings = X_embeddings.cpu().numpy()
+        return self.model.predict(X_embeddings, **kwargs)
+    
+    def predict_raw(self, X, **kwargs):
+        # X = torch.tensor(X)
+        # X = X.to(self.device)
+        X_embeddings = self.get_embeddings(X)
+        X_embeddings = X_embeddings.cpu().numpy()
+
+        return self.model(X_embeddings, **kwargs)
+     
+    def pad_to_multiple_of_patch_size(self, X, patch_size):
+        _, height, width, _ = X.shape
+        pad_height = (patch_size - height % patch_size) % patch_size
+        pad_width = (patch_size - width % patch_size) % patch_size
+        # Convert TensorFlow tensor to NumPy array
+        # if X is a PyTorch tensor
+        np_array = None
+        
+        if isinstance(X, torch.Tensor) or isinstance(X, EagerTensor):
+            np_array = X.numpy()
+        elif isinstance(X, np.ndarray):
+            np_array = X
+        else:
+            raise ValueError("Input must be a NumPy array or PyTorch tensor")
+        # Convert NumPy array to PyTorch tensor
+        # torch_tensor = np_array
+        # if VERSION_FLAG  != "windows":
+        torch_tensor = torch.from_numpy(np_array)
+
+        return torch.nn.functional.pad(torch_tensor, (0, 0, 0, pad_width, 0, pad_height))
+
+    def get_embeddings(self, X):
+        with torch.no_grad():
+            # X = torch.tensor(X)
+            embeddings = torch.tensor([])
+            for i in range(X.shape[1]):
+                # self.visualize_dino_features(X[:,i,:,:,:])
+                X_resize = self.pad_to_multiple_of_patch_size(
+                    X[:, i, :, :, :], patch_size=self.patch_size
+                )
+                X_normalize = X_resize / 255.0
+                X_permute = X_normalize.permute(0, 3, 1, 2)
+                embedding = self.backbone(X_permute.float())
+                embeddings = torch.cat((embeddings, embedding), dim=1)
+                # if i == 0:
+                #     embeddings = embedding
+                # else:
+                #     embeddings = embeddings + embedding
+        return embeddings
+            
+            
+            
 class DINOv2NN:
     def __init__(self):
         self.model_name = "DINOv2NN"

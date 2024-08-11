@@ -1,6 +1,7 @@
 import wandb
 import pandas as pd
 import csv
+import argparse
 # Authenticate your WandB account
 wandb.login()
 
@@ -39,11 +40,15 @@ def get_wandb_field_history(username, project_name, run_id, field_name):
 
 
 # Example usage:
-if __name__ == "__main__":            
-    username = "patchouli_lab"
+if __name__ == "__main__": 
+    parser = argparse.ArgumentParser(description="Export metric history from WandB runs to CSV files.")
+    parser.add_argument("--username", type=str, default="patchouli_lab", help="Your Wandb username.")
+    parser.add_argument("--project_name", type=str, default="leave_one_out", help="Name of the project containing the run.")
+    args = parser.parse_args()
+    username = args.username
     # project_name = "Comp_Model_Aug_11_hardness_ConvLSTM"
     # project_name = "Comp_Model_Aug_11_hardness_DINOv2NN"
-    project_name = "Comp_Model_Aug_11_hardness_OpticalFlowNN"
+    project_name = args.project_name
 
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
