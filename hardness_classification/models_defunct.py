@@ -1206,6 +1206,330 @@ class DINOv2MLP:
         self.model.load_state_dict(torch.load(path))
         return None
 
+class DINOv2NN:
+    def __init__(self):
+        self.model_name = "DINOv2NN"
+        self.model = None
+        self.device = "cpu"
+
+    def visualize_dino_features(self, X):
+        patchsize = self.patch_size
+        X_resize = self.pad_to_multiple_of_patch_size(X, patch_size=self.patch_size)
+        X_normalize = X_resize / 255.0
+        X_permute = X_normalize.permute(0, 3, 1, 2)
+        total_features = []
+        patch_h = X_resize.shape[1] // patchsize
+        patch_w = X_resize.shape[2] // patchsize
+        for image in X_permute:
+            features_dict = self.backbone.forward_features(image.unsqueeze(0))
+            features = features_dict["x_norm_patchtokens"]
+            total_features.append(features)
+        total_features = torch.cat(total_features, dim=0)
+        total_features = total_features.reshape(
+            X.shape[0] * patch_h * patch_w, self.backbone.num_features
+        )
+        pca = PCA(n_components=3)
+        pca.fit(total_features)
+        pca_features = pca.transform(total_features)
+        # visualize PCA components for finding a proper threshold
+        # 3 histograms for 3 components
+        plt.subplot(2, 2, 1)
+        plt.hist(pca_features[:, 0])
+        plt.subplot(2, 2, 2)
+        plt.hist(pca_features[:, 1])
+        plt.subplot(2, 2, 3)
+        plt.hist(pca_features[:, 2])
+        plt.savefig("dino_features_histogram.png")
+        # Clear the plot
+        plt.clf()
+
+        # min_max scale
+        pca_features[:, 0] = (pca_features[:, 0] - pca_features[:, 0].min()) / (
+            pca_features[:, 0].max() - pca_features[:, 0].min()
+        )
+        for i in range(X_resize.shape[0]):
+            plt.subplot(2, 2, i + 1)
+            plt.imshow(
+                pca_features[
+                    i * patch_h * patch_w : (i + 1) * patch_h * patch_w, 0
+                ].reshape(patch_h, patch_w)
+            )
+        plt.savefig("dino_features.png")
+        # Clear the plot
+        plt.clf()
+
+        # segment/seperate the backgound and foreground using the first component
+        pca_features_bg = pca_features[:, 0] > 0.35  # from first histogram
+        pca_features_fg = ~pca_features_bg
+        # plot the pca_features_bg
+        for i in range(X_resize.shape[0]):
+            plt.subplot(2, 2, i + 1)
+            plt.imshow(
+                pca_features_bg[
+                    i * patch_h * patch_w : (i + 1) * patch_h * patch_w
+                ].reshape(patch_h, patch_w)
+            )
+        plt.savefig("dino_features_bg.png")
+        # Clear the plot
+        plt.clf()
+
+        # 2nd PCA for only foreground patches
+        pca.fit(total_features[pca_features_fg])
+        pca_features_left = pca.transform(total_features[pca_features_fg])
+        for i in range(3):
+            # min_max scaling
+            pca_features_left[:, i] = (
+                pca_features_left[:, i] - pca_features_left[:, i].min()
+            ) / (pca_features_left[:, i].max() - pca_features_left[:, i].min())
+
+        pca_features_rgb = pca_features.copy()
+        # for black background
+        pca_features_rgb[pca_features_bg] = 0
+        # new scaled foreground features
+        pca_features_rgb[pca_features_fg] = pca_features_left
+
+        # reshaping to numpy image format
+        pca_features_rgb = pca_features_rgb.reshape(
+            X_resize.shape[0], patch_h, patch_w, 3
+        )
+        for i in range(X_resize.shape[0]):
+            plt.subplot(2, 2, i + 1)
+            plt.imshow(pca_features_rgb[i])
+        plt.savefig("dino_features_fg.png")
+
+    def get_model(self, input_shape, num_classes):
+        self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
+        self.patch_size = 14
+        self.backbone.eval()
+        # Define the first linear layer
+        linear1 = nn.Linear(self.backbone.num_features * input_shape[0], 128)
+        # Add dropout layer
+        dropout = nn.Dropout(0.2)
+        relu1 = nn.ReLU()
+        linear2 = nn.Linear(128, num_classes)
+        softmax = nn.Softmax(dim=1)
+
+
+        # Create the model
+        self.model = nn.Sequential(linear1, dropout, relu1, linear2, softmax)
+        return self.model
+
+    def pad_to_multiple_of_patch_size(self, X, patch_size):
+        _, height, width, _ = X.shape
+        pad_height = (patch_size - height % patch_size) % patch_size
+        pad_width = (patch_size - width % patch_size) % patch_size
+        # Convert TensorFlow tensor to NumPy array
+        # if X is a PyTorch tensor
+        np_array = None
+        
+        if isinstance(X, torch.Tensor) or isinstance(X, EagerTensor):
+            np_array = X.numpy()
+        elif isinstance(X, np.ndarray):
+            np_array = X
+        else:
+            raise ValueError("Input must be a NumPy array or PyTorch tensor")
+        # Convert NumPy array to PyTorch tensor
+        # torch_tensor = np_array
+        # if VERSION_FLAG  != "windows":
+        torch_tensor = torch.from_numpy(np_array)
+
+        return torch.nn.functional.pad(torch_tensor, (0, 0, 0, pad_width, 0, pad_height))
+
+    def get_embeddings(self, X):
+        with torch.no_grad():
+            # X = torch.tensor(X)
+            embeddings = torch.tensor([])
+            for i in range(X.shape[1]):
+                # self.visualize_dino_features(X[:,i,:,:,:])
+                X_resize = self.pad_to_multiple_of_patch_size(
+                    X[:, i, :, :, :], patch_size=self.patch_size
+                )
+                X_normalize = X_resize / 255.0
+                X_permute = X_normalize.permute(0, 3, 1, 2)
+                embedding = self.backbone(X_permute.float())
+                embeddings = torch.cat((embeddings, embedding), dim=1)
+                # if i == 0:
+                #     embeddings = embedding
+                # else:
+                #     embeddings = embeddings + embedding
+        return embeddings
+
+    def compile_model(self, loss, metrics, **kwargs):
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.0003)
+        self.loss = torch.nn.CrossEntropyLoss()
+        self.metrics = metrics
+        return None
+
+    def train_model(
+        self,
+        X_train,
+        y_train,
+        batch_size,
+        epochs,
+        validation_samples_per_class,
+        train_samples_per_class,
+    ):
+        train_accuracy = []
+        val_accuracy = []
+        train_loss=[]
+        val_loss=[]
+        # Move the model to the GPU
+        self.model = self.model.to(self.device)
+        # Move the backbone to the GPU
+        self.backbone = self.backbone.to(self.device)
+        
+        validation_split = 0
+
+        if validation_samples_per_class is None or validation_samples_per_class == 0:
+            validation_split = 0
+        else:
+            validation_split = validation_samples_per_class / (
+                validation_samples_per_class + train_samples_per_class
+            )
+
+        # Split the data into training and validation sets
+        if(validation_split == 0):
+            X_train, X_val, y_train, y_val = X_train, [], y_train, []
+        else:
+            X_train, X_val, y_train, y_val = train_test_split(
+            X_train,
+            y_train,
+            test_size=validation_split,
+            stratify=y_train,
+        )
+        if(validation_samples_per_class != 0):
+            print("Train samples: ", X_train.shape[0], "Validation samples: ", X_val.shape[0])
+        else :
+            print("Train samples: ", X_train.shape[0])
+        # Convert the data to PyTorch tensors and move to GPU
+        X_train = torch.tensor(X_train)
+        X_train = X_train.to(self.device)
+        X_train_embeddings = self.get_embeddings(X_train)
+        y_train = torch.tensor(y_train, dtype=torch.float32)
+        y_train = y_train.to(self.device)
+        if validation_samples_per_class != 0:
+            X_val = torch.tensor(X_val)
+            X_val = X_val.to(self.device)
+            X_val_embeddings = self.get_embeddings(X_val)
+            y_val = torch.tensor(y_val, dtype=torch.float32)
+            y_val = y_val.to(self.device)
+        # Create a DataLoader for the training and validation sets
+        train_dataset = torch.utils.data.TensorDataset(X_train_embeddings, y_train)
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True
+        )
+        if validation_samples_per_class != 0:
+            val_dataset = torch.utils.data.TensorDataset(X_val_embeddings, y_val)
+            val_loader = torch.utils.data.DataLoader(
+                val_dataset, batch_size=batch_size, shuffle=False
+            )
+        # Train the model
+        for epoch in range(epochs):
+            self.model.train()
+            total_loss = 0
+            batch_count = 0  # To keep track of the number of batches
+            all_data = []
+            all_labels = []
+            for X_batch, y_batch in train_loader:
+                self.optimizer.zero_grad()
+                y_pred = self.model(X_batch)
+                loss = self.loss(y_pred, y_batch)
+                total_loss += loss.item()
+                loss.backward()
+                self.optimizer.step()
+                all_data.append(X_batch)
+                all_labels.append(y_batch)
+                batch_count += 1
+            all_data = torch.cat(all_data)
+            all_labels = torch.cat(all_labels)
+            
+            with torch.no_grad():
+                # Get model predictions
+                outputs = self.model(all_data)
+                _, predicted = torch.max(outputs, 1)
+                # convert from one-hot to class index
+                all_labels = torch.argmax(all_labels, dim=1)
+                # Calculate accuracy
+                correct = (predicted == all_labels).sum().item()
+                epoch_accuracy = correct / all_labels.size(0)
+
+            epoch_loss = total_loss / batch_count  # Dividing total loss by the number of batches
+
+            train_accuracy.append(epoch_accuracy)
+            train_loss.append(epoch_loss)
+            
+            
+            # Evaluate the model on the validation set per epoch
+            self.model.eval()
+
+            if validation_samples_per_class != 0:
+                all_data = []
+                all_labels = []
+                total_loss = 0
+                total_val = 0
+                for X_batch, y_batch in val_loader:
+                    X_batch = X_batch.to(self.device)
+                    y_batch = y_batch.to(self.device)
+                    y_pred = self.model(X_batch)
+                    _, predicted = torch.max(y_pred, 1)
+                    total_val += X_batch.size(0)
+                    
+                    total_loss += self.loss(y_pred, y_batch).item()
+                    all_data.append(X_batch)
+                    all_labels.append(y_batch)
+                    
+                val_loss.append(total_loss / total_val)
+                val_accuracy.append(epoch_accuracy)
+                all_data = torch.cat(all_data)
+                all_labels = torch.cat(all_labels)
+                
+                with torch.no_grad():
+                    # Get model predictions
+                    outputs = self.model(all_data)
+                    _, predicted = torch.max(outputs, 1)
+                    # convert from one-hot to class index
+                    all_labels = torch.argmax(all_labels, dim=1)
+                    # Calculate accuracy
+                    correct = (predicted == all_labels).sum().item()
+                    epoch_accuracy = correct / all_labels.size(0)
+
+            if validation_samples_per_class != 0:
+                print(f"Epoch {epoch+1}/{epochs}, Training Accuracy: {epoch_accuracy:.4f}, Training Loss: {epoch_loss:.2f}, Validation Accuracy: {epoch_accuracy}, Validation Loss: {total_loss / total_val:.2f}")
+
+            else:
+                print(f"Epoch {epoch+1}/{epochs}, Training Accuracy: {epoch_accuracy:.4f}, Training Loss: {epoch_loss:.2f}")
+                
+            
+        hist = TorchHistory()
+        hist.history = {"accuracy": train_accuracy, "val_accuracy": val_accuracy, "loss": train_loss, "val_loss": val_loss}
+        return hist
+
+    def predict(self, X, batch_size=1, verbose=0):
+        if np.isscalar(X):  # Check if X is a scalar
+            X = [X]  # Convert it to a list
+        ### The following code is for the case on newer versions of TensorFlow
+        if VERSION_FLAG != "windows":
+            X = torch.Tensor(X) # convert X to tensor
+            X = X.to(self.device) # Move the input to the GPU
+        self.model.eval()
+        X_embeddings = self.get_embeddings(X)
+        y_pred = self.model(X_embeddings)
+        return y_pred.detach().numpy()
+    
+    def predict_raw(self, X, training=True):
+
+        if training:
+            self.model.train()
+        else:
+            self.model.eval()
+        return self.predict(X)
+    def save_model(self, path):
+        torch.save(self.model.state_dict(), path)
+        return None
+
+    def load_model(self, path):
+        self.model.load_state_dict(torch.load(path))
+        return None
 
 # ================================================= Spatio Temporal Convolution ======================================================
 # https://github.com/tensorflow/docs/blob/master/site/en/tutorials/video/video_classification.ipynb

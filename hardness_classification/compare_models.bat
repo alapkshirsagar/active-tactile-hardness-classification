@@ -5,13 +5,13 @@ set i=0
 setlocal enabledelayedexpansion
 
 set strategies=YOTO
-set models=OFNN DinoNN ConvLSTM
-
+set all_models=OFNN DinoNN ConvLSTM
+set models=DinoNN
 for /L %%r in (1,1,%n%) do (
     echo Run #%%r
     for %%s in (%strategies%) do (
         for %%m in (%models%) do (
-            call python ./leave_one_out.py --i !i! --strat %%s --prefix "Comp_Model_Aug_11_Extended" --model %%m
+            call python ./leave_one_out.py --i !i! --strat %%s --prefix "Comp_Model_Aug_12" --model %%m
         )
     )
 )
