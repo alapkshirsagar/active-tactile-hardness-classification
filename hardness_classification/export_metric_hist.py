@@ -41,7 +41,9 @@ def get_wandb_field_history(username, project_name, run_id, field_name):
 # Example usage:
 if __name__ == "__main__":            
     username = "patchouli_lab"
-    project_name = "Comp_Model_Aug_10_final_yuan_OpticalFlowNN"
+    # project_name = "Comp_Model_Aug_11_hardness_ConvLSTM"
+    # project_name = "Comp_Model_Aug_11_hardness_DINOv2NN"
+    project_name = "Comp_Model_Aug_11_hardness_OpticalFlowNN"
 
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
