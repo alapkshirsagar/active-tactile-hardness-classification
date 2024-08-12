@@ -4,7 +4,7 @@ from models import *
 import time
 import argparse
 from tensorflow.python.ops.numpy_ops import np_config
-DATASET = "hardness" # "yuan" or "hardness
+DATASET = "yuan" # "yuan" or "hardness
 
 if DATASET == "yuan":
     CLASSES =  [8, 17, 27, 46, 62, 73, 81, 87, 95] # Use these for FLAT object, 9 classes

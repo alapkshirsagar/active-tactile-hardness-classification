@@ -372,7 +372,9 @@ class DINOKeras:
             
             
             
-
+    def save_model(self, path):
+        self.model.save(path)
+        return None
 
 class Conv2Plus1D(Layer):
     def __init__(self, filters, kernel_size, padding):
