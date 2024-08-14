@@ -43,7 +43,7 @@ def get_wandb_field_history(username, project_name, run_id, field_name):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser(description="Export metric history from WandB runs to CSV files.")
     parser.add_argument("--username", type=str, default="patchouli_lab", help="Your Wandb username.")
-    parser.add_argument("--project_name", type=str, default="leave_one_out", help="Name of the project containing the run.")
+    parser.add_argument("--project_name", type=str, default="Final_exp_Aug_12_yuan_DINOKeras", help="Name of the project containing the run.")
     args = parser.parse_args()
     username = args.username
     # project_name = "Comp_Model_Aug_11_hardness_ConvLSTM"
@@ -52,8 +52,8 @@ if __name__ == "__main__":
 
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
-    for field_name in {"train_accuracy", "val_accuracy"}: # {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}
-        csv_filename = f"metrics/{project_name}_{field_name}_history.csv"
+    for field_name in {"acc_comp", "abs_diff_comp"}: # {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}
+        csv_filename = f"metrics/exp/{project_name}_{field_name}_history.csv"
         
         with open(csv_filename, 'w', newline='\n') as csvfile:
             csvwriter = csv.writer(csvfile)      
