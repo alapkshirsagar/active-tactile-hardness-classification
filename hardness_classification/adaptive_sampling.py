@@ -193,7 +193,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     print("### Eval After Initial Training")
     eval_model()
      
-    if (model.model_name == "ConvLSTM" and final_train_loss > .5) or (model.model_name == "DinoNN" and final_train_loss > 1.5) or (model.model_name == "OFNN" and final_train_loss > .25):
+    if (model.model_name == "ConvLSTM" and final_train_loss > 1) or (model.model_name == "DinoNN" and final_train_loss > 1.5) or (model.model_name == "OFNN" and final_train_loss > .25):
         print("Model diverged, stopping")
         run.log({"converged": False})
         run.finish()

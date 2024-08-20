@@ -44,24 +44,25 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Export metric history from WandB runs to CSV files.")
     parser.add_argument("--username", type=str, default="patchouli_lab", help="Your Wandb username.")
     parser.add_argument("--project_name", type=str, default="Final_exp_Aug_12_yuan_DINOKeras", help="Name of the project containing the run.")
+    parser.add_argument("--field_name", type=str, default="acc_comp", help="Name of the field (metric or parameter) to retrieve.")
     args = parser.parse_args()
     username = args.username
+    field_name = args.field_name
     # project_name = "Comp_Model_Aug_11_hardness_ConvLSTM"
     # project_name = "Comp_Model_Aug_11_hardness_DINOv2NN"
     project_name = args.project_name
 
     runs = api.runs(f"{username}/{project_name}")
     # Replace with your Wandb username, project name, run ID, and field name
-    for field_name in {"acc_comp", "abs_diff_comp"}: # {"acc_base", "acc_comp", "abs_diff_base", "abs_diff_comp"}
-        csv_filename = f"metrics/exp/{project_name}_{field_name}_history.csv"
-        
-        with open(csv_filename, 'w', newline='\n') as csvfile:
-            csvwriter = csv.writer(csvfile)      
+    csv_filename = f"metrics/exp/{project_name}_{field_name}_history.csv"
+    
+    with open(csv_filename, 'w', newline='\n') as csvfile:
+        csvwriter = csv.writer(csvfile)      
 
-            for i in range(0, len(runs)):
-                run_id = runs[i].id                
-                # Retrieve the history of the specified field
-                history_list = get_wandb_field_history(username, project_name, run_id, field_name)
-                csvwriter.writerow(history_list)
+        for i in range(0, len(runs)):
+            run_id = runs[i].id                
+            # Retrieve the history of the specified field
+            history_list = get_wandb_field_history(username, project_name, run_id, field_name)
+            csvwriter.writerow(history_list)
 
-        print(f"History of '{field_name}' written to '{csv_filename}'.")
+    print(f"History of '{field_name}' written to '{csv_filename}'.")
