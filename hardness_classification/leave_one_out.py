@@ -32,7 +32,7 @@ if __name__ == "__main__":
         hardness_levels = np.array([1.13, 1.02, 0.79, 0.68, 0.44]) # Hardness levels for the 5 classes
     else: raise ValueError("Invalid dataset name")
     
-    manager = DatasetManagerYuan("E:/MLData/dataset-yuan/Data1/", objects = ["FLAT"], classes = CLASSES, seq_length=3) if DATASET == "yuan" else DatasetManager(["E:/MLData/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
+    manager = DatasetManagerYuan("../../Data1", objects = ["FLAT"], classes = CLASSES, seq_length=3) if DATASET == "yuan" else DatasetManager(["E:/MLData/data_no_noise_vel_02to07_force_1to5/data"], classes=CLASSES, seq_length=4)
     
     # Create hyperparameters according to dataset
     iterations = 5
