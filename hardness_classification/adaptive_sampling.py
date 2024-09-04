@@ -249,7 +249,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
         # Training iteration part
 
-        model.compile_model(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
+        # model.compile_model(loss=lossfunction, optimizer="rmsprop", metrics=["accuracy"])
         stop_callback = EarlyStopping(monitor="val_accuracy", patience=30, mode="max", restore_best_weights=True)
 
         history = model.train_model(X_train, y_train, batch_size=1, epochs=epochs_per_iter, validation_samples_per_class=val_per_class, train_samples_per_class=sample_per_iter_per_class)
