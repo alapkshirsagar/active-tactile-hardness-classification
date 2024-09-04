@@ -1,6 +1,6 @@
 #!/bin/bash
 # Number of times to repeat the whole set of experiments
-n=9
+n=10
 
 strategies=("random" "entropy" "variance" "YOTO")
 

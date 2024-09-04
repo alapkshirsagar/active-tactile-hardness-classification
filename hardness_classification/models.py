@@ -54,7 +54,7 @@ class ConvLSTM:
         self.model_name = "ConvLSTM"
         self.model = None
     def get_model(
-        self, input_shape, num_classes
+        self, input_shape, num_classes, dropout_rate=0.2
     ):  # input_shape = (SEQ_LEN, IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS)
         model = Sequential()
         
@@ -66,7 +66,7 @@ class ConvLSTM:
                 kernel_size=(3, 3),
                 activation="tanh",
                 data_format="channels_last",
-                recurrent_dropout=0.2,
+                recurrent_dropout=dropout_rate,
                 return_sequences=True,
                 input_shape=input_shape,
             )
@@ -76,7 +76,7 @@ class ConvLSTM:
                 pool_size=(1, 2, 2), padding="same", data_format="channels_last"
             )
         )
-        model.add(TimeDistributed(Dropout(0.2)))
+        model.add(TimeDistributed(Dropout(dropout_rate)))
 
         # Second Layer
         model.add(
@@ -85,7 +85,7 @@ class ConvLSTM:
                 kernel_size=(3, 3),
                 activation="tanh",
                 data_format="channels_last",
-                recurrent_dropout=0.2,
+                recurrent_dropout=dropout_rate,
                 return_sequences=True,
             )
         )
@@ -94,7 +94,7 @@ class ConvLSTM:
                 pool_size=(1, 2, 2), padding="same", data_format="channels_last"
             )
         )
-        model.add(TimeDistributed(Dropout(0.2)))
+        model.add(TimeDistributed(Dropout(dropout_rate)))
 
         # Third Layer
         model.add(
@@ -103,7 +103,7 @@ class ConvLSTM:
                 kernel_size=(3, 3),
                 activation="tanh",
                 data_format="channels_last",
-                recurrent_dropout=0.2,
+                recurrent_dropout=dropout_rate,
                 return_sequences=True,
             )
         )
@@ -112,7 +112,7 @@ class ConvLSTM:
                 pool_size=(1, 2, 2), padding="same", data_format="channels_last"
             )
         )
-        model.add(TimeDistributed(Dropout(0.2)))
+        model.add(TimeDistributed(Dropout(dropout_rate)))
 
         # Forth Layer
         model.add(
@@ -130,12 +130,12 @@ class ConvLSTM:
                 pool_size=(1, 2, 2), padding="same", data_format="channels_last"
             )
         )
-        model.add(TimeDistributed(Dropout(0.2)))
+        model.add(TimeDistributed(Dropout(dropout_rate)))
 
         model.add(Flatten())
         model.add(Dense(num_classes, activation="softmax"))
 
-        # model.summary()
+        model.summary()
         self.model = model
 
         return model
@@ -183,12 +183,13 @@ class OpticalFlowNN:
         self.model = None
         self.max_features = 500
 
-    def get_model(self, input_shape, num_classes):
+    def get_model(self, input_shape, num_classes, dropout_rate=0.2):
         model = Sequential()
         model.add(Dense(128, input_shape=input_shape, activation="relu"))
-        model.add(Dropout(0.2))
+        model.add(Dropout(dropout_rate))
         model.add(Dense(num_classes, activation="softmax"))
         self.model = model
+        model.summary()
         return model
 
     def compile_model(self, optimizer, loss, metrics):
@@ -254,7 +255,7 @@ class DINOKeras:
         self.model = None
         self.device = "cpu"
 
-    def get_model(self, input_shape, num_classes):
+    def get_model(self, input_shape, num_classes, dropout_rate=0.2):
         self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
         self.patch_size = 14
         self.backbone.eval()
@@ -262,13 +263,14 @@ class DINOKeras:
         model = Sequential()
         model.add(
             Dense(128, input_dim=self.backbone.num_features * input_shape[0], activation="relu"))
-        model.add(Dropout(0.2))
+        model.add(Dropout(dropout_rate))
         model.add(Dense(num_classes, activation="softmax"))
         self.model = model
         
         self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vits14")
         self.patch_size = 14
         self.backbone.eval()
+        model.summary()
         return model
 
     def compile_model(self, optimizer, loss, metrics):

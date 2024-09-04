@@ -99,7 +99,7 @@ def try_purge_GPU():
     if gpus:
         tf.keras.backend.clear_session() # clear the session to free up memory
 
-def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=5, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU = True, verbose = 0, run_prefix="", optimize_against_OOM=True) -> None:
+def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_classes, comp_classes, init_epochs=10, iterations=5, num_dropouts=10, epochs_per_iter=10, strat="random", augment_factor=10, max_samples=50, init_sample_per_class=1, sample_per_iter_per_class=1, val_per_class=0, comp_size=1, GPU = True, verbose = 0, run_prefix="", optimize_against_OOM=True, dropout=.2) -> None:
 
     def eval_model():
                 # Iteration Evaluation part
@@ -142,8 +142,11 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                         y_true=y_comp_argmax, preds=pred_comp_argmax,
                         class_names=CLASSES)})
 
+
+    
+    
     print("# Initial Training")
-    print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs")
+    print(f"{init_sample_per_class} samples per class, {val_per_class} validation samples per class, augment factor as {augment_factor} and {init_epochs} epochs, dropout rate: {dropout}")
     if GPU:
         try_purge_GPU()
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
@@ -157,7 +160,8 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                                                     })
 
     print("Base class: ", base_classes, "Comp class: ", comp_classes)
-    run.log({"base_classes": base_classes, "comp_class": comp_classes})
+    # log hyperparameters
+    run.log({"base_classes": base_classes, "comp_class": comp_classes, "init_sample_per_class": init_sample_per_class, "sample_per_iter_per_class": sample_per_iter_per_class, "val_per_class": val_per_class, "comp_size": comp_size, "augment_factor": augment_factor, "max_samples": max_samples, "init_epochs": init_epochs, "iterations": iterations, "num_dropouts": num_dropouts, "epochs_per_iter": epochs_per_iter, "strat": strat, "dropout": dropout})
 
     X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
     # filter base classes
