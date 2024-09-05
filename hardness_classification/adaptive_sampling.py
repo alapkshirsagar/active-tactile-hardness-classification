@@ -217,8 +217,8 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
         # Adaptive sampling part
 
-        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
-        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM=optimize_against_OOM)
+        entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM = model.model_name == "ConvLSTM" )
+        var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM = model.model_name == "ConvLSTM" )
         run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)

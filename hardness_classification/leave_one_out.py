@@ -109,6 +109,10 @@ if __name__ == "__main__":
         model = train_model_DinoKeras(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
     elif(args.model=="Debug"):
         model = train_model_debug(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
+    elif(args.model == "ConvLSTM_Expansion"):
+        model = train_model_ConvLSTM(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
+    elif(args.model == "DinoNN"):
+        model = train_model_DinoKeras(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[comp_index]) + "_out.h5")
 
     print("**Time taken:**", time.time() - start_time)
