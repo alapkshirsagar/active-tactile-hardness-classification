@@ -1,6 +1,6 @@
 #!/bin/bash
 # Number of times to repeat the whole set of experiments
-n=10
+n=9
 
 strategies=("variance")
 
@@ -11,7 +11,7 @@ do
   do
     for i in {0..4}
     do
-      /home/junyi/miniconda3/envs/ip_hardness/bin/python /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --comp_index "$i" --strat "$strat" --prefix "Experiment_" --model "ConvLSTM_Expansion" --dataset "hardness"
+      /home/junyi/miniconda3/envs/ip_hardness/bin/python /home/junyi/ip-hardness/hardness_classification/leave_one_out.py --comp_index "$i" --strat "$strat" --prefix "Sep_6_Domain_Expansion_" --model "ConvLSTM_Expansion" --dataset "hardness"
     done
   done
 done
