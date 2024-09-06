@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument('--strat', type=str, default="entropy", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
     parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
     parser.add_argument('--prefix', type=str, default="Comp_Models", help='Prefix for the model name')
-    parser.add_argument('--model', type=str, default="DinoNN", choices=['ConvLSTM', 'DinoNN', 'OFNN', 'Debug'], help='model')
+    parser.add_argument('--model', type=str, default="ConvLSTM_Expansion", choices=['ConvLSTM', 'DinoNN', 'OFNN', 'Debug', 'ConvLSTM_Expansion', ], help='model')
     parser.add_argument('--dataset', type=str, default="yuan", choices=['yuan', 'hardness'], help='dataset name')
     parser.add_argument('--dropout', type=float, default=0.2, help="dropout rate")
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         model = train_model_debug(manager, base_cls=[CLASSES[j] for j in range(len(CLASSES))], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
     elif(args.model == "ConvLSTM_Expansion"):
         model = train_model_ConvLSTM(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
-    elif(args.model == "DinoNN"):
+    elif(args.model == "DinoNN_Expansion"):
         model = train_model_DinoKeras(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
     model.save_model("./AdaptiveModels/OFNN/leave_" + str(CLASSES[comp_index]) + "_out.h5")
 
