@@ -15,25 +15,38 @@ It's confirmed that the project is fully executable with the following library v
 * cuDNN 8.1.0
 
 Then install the requirement file after `cd` into current directory:
-```
+
+```bash
 pip install -r requirements.txt
 ```
 
+## Training and Evaluation
 
-## Usage
+Please login your *WandB* credential before executing the scripts to make sure that the experiment results can be logged.
 
-### Training and Evaluation
 
 First, make sure that you've run `cd hardness_classification`. All scripts must be executed under such folder.
 
+Our main executable script is the following:
+
+```bash
+python ./leave_one_out.py --comp_index --strat --prefix --model --dataset
 ```
-python3 leave_one_out.py
-```
-Keep in mind that you need to change the directory of both datasets accordingly in this script.
+
+Keep in mind that you need to change the directory of both datasets accordingly in this python file.
 
 The first run will initially take some time to preprocess the dataset, after that the script will continue to use the cached subsampled data, unless the parameters of dataset manager is changed.
 
-### Experiments
+## Experiments
 
 For reproducing our experiment results, you can utilize the *Batch Scripts* or *Bash Scripts* to simplify the calling of `leave_one_out.py` .
 
+### Model Comparison
+
+### Adaptive Sampling
+
+### Dropout Rate Comparison
+
+## Download Experiment Results
+
+## Data Visualization

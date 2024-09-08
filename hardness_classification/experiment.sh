@@ -15,6 +15,7 @@ do
     done
   done
 done
+# Change your model and dataset path with --
 
 # Wait for all background processes to finish
 wait
