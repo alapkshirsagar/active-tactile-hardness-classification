@@ -25,7 +25,7 @@ pip install -r requirements.txt
 Please login your *WandB* credential before executing the scripts to make sure that the experiment results can be logged.
 
 
-First, make sure that you've run `cd hardness_classification`. All scripts must be executed under such folder.
+First, make sure that you've run `cd hardness_classification`. All scripts must be executed under such folder. Later we omit this folder name as the directory prefix.
 
 Our main executable script is the following:
 
@@ -39,14 +39,30 @@ The first run will initially take some time to preprocess the dataset, after tha
 
 ## Experiments
 
-For reproducing our experiment results, you can utilize the *Batch Scripts* or *Bash Scripts* to simplify the calling of `leave_one_out.py` .
+For reproducing our experiment results, you can utilize the *Windows Batch Scripts* or *Linux Bash Scripts* to simplify the calling of `leave_one_out.py` .
 
 ### Model Comparison
 
+Strategy *YOTO* is used for disable adaptive sampling.
+
+Please refer to `compare_models.sh` and change the path to *Python* interpreter and the path to project according to your local settings.
+
 ### Adaptive Sampling
+
+Please refer to `experiment_iph.bat` and  `experiment_yuan.bat`.
 
 ### Dropout Rate Comparison
 
+Please refer to `test_dropout.sh` or `test_dropout.bat`. Change paths according to your local settings.
+
 ## Download Experiment Results
 
+Use `export_data.py` to export a CSV file from a *WandB* project.
+
+Use `export_metric_hist.py` to export the historical values in
+
+For example usages, please refer to `export_metric.bat`.
+
 ## Data Visualization
+
+Please refer to `visualize.ipynb`. You can change settings and path to exported CSV files in this *Jupyter Notebook* document.
