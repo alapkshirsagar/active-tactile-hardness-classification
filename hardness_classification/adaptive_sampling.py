@@ -273,6 +273,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
     run.log({"converged": True})
     run.finish()
+    model.model.save(save_path + run.id + time() + ".h5")
     return model
 
 ## Function to return the closest class to a given class
