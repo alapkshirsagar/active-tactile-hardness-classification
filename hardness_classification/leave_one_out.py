@@ -9,7 +9,7 @@ if __name__ == "__main__":
     # Parse the arguments
     parser = argparse.ArgumentParser(description='Adaptive Sampling Script')
     parser.add_argument('--comp_index', type=int, default=2, help='idx of the class to leave out')
-    parser.add_argument('--strat', type=str, default="variance", choices=['random', 'entropy', 'variance', 'YOTO'], help='Sampling strategy')
+    parser.add_argument('--strat', type=str, default="variance", choices=['random', 'entropy', 'variance', 'YOTO', 'avg'], help='Sampling strategy')
     parser.add_argument('--verbose', type=int, default=1, help='Verbose level. 0: silent, 1: progress bar, 2: one line per epoch')
     parser.add_argument('--prefix', type=str, default="test_Sep_6", help='Prefix for the model name')
     parser.add_argument('--model', type=str, default="Debug", choices=['ConvLSTM', 'DinoNN', 'OFNN', 'Debug', 'ConvLSTM_Expansion', 'DinoNN_Expansion'], help='model')

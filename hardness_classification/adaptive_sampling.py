@@ -80,6 +80,16 @@ def calculate_variance_with_dropout(model, X_val, num_dropouts=10, optimize_agai
     mean_variance = np.mean(variances, axis=0)
     return mean_variance
 
+def calculate_avg_with_dropout(model, X_val, num_dropouts=10, optimize_against_OOM=True) -> np.ndarray:
+    preds = None
+    if(optimize_against_OOM):
+        preds = np.array([predict_with_dropout_and_batch_size_1(model, X_val) for _ in range(num_dropouts)])
+    else:
+        preds = np.array([model.predict_raw(X_val) for _ in range(num_dropouts)])
+    avg = np.mean(preds, axis=0)
+    avg = np.mean(avg, axis=0)
+    return avg
+
 def acc_on_comp(model, X_comp, base_classes, comp_classes, hardness_levels, comp_index):
     dist = model.predict(X_comp, batch_size=1, verbose=0)
     choice = np.argmax(dist, axis = 1)
@@ -222,8 +232,14 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)
-        elif strat in ["entropy", "variance"]:
-            uncertainty = var if strat == "variance" else entr
+        elif strat in ["entropy", "variance", "avg"]:
+            uncertainty = None
+            if strat == "entropy":
+                uncertainty = entr
+            elif strat == "variance":
+                uncertainty = var
+            elif strat == "avg":
+                uncertainty = calculate_avg_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM = model.model_name == "ConvLSTM" )
             print(f"{strat} values: ", uncertainty)
             selected_index = 0
             max_uncertainty = -1.0
