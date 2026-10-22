@@ -8,6 +8,8 @@ import numpy as np
 import random
 from time import time
 import uuid
+import os
+from pathlib import Path
 import pandas as pd
 from utils import *
 import wandb
@@ -162,7 +164,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
-    run = wandb.init(project=run_prefix + model.model_name, name=f"{strat}_leave_{comp_classes}_out",
+    run = wandb.init(project=os.environ.get("WANDB_PROJECT") or run_prefix + model.model_name, name=f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model.model_name, 
                                                     "lossfunction": lossfunction,
@@ -289,7 +291,9 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
     run.log({"converged": True})
     run.finish()
-    model.model.save(save_path + run.id + time() + ".h5")
+    checkpoint = Path(save_path) / f"{run.id}_{time():.6f}.h5"
+    checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    model.model.save(str(checkpoint))
     return model
 
 ## Function to return the closest class to a given class

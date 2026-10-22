@@ -1,0 +1,13 @@
+# Allow only source needed by the image. Never send data, credentials, local
+# environments, checkpoints, or run histories to the Docker builder.
+**
+!Dockerfile
+!environment/
+!environment/*.txt
+!environment/*.in
+!environment/assets.sha256
+!scripts/
+!scripts/*.sh
+!scripts/*.py
+!hardness_classification/
+!hardness_classification/*.py

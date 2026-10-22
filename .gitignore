@@ -13,3 +13,13 @@ tmp/
 data_collection/data/
 wandb/
 myenv/
+.venv/
+.tools/
+.cache/
+environment/validation-output/
+runs/
+.sky-venv/
+results/
+data/
+hardness_classification/processed_data/Own
+hardness_classification/processed_data/Yuan

@@ -4,6 +4,8 @@ This is the code repository of the *ICRA 2025* paper *Active Sampling for Tactil
 
 ## Installation
 
+For the pinned Linux GPU environment reconstructed and validated against this code, see [environment/README.md](environment/README.md). Run `bash scripts/setup_environment.sh` to recreate it, then `source scripts/env.sh` before running Python. This environment matches the Python/CUDA/cuDNN versions below; other package versions are documented reconstruction choices. For container builds and RunPod jobs, see [Docker and SkyPilot](environment/DOCKER_SKYPILOT.md).
+
 Our project is confirmed to be executable on both *Microsoft Windows 11 [Version 10.0.22631.4037]* and *Ubuntu 20.04.6 LTS*. It should function normally on the *Windows 10*, *Windows 11* and the most *Linux* distributions. We did not test the installation procedure on *WSL*.
 
 First, install the required components of *Tensorflow*: *NVCC* and *CuDNN*.

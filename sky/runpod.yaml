@@ -1,0 +1,32 @@
+# Run from the repository root on your laptop. Replace the registry image.
+name: tactile-convlstm
+
+# Online logging is opt-in at launch. Pass the API key with --secret,
+# never as a Docker build argument or a value committed to this YAML.
+envs:
+  WANDB_MODE: offline
+  WANDB_PROJECT: tactile-hardness-supplementary
+
+resources:
+  cloud: runpod
+  image_id: docker:YOUR_DOCKERHUB_USER/tactile-hardness:tf210-v1
+  accelerators: A5000:1
+  cpus: 8+
+  memory: 24+
+  disk_size: 80
+
+# Data must exist on the machine running `sky launch`. It is not in Git/image.
+file_mounts:
+  /opt/tactile-hardness/data/Own: ./data/Own
+
+setup: |
+  set -euo pipefail
+  cd /opt/tactile-hardness
+  test -f data/Own/X_4_raw.npy
+  test -f data/Own/y_4_raw.npy
+  bash scripts/run.sh python -c 'import tensorflow as tf; assert tf.config.list_physical_devices("GPU"), "No TensorFlow GPU detected"'
+
+run: |
+  set -euo pipefail
+  cd /opt/tactile-hardness
+  bash scripts/benchmark_ablation.sh ConvLSTM hardness
