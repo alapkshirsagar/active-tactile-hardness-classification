@@ -68,3 +68,9 @@ For example usages, please refer to `export_metric.bat`.
 ## Data Visualization
 
 Please refer to `visualize.ipynb`. You can change settings and path to exported CSV files in this *Jupyter Notebook* document.
+
+## ConvLSTM replenishment
+
+See [experiments/REPLENISHMENT.md](experiments/REPLENISHMENT.md) and
+[sky/replenish-convlstm.yaml](sky/replenish-convlstm.yaml) for the quota-aware
+SkyPilot campaign (28 additional successes, no launch performed yet).

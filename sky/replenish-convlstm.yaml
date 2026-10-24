@@ -1,0 +1,66 @@
+# Two independent training processes share one GPU; per-run batch size is unchanged.
+name: tactile-convlstm-replenishment
+envs:
+  WANDB_MODE: online
+  WANDB_PROJECT: tactile-hardness-replenishment
+  WANDB_ENTITY: patchouli_lab
+  SKYPILOT_DOCKER_USERNAME: fheller0
+  SKYPILOT_DOCKER_SERVER: docker.io
+  REPLENISH_WORKERS: '2'
+  TACTILE_READONLY_DATA: '1'
+  REPLENISH_MAX_ATTEMPTS: '84'
+  TF_NUM_INTRAOP_THREADS: '2'
+  TF_NUM_INTEROP_THREADS: '1'
+  OMP_NUM_THREADS: '2'
+  OPENBLAS_NUM_THREADS: '1'
+  MKL_NUM_THREADS: '1'
+resources:
+  cloud: runpod
+  image_id: docker:fheller0/tactile-hardness:tf210-smoke-v1
+  accelerators: RTX2000-Ada:1
+  disk_size: 80
+  region: RO
+  zone: EU-RO-1
+volumes:
+  /workspace: high_scarlet_vole
+setup: |
+  set -euo pipefail
+  cd /opt/tactile-hardness
+  # Stage outside the image tree: SkyPilot refuses to mount over existing files.
+  python3 - <<'PY_COPY'
+  from pathlib import Path
+  import shutil
+  source = Path('/tmp/tactile-replenishment-overlay')
+  target = Path('/opt/tactile-hardness')
+  for path in source.rglob('*'):
+      if path.is_file():
+          destination = target / path.relative_to(source)
+          destination.parent.mkdir(parents=True, exist_ok=True)
+          if destination.is_symlink():
+              destination.unlink()
+          shutil.copyfile(path, destination)
+  PY_COPY
+  test -f /workspace/data/Own/X_4_raw.npy
+  test -f /workspace/data/Own/y_4_raw.npy
+  # The image's processed_data links already point through /opt/.../data.
+  # Link those paths to the mounted dataset without changing the source volume.
+  for dataset in Own Yuan; do
+    if [[ -e "data/$dataset" && ! -L "data/$dataset" ]]; then
+      echo "Refusing to replace existing directory: data/$dataset" >&2
+      exit 1
+    fi
+    ln -sfn "/workspace/data/$dataset" "data/$dataset"
+  done
+  bash scripts/run.sh python -c 'import tensorflow as tf; assert tf.config.list_physical_devices("GPU"), "No TensorFlow GPU detected"'
+run: |
+  set -euo pipefail
+  cd /opt/tactile-hardness
+  bash scripts/replenish_convlstm.sh
+file_mounts:
+  /tmp/tactile-replenishment-overlay/scripts/patch_wandb_0179.py: ./scripts/patch_wandb_0179.py
+  /tmp/tactile-replenishment-overlay/scripts/replenish_convlstm.py: ./scripts/replenish_convlstm.py
+  /tmp/tactile-replenishment-overlay/scripts/replenish_convlstm.sh: ./scripts/replenish_convlstm.sh
+  /tmp/tactile-replenishment-overlay/experiments/convlstm_replenishment.json: ./experiments/convlstm_replenishment.json
+  /tmp/tactile-replenishment-overlay/hardness_classification/leave_one_out.py: ./hardness_classification/leave_one_out.py
+  /tmp/tactile-replenishment-overlay/hardness_classification/adaptive_sampling.py: ./hardness_classification/adaptive_sampling.py
+  /tmp/tactile-replenishment-overlay/hardness_classification/preprocessing.py: ./hardness_classification/preprocessing.py

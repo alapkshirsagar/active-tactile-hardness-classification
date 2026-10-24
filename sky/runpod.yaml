@@ -9,21 +9,31 @@ envs:
 
 resources:
   cloud: runpod
-  image_id: docker:YOUR_DOCKERHUB_USER/tactile-hardness:tf210-v1
-  accelerators: A5000:1
+  image_id: docker:fheller0/tactile-hardness:tf210-smoke-v1
+  accelerators: A4500:1
   cpus: 8+
   memory: 24+
   disk_size: 80
 
-# Data must exist on the machine running `sky launch`. It is not in Git/image.
-file_mounts:
-  /opt/tactile-hardness/data/Own: ./data/Own
+# Register the existing network volume with sky/runpod-volume.yaml first.
+# Replace this with its exact name; see environment/DOCKER_SKYPILOT.md.
+volumes:
+  /workspace: high_scarlet_vole
 
 setup: |
   set -euo pipefail
   cd /opt/tactile-hardness
-  test -f data/Own/X_4_raw.npy
-  test -f data/Own/y_4_raw.npy
+  test -f /workspace/data/Own/X_4_raw.npy
+  test -f /workspace/data/Own/y_4_raw.npy
+  # The image's processed_data links already point through /opt/.../data.
+  # Link those paths to the mounted dataset without changing the source volume.
+  for dataset in Own Yuan; do
+    if [[ -e "data/$dataset" && ! -L "data/$dataset" ]]; then
+      echo "Refusing to replace existing directory: data/$dataset" >&2
+      exit 1
+    fi
+    ln -sfn "/workspace/data/$dataset" "data/$dataset"
+  done
   bash scripts/run.sh python -c 'import tensorflow as tf; assert tf.config.list_physical_devices("GPU"), "No TensorFlow GPU detected"'
 
 run: |

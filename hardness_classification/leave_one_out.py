@@ -16,7 +16,16 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, default="hardness", choices=['yuan', 'hardness'], help='dataset name')
     parser.add_argument('--dropout', type=float, default=0.2, help="dropout rate")
 
+    parser.add_argument('--seed', type=int, default=None, help='Recorded seed for replenishment runs')
+    parser.add_argument('--no-checkpoint', action='store_true', help='Log metrics without retaining model files')
+
     args = parser.parse_args()
+    if args.seed is not None:
+        tf.keras.utils.set_random_seed(args.seed)
+        os.environ['TACTILE_RUN_SEED'] = str(args.seed)
+    if args.no_checkpoint:
+        os.environ['TACTILE_SAVE_CHECKPOINT'] = '0'
+
     comp_index = args.comp_index
     strat = args.strat
     verbose = args.verbose
@@ -113,7 +122,8 @@ if __name__ == "__main__":
         model = train_model_ConvLSTM(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
     elif(args.model == "DinoNN_Expansion"):
         model = train_model_DinoKeras(manager, base_cls = [x for i, x in enumerate(CLASSES) if i != comp_index], test_cls=[CLASSES[comp_index]], strat=strat, verbose=verbose, run_prefix=args.prefix+"_"+DATASET+"_", dropout=args.dropout)
-    model.save_model("./AdaptiveModels/dump.h5")
+    if not args.no_checkpoint:
+        model.save_model("./AdaptiveModels/dump.h5")
 
     print("**Time taken:**", time.time() - start_time)
 

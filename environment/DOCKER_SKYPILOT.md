@@ -67,19 +67,35 @@ not installed, use `python3.11 -m venv .sky-venv` and install with pip instead.
 
 ## 4. Transfer data and launch one training run
 
-Copy the existing processed `data/Own` directory from this container to
-`data/Own` in your laptop checkout. It must include `X_4_raw.npy` and
-`y_4_raw.npy`. These files are ignored by Git and excluded from the image.
-The example uses SkyPilot `file_mounts` to transfer them from your laptop;
-large-scale use can replace this with object storage. A volume on the current
-RunPod container does not automatically attach to a new SkyPilot pod.
+The processed arrays live on your existing regional RunPod Network Volume:
 
-For a regional RunPod Network Volume, SkyPilot also supports registering the
-existing volume and attaching it through `volumes`; compute must use the same
-datacenter. Global Volumes are a different storage type: native SkyPilot
-attachment has not been verified, so do not register one as
-`runpod-network-volume`. The checked-in task uses laptop file transfer until
-a different attachment method is configured.
+```text
+/workspace/data/Own/X_4_raw.npy
+/workspace/data/Own/y_4_raw.npy
+/workspace/data/Yuan/...
+```
+
+No laptop dataset copy is required. In `sky/runpod-volume.yaml`, set `name` to
+its exact RunPod volume name and `infra` to its region/data-centre combination
+(e.g. `runpod/CA/CA-MTL-1`). Keep `use_existing: true`: this registers the
+existing data volume instead of creating an empty replacement. Also replace
+`YOUR_EXISTING_VOLUME_NAME` in `sky/runpod.yaml` with that same name.
+
+```sh
+sky volumes apply sky/runpod-volume.yaml
+sky volumes ls -v
+```
+
+The task mounts the volume at `/workspace`; SkyPilot places compute in the
+volume's data centre, where an A40 must be available. Setup checks the Own
+arrays and connects the image's existing dataset paths to the mounted data.
+The Yuan link is prepared too, but the current benchmark uses Own data only.
+Store processed arrays under those directories, not only raw source videos.
+
+This config is for a **Network Volume**, not a Global Volume. It leaves the
+dataset on the volume and does not upload, delete, or regenerate it. Outputs
+still live under `/opt/tactile-hardness/runs` and must be retrieved as described
+below; this mount does not by itself make those output paths persistent.
 
 Edit `sky/runpod.yaml` to set the image you pushed. Then:
 
@@ -162,3 +178,19 @@ References: [SkyPilot Docker runtime requirements](https://docs.skypilot.ai/en/l
 and [RunPod client setup](https://docs.skypilot.ai/en/latest/getting-started/installation.html#runpod).
 RunPod uses this image as its pod runtime, not nested `docker run`. The image
 uses Ubuntu, root, and a plain shell command as required by that integration.
+
+## W&B 0.17.9 schema compatibility (smoke test)
+
+The first online smoke run authenticated but failed in
+`server_settings_introspection`: the current server returned a null optional
+`ServerSettings` GraphQL type, which W&B 0.17.9 did not handle. The smoke task
+now syncs `scripts/patch_wandb_0179.py` and applies a version-guarded patch before
+training. It treats a missing/null type as an empty supported-field list;
+authentication, run creation and upload errors are not suppressed. Regression
+checks cover missing, null and supported types. This does not change the
+TensorFlow environment or training settings. The preflight JSON records that
+the compatibility patch is applied.
+
+Use `sky launch` rather than `sky exec` when rerunning with updated file mounts:
+`sky exec` does not synchronize file mounts or rerun setup. No image rebuild is
+needed for this fix because the task mounts the patch and smoke launcher.

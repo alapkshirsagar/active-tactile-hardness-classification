@@ -9,6 +9,7 @@ import random
 from time import time
 import uuid
 import os
+import json
 from pathlib import Path
 import pandas as pd
 from utils import *
@@ -126,31 +127,31 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         # Accuracy on base classes
         acc_base = np.sum(y_pred_argmax == y_test_argmax) / len(y_test_base) # test accuracy
         print("model test accuracy on base classes: ", acc_base)
-        run.log({"acc_base": acc_base})
+        log_metrics({"acc_base": acc_base})
 
         # Avg. absolute  in hardness levels on base classes
         abs_diff_base =  hardness_abs_diff(y_pred_argmax, y_test_argmax, hardness_levels)
         print("Avg. absolute difference on base classes: ", abs_diff_base)
-        run.log({"abs_diff_base": abs_diff_base})
+        log_metrics({"abs_diff_base": abs_diff_base})
 
         # Accuracy on comp class. Prediction is correct if the predicted class is the closest to the ground truth class in terms of hardness level
         pred_comp, acc_comp = acc_on_comp(model, X_comp, base_classes, comp_classes, hardness_levels, CLASSES.index(comp_classes[0]))
         print("Iteration accuracy on comp class: ", acc_comp)
-        run.log({"acc_comp": acc_comp})
+        log_metrics({"acc_comp": acc_comp})
 
         # Avg. absolute difference in hardness levels on comp class
         abs_diff_comp = hardness_abs_diff(np.argmax(pred_comp, axis=1), y_comp_argmax, hardness_levels)
         print("Avg. absolute difference in hardness levels on comp class: ", abs_diff_comp)
-        run.log({"abs_diff_comp": abs_diff_comp})
+        log_metrics({"abs_diff_comp": abs_diff_comp})
 
         pred_comp_argmax = np.argmax(pred_comp, axis=1) # prediction on comp class
         model_confusion_matrix = sk.metrics.confusion_matrix(y_test_argmax, y_pred_argmax)
         print("Confusion matrix on Base Classes: \n", model_confusion_matrix)
         print("Prediction on Comp Class: \n", pred_comp_argmax)
-        run.log({"base_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+        log_metrics({"base_conf_mat" : wandb.plot.confusion_matrix(probs=None,
                         y_true=y_test_argmax, preds=y_pred_argmax,
                         class_names=CLASSES)})  
-        run.log({"comp_conf_mat" : wandb.plot.confusion_matrix(probs=None,
+        log_metrics({"comp_conf_mat" : wandb.plot.confusion_matrix(probs=None,
                         y_true=y_comp_argmax, preds=pred_comp_argmax,
                         class_names=CLASSES)})
 
@@ -171,9 +172,32 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
                                                     "epochs": init_epochs + iterations * epochs_per_iter,
                                                     })
 
+    metric_counts = {key: 0 for key in ["train_accuracy", "acc_comp", "abs_diff_comp", "avg_entropy", "avg_variance"]}
+    if os.environ.get("TACTILE_RUN_CONFIG_JSON"):
+        run.config.update(json.loads(os.environ["TACTILE_RUN_CONFIG_JSON"]))
+
+    def log_metrics(values):
+        for key in metric_counts:
+            if key in values:
+                metric_counts[key] += 1
+        run.log(values)
+
+    def finish_run(converged, completed_updates):
+        run.summary.update({"converged": converged, "completed_updates": completed_updates,
+                            "metric_counts": dict(metric_counts)})
+        run.finish()  # In online mode this waits for metric synchronization.
+        if os.environ.get("TACTILE_RESULT_PATH"):
+            destination = Path(os.environ["TACTILE_RESULT_PATH"])
+            payload = {"run_id": run.id, "converged": converged,
+                       "completed_updates": completed_updates,
+                       "metric_counts": dict(metric_counts), "wandb_finished": True}
+            temporary = destination.with_suffix(".tmp")
+            temporary.write_text(json.dumps(payload, indent=2) + "\n")
+            temporary.replace(destination)
+
     print("Base class: ", base_classes, "Comp class: ", comp_classes)
     # log hyperparameters
-    run.log({"base_classes": base_classes, "comp_class": comp_classes, "init_sample_per_class": init_sample_per_class, "sample_per_iter_per_class": sample_per_iter_per_class, "val_per_class": val_per_class, "comp_size": comp_size, "augment_factor": augment_factor, "max_samples": max_samples, "init_epochs": init_epochs, "iterations": iterations, "num_dropouts": num_dropouts, "epochs_per_iter": epochs_per_iter, "strat": strat, "dropout": dropout})
+    log_metrics({"base_classes": base_classes, "comp_class": comp_classes, "init_sample_per_class": init_sample_per_class, "sample_per_iter_per_class": sample_per_iter_per_class, "val_per_class": val_per_class, "comp_size": comp_size, "augment_factor": augment_factor, "max_samples": max_samples, "init_epochs": init_epochs, "iterations": iterations, "num_dropouts": num_dropouts, "epochs_per_iter": epochs_per_iter, "strat": strat, "dropout": dropout})
 
     X, y = manager.get_raw_with_classes(CLASSES, init_sample_per_class + val_per_class, augment_factor=augment_factor)
     # filter base classes
@@ -190,12 +214,12 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     executed_epochs = len(history.history["accuracy"])
     for epoch in range(executed_epochs):
         if(val_per_class > 0):
-            run.log({"train_accuracy": history.history["accuracy"][epoch], 
+            log_metrics({"train_accuracy": history.history["accuracy"][epoch], 
                     "val_accuracy": history.history["val_accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch], 
                     "val_loss": history.history["val_loss"][epoch]})
         else:
-            run.log({"train_accuracy": history.history["accuracy"][epoch], 
+            log_metrics({"train_accuracy": history.history["accuracy"][epoch], 
                     "train_loss": history.history["loss"][epoch]})
             
     X_, y_ = manager.get_raw_with_classes(CLASSES, comp_size, augment_factor=augment_factor, shuffle=True)
@@ -211,14 +235,14 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
      
     if (model.model_name == "ConvLSTM" and final_train_loss > 1) or (model.model_name == "DinoNN" and final_train_loss > 1.5) or (model.model_name == "OFNN" and final_train_loss > .25):
         print("Model diverged, stopping")
-        run.log({"converged": False})
-        run.finish()
+        log_metrics({"converged": False})
+        finish_run(False, 0)
         return model
 
     if(strat == "YOTO"):
         print("Strategy is YOTO, no further iterations")
-        run.log({"converged": True})
-        run.finish()
+        log_metrics({"converged": True})
+        finish_run(True, 0)
         return model
     print("## Adaptive Sampling")
     print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
@@ -231,7 +255,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
         entr = calculate_entropy_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM = model.model_name == "ConvLSTM" )
         var = calculate_variance_with_dropout(model, X_comp, num_dropouts=num_dropouts, optimize_against_OOM = model.model_name == "ConvLSTM" )
-        run.log({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
+        log_metrics({"avg_entropy": np.mean(entr) , "avg_variance": np.mean(var)}) # log average entropy and variance
         if strat == "random":
             selected_class = random.choice(base_classes)
         elif strat in ["entropy", "variance", "avg"]:
@@ -263,7 +287,7 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         y_base = np.append(y_base, y_base_iter, axis=0)
         X_train, y_train = subsample(max_samples * (val_per_class + sample_per_iter_per_class) / sample_per_iter_per_class, X_base, y_base)
         print("Reservoir size: ", X_base.shape[0], "Training size: ", X_train.shape[0])
-        run.log({"reservoir_size": X_base.shape[0], "training_size": X_train.shape[0]})
+        log_metrics({"reservoir_size": X_base.shape[0], "training_size": X_train.shape[0]})
 
         # Training iteration part
 
@@ -275,13 +299,13 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         executed_epochs = len(history.history["accuracy"])
         for epoch in range(executed_epochs):
             if(val_per_class > 0):
-                run.log({
+                log_metrics({
                 "train_accuracy": history.history["accuracy"][epoch], 
                 "val_accuracy": history.history["val_accuracy"][epoch], 
                 "train_loss": history.history["loss"][epoch], 
                 "val_loss": history.history["val_loss"][epoch]}) # log training and validation accuracy and loss for each epoch
             else:
-                run.log({
+                log_metrics({
                 "train_accuracy": history.history["accuracy"][epoch], 
                 "train_loss": history.history["loss"][epoch]
                 })
@@ -289,11 +313,12 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
         eval_model()
 
 
-    run.log({"converged": True})
-    run.finish()
+    log_metrics({"converged": True})
+    finish_run(True, iterations)
     checkpoint = Path(save_path) / f"{run.id}_{time():.6f}.h5"
-    checkpoint.parent.mkdir(parents=True, exist_ok=True)
-    model.model.save(str(checkpoint))
+    if os.environ.get("TACTILE_SAVE_CHECKPOINT", "1") != "0":
+        checkpoint.parent.mkdir(parents=True, exist_ok=True)
+        model.model.save(str(checkpoint))
     return model
 
 ## Function to return the closest class to a given class
