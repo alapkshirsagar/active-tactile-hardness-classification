@@ -1,6 +1,8 @@
-# Active Sampling for Tactile Hardness Exploration
+# Active Sampling for Hardness Classification with Vision-Based Tactile Sensors
 
-This is the code repository of the *ICRA 2025* paper *Active Sampling for Tactile Hardness Exploration*.
+This is the code repository of the paper:
+
+Chen, J., Heller, F., Andreu, M.G., Belousov, B., Schneider, T., Lin, L.P., Doerschner, K., Drewing, K., Peters, J., Kshirsagar, A., 2026. *Investigating Active Sampling for Hardness Classification with Vision-Based Tactile Sensors*. IEEE/RAS International Conference on Humanoid Robots (Humanoids), 2026.
 
 ## Installation
 
