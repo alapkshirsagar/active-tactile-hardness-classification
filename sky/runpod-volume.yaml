@@ -1,8 +1,6 @@
-# Existing RunPod volume ID: bhlasflv0z. Fill in its exact NAME below.
-# Register an EXISTING regional RunPod Network Volume; do not create a new one.
-# Use the exact volume NAME from RunPod, not its opaque volume ID.
-name: high_scarlet_vole
+# Use the exact existing RunPod Network Volume name, not its opaque volume ID.
+# Create and populate the volume as described in REPRODUCE.md first.
+name: YOUR_EXISTING_VOLUME_NAME
 type: runpod-network-volume
-# Replace region and data-centre ID; example syntax: runpod/CA/CA-MTL-1
-infra: runpod/RO/EU-RO-1
+infra: runpod/YOUR_COUNTRY/YOUR_DATA_CENTER
 use_existing: true

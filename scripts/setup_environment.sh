@@ -55,5 +55,6 @@ printf '%s\n' e1277af2ba9496fbadf7aec6eba56e8d882d1e35 \
 source scripts/env.sh
 python -m ipykernel install --sys-prefix --name tactile-hardness \
     --display-name 'Tactile Hardness (Python 3.10 / TF 2.10)'
+python scripts/patch_wandb_0179.py
 python -m pip check
 echo 'Environment installed. Validate with: bash scripts/run.sh python scripts/verify_environment.py'

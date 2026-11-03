@@ -23,3 +23,17 @@ results/
 data/
 hardness_classification/processed_data/Own
 hardness_classification/processed_data/Yuan
+
+**/__pycache__/
+figures/
+
+# Local analysis, plotting code, and their JSON inputs/outputs.
+# Keep experiment runners, environment files, and experiment configs versioned.
+/analysis/
+/sky/plots.yaml
+/sky/statistics.yaml
+/sky/table1.yaml
+/hardness_classification/analysis.py
+/hardness_classification/log_vis.py
+/hardness_classification/visualize.ipynb
+/data_collection/frame_vis.py

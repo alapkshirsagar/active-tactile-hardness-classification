@@ -1,4 +1,4 @@
-# Reconstruction choices; see environment/README.md for historical evidence.
+# Reconstruction choices; see REPRODUCE.md for historical evidence.
 # Python/CUDA/cuDNN are managed by micromamba, not pip.
 tensorflow==2.10.1
 keras==2.10.0

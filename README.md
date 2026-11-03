@@ -6,7 +6,7 @@ Chen, J., Heller, F., Andreu, M.G., Belousov, B., Schneider, T., Lin, L.P., Doer
 
 ## Installation
 
-For the pinned Linux GPU environment reconstructed and validated against this code, see [environment/README.md](environment/README.md). Run `bash scripts/setup_environment.sh` to recreate it, then `source scripts/env.sh` before running Python. This environment matches the Python/CUDA/cuDNN versions below; other package versions are documented reconstruction choices. For container builds and RunPod jobs, see [Docker and SkyPilot](environment/DOCKER_SKYPILOT.md).
+For the locked environment, Google Drive dataset setup and RunPod reproduction workflow, see [REPRODUCE.md](REPRODUCE.md).
 
 Our project is confirmed to be executable on both *Microsoft Windows 11 [Version 10.0.22631.4037]* and *Ubuntu 20.04.6 LTS*. It should function normally on the *Windows 10*, *Windows 11* and the most *Linux* distributions. We did not test the installation procedure on *WSL*.
 
@@ -70,9 +70,3 @@ For example usages, please refer to `export_metric.bat`.
 ## Data Visualization
 
 Please refer to `visualize.ipynb`. You can change settings and path to exported CSV files in this *Jupyter Notebook* document.
-
-## ConvLSTM replenishment
-
-See [experiments/REPLENISHMENT.md](experiments/REPLENISHMENT.md) and
-[sky/replenish-convlstm.yaml](sky/replenish-convlstm.yaml) for the quota-aware
-SkyPilot campaign (28 additional successes, no launch performed yet).

@@ -1,0 +1,21 @@
+name: tactile-hardness
+envs:
+  DATA_ROOT: /workspace/data
+  RESULTS_ROOT: /workspace/results
+resources:
+  cloud: runpod
+  image_id: docker:fheller0/tactile-hardness:tf210-smoke-v1
+  accelerators: RTXA5000:1
+  cpus: 8+
+  memory: 32+
+  disk_size: 100
+workdir: .
+# Must match the name registered with sky volumes apply sky/runpod-volume.yaml.
+volumes:
+  /workspace: YOUR_EXISTING_VOLUME_NAME
+setup: |
+  set -euo pipefail
+  cd ~/sky_workdir
+  bash /opt/tactile-hardness/scripts/run.sh python scripts/link_storage.py --data-root "$DATA_ROOT" --results-root "$RESULTS_ROOT"
+  bash /opt/tactile-hardness/scripts/run.sh python scripts/patch_wandb_0179.py
+  bash /opt/tactile-hardness/scripts/run.sh python -c 'import tensorflow as tf; assert tf.config.list_physical_devices("GPU")'

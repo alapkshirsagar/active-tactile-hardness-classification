@@ -121,11 +121,6 @@ class DatasetManager():
 
 
     def get_raw(self):
-        if os.environ.get("TACTILE_READONLY_DATA") == "1":
-            required = [join(self.storage, self.id, prefix+str(self.seq_length)+"_raw.npy")
-                        for prefix in ["X_", "y_"]]
-            if not all(exists(path) for path in required):
-                raise FileNotFoundError("Read-only dataset cache is incomplete; refusing to regenerate shared data: " + str(required))
         if exists(join(self.storage, self.id, "X_"+str(self.seq_length)+"_raw.npy")):
             X = np.load(join(self.storage, self.id, "X_"+str(self.seq_length)+"_raw.npy"), allow_pickle=True)
             y = np.load(join(self.storage, self.id, "y_"+str(self.seq_length)+"_raw.npy"), allow_pickle=True)
@@ -167,9 +162,6 @@ class DatasetManager():
         # Create a list of indices and shuffle it if necessary
         indices = list(range(y.shape[0]))
         if shuffle:
-            # Preserve historical entropy-seeding unless explicit run seeding is enabled.
-            if seed is None and os.environ.get("TACTILE_RUN_SEED") is not None:
-                seed = random.randrange(2**32)
             random.seed(seed)
             random.shuffle(indices)
 

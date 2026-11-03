@@ -165,35 +165,28 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     else: tf.config.set_visible_devices([], 'GPU')  # disable GPU
     lossfunction = "categorical_crossentropy"
 
-    run = wandb.init(project=os.environ.get("WANDB_PROJECT") or run_prefix + model.model_name, name=f"{strat}_leave_{comp_classes}_out",
+    metric_history = []
+
+    def log_metrics(values):
+        metric_history.append({k: float(v) for k, v in values.items()
+                        if k in {"train_accuracy", "val_accuracy", "acc_comp",
+                                 "abs_diff_comp", "avg_entropy", "avg_variance"}})
+        run.log(values)
+
+    def finish_run(converged):
+        if os.environ.get("TACTILE_METRICS"):
+            path = Path(os.environ["TACTILE_METRICS"])
+            path.write_text(json.dumps({**json.loads(os.environ.get("TACTILE_RUN_CONFIG", "{}")),
+                                       "converged": converged, "history": metric_history}))
+            run.save(str(path), base_path=str(path.parent), policy="now")
+        run.finish()
+
+    run = wandb.init(project=run_prefix + model.model_name, name=f"{strat}_leave_{comp_classes}_out",
                                             config={"dataset_id": DATASET_ID, 
                                                     "model": model.model_name, 
                                                     "lossfunction": lossfunction,
                                                     "epochs": init_epochs + iterations * epochs_per_iter,
                                                     })
-
-    metric_counts = {key: 0 for key in ["train_accuracy", "acc_comp", "abs_diff_comp", "avg_entropy", "avg_variance"]}
-    if os.environ.get("TACTILE_RUN_CONFIG_JSON"):
-        run.config.update(json.loads(os.environ["TACTILE_RUN_CONFIG_JSON"]))
-
-    def log_metrics(values):
-        for key in metric_counts:
-            if key in values:
-                metric_counts[key] += 1
-        run.log(values)
-
-    def finish_run(converged, completed_updates):
-        run.summary.update({"converged": converged, "completed_updates": completed_updates,
-                            "metric_counts": dict(metric_counts)})
-        run.finish()  # In online mode this waits for metric synchronization.
-        if os.environ.get("TACTILE_RESULT_PATH"):
-            destination = Path(os.environ["TACTILE_RESULT_PATH"])
-            payload = {"run_id": run.id, "converged": converged,
-                       "completed_updates": completed_updates,
-                       "metric_counts": dict(metric_counts), "wandb_finished": True}
-            temporary = destination.with_suffix(".tmp")
-            temporary.write_text(json.dumps(payload, indent=2) + "\n")
-            temporary.replace(destination)
 
     print("Base class: ", base_classes, "Comp class: ", comp_classes)
     # log hyperparameters
@@ -236,13 +229,13 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
     if (model.model_name == "ConvLSTM" and final_train_loss > 1) or (model.model_name == "DinoNN" and final_train_loss > 1.5) or (model.model_name == "OFNN" and final_train_loss > .25):
         print("Model diverged, stopping")
         log_metrics({"converged": False})
-        finish_run(False, 0)
+        finish_run(False)
         return model
 
     if(strat == "YOTO"):
         print("Strategy is YOTO, no further iterations")
         log_metrics({"converged": True})
-        finish_run(True, 0)
+        finish_run(True)
         return model
     print("## Adaptive Sampling")
     print(f"{strat} strategy, {sample_per_iter_per_class} samples per iteration per class, {val_per_class} validation samples per class and {epochs_per_iter} epochs per iteration")
@@ -314,11 +307,10 @@ def adaptive_sampling(CLASSES, hardness_levels, model, manager, save_path, base_
 
 
     log_metrics({"converged": True})
-    finish_run(True, iterations)
-    checkpoint = Path(save_path) / f"{run.id}_{time():.6f}.h5"
+    finish_run(True)
     if os.environ.get("TACTILE_SAVE_CHECKPOINT", "1") != "0":
-        checkpoint.parent.mkdir(parents=True, exist_ok=True)
-        model.model.save(str(checkpoint))
+        Path(save_path).mkdir(parents=True, exist_ok=True)
+        model.model.save(str(Path(save_path) / f"{run.id}_{time():.6f}.h5"))
     return model
 
 ## Function to return the closest class to a given class

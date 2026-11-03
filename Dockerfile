@@ -17,17 +17,13 @@ COPY scripts/ scripts/
 RUN bash scripts/setup_environment.sh
 
 COPY hardness_classification/ hardness_classification/
-RUN mkdir -p data runs hardness_classification/processed_data \
-    hardness_classification/AdaptiveModels \
-    && ln -s ../../data/Own hardness_classification/processed_data/Own \
-    && ln -s ../../data/Yuan hardness_classification/processed_data/Yuan
 
 ARG VCS_REF=unknown
 LABEL org.opencontainers.image.revision=$VCS_REF
 ENV NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
     PYTHONUNBUFFERED=1 \
-    WANDB_MODE=offline
+    WANDB_MODE=online
 
 # RunPod/SkyPilot needs a plain shell rather than a training entrypoint.
 USER root

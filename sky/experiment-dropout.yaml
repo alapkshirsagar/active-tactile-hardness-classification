@@ -1,0 +1,8 @@
+name: experiment-dropout
+envs:
+  WANDB_MODE: online
+  WANDB_ENTITY: ''
+run: |
+  set -euo pipefail
+  cd ~/sky_workdir
+  bash /opt/tactile-hardness/scripts/run.sh python scripts/reproduce.py dropout
